@@ -1,0 +1,145 @@
+
+body, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+header {
+  background: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+header h1 {
+  margin-bottom: 0.5rem;
+}
+
+nav a {
+  color: #fff;
+  margin-right: 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  padding: 20px;
+}
+
+footer {
+  background: #222;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 20px;
+}
+
+#calendar .flatpickr-input {
+  display: none;  /* hides the default input box if any */
+}
+
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.car-box {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.car-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.car-box p {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.car-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.car-box.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#reservation-form-container {
+  max-width: 500px;   /* form width */
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+#reservation-form-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+#rental-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#rental-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#rental-form input,
+#rental-form select,
+#rental-form textarea {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#rental-form input[type="file"] {
+  padding: 3px;
+}
+
+#rental-form button {
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+#rental-form button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}

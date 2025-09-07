@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rental - 26 Ride Rental</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/main.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <h2>Book a Ride</h2>
+    <p>Here you will be able to choose cars, dates, and make a reservation.</p>
+    <p>(add reservation form + calendar)</p>
+
+    <h2>Select Pick-up Date</h2>
+    <div id="calendar"></div>
+
+    <div id="car-selection" style="display:none;">
+      <h3>Select Available Car</h3>
+      <div id="car-grid" class="car-grid">
+        <!-- Car box example -->
+        <div class="car-box" data-car="Toyota Vellfire">
+          <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
+          <p>Toyota Vellfire</p>
+        </div>
+        <div class="car-box" data-car="Nissan Serena">
+          <img src="assets/images/serena.jpg" alt="Nissan Serena">
+          <p>Nissan Serena</p>
+        </div>
+        <div class="car-box" data-car="Toyota Crown">
+          <img src="assets/images/crown.jpg" alt="Toyota Crown">
+          <p>Toyota Crown</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="reservation-form-container" style="display:none;">
+      <h3>Reservation Form</h3>
+      <form id="rental-form" enctype="multipart/form-data">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="facebook">Facebook Username:</label>
+        <input type="text" id="facebook" name="facebook">
+
+        <label for="location">Pick-up Location:</label>
+        <select id="location" name="location" required>
+          <option value="">Select Location</option>
+          <option value="Office">Office</option>
+          <option value="JR Shin-koiwa">JR Shin-koiwa</option>
+          <option value="JR Kinshichou">JR Kinshichou</option>
+          <option value="JR Akihabara">JR Akihabara</option>
+        </select>
+
+        <label for="payment">Proof of Payment:</label>
+        <input type="file" id="payment" name="payment" accept="image/*,.pdf" required>
+
+        <button type="submit">Submit Reservation</button>
+      </form>
+    </div>
+
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+
+</html>
