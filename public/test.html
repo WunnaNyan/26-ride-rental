@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Test</title>
+</head>
+<body>
+    
+  <h1>Firebase Test</h1>
+  <button id="testBtn">Add Test Document</button>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBYpWHtaztTps2LlSItES1ZJxt_XdDztU",
+        authDomain: "ride-rental-7e38d.firebaseapp.com",
+        projectId: "ride-rental-7e38d",
+        storageBucket: "ride-rental-7e38d.firebasestorage.app",
+        messagingSenderId: "262023674030",
+        appId: "1:262023674030:web:b191ce0617ccba4140153f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Button click
+    document.getElementById("testBtn").addEventListener("click", async () => {
+        try {
+        await addDoc(collection(db, "testCollection"), { test: "Hello Firebase!" });
+        alert("✅ Document added!");
+        } catch (e) {
+        console.error("❌ Error adding document:", e);
+        alert("❌ " + e.message);
+        }
+    });
+    </script>
+
+</body>
+</html>

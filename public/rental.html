@@ -6,10 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rental - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/main.js" defer></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
+
+<!-- Firebase Initialization -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+  import { getStorage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDBYpWHtaztTps2LlSItES1ZJxt_XdDztU",
+    authDomain: "ride-rental-7e38d.firebaseapp.com",
+    projectId: "ride-rental-7e38d",
+    storageBucket: "ride-rental-7e38d.firebasestorage.app",
+    messagingSenderId: "262023674030",
+    appId: "1:262023674030:web:b191ce0617ccba4140153f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  window.db = db;
+  window.storage = storage;
+</script>
+
+<script type="module" src="assets/js/main.js" defer></script>
 
 <body>
   <div id="site-header"></div>
@@ -17,7 +41,6 @@
   <main>
     <h2>Book a Ride</h2>
     <p>Here you will be able to choose cars, dates, and make a reservation.</p>
-    <p>(add reservation form + calendar)</p>
 
     <h2>Select Pick-up Date</h2>
     <div id="calendar"></div>
@@ -25,7 +48,6 @@
     <div id="car-selection" style="display:none;">
       <h3>Select Available Car</h3>
       <div id="car-grid" class="car-grid">
-        <!-- Car box example -->
         <div class="car-box" data-car="Toyota Vellfire">
           <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
           <p>Toyota Vellfire</p>
@@ -40,7 +62,6 @@
         </div>
       </div>
     </div>
-
 
     <div id="reservation-form-container" style="display:none;">
       <h3>Reservation Form</h3>
