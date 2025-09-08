@@ -1,28 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cars - 26 Ride Rental</title>
+  <title>Our Cars - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/main.js" defer></script>
-</head>
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
+  <script type="module" src="assets/js/main.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
+</head>
 <body>
   <div id="site-header"></div>
 
   <main>
-    <h2>Our Cars</h2>
-    <ul>
-      <li>Toyota Vellfire - Family Van</li>
-      <li>Toyota - Crown</li>
-      <li>Nissan Serena - Family Van</li>
-    </ul>
-    <p>(load from Firebase later)</p>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-overlay">
+        <h1>Our Cars</h1>
+        <p>Explore our cars and choose the perfect ride for you.</p>
+      </div>
+    </section>
+
+    <!-- Cars Grid -->
+    <section class="car-listing">
+      <h2>Available Cars</h2>
+      <div class="cars-grid">
+
+        <!-- Toyota Vellfire -->
+        <div id="vellfire" class="car-card">
+          <div class="car-image-container">
+            <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
+          </div>
+          <h3>Toyota Vellfire</h3>
+          <p>Luxury Family Van</p>
+          <ul class="car-specs">
+            <li>Seats: 7</li>
+            <li>Transmission: Automatic</li>
+            <li>Fuel: Petrol</li>
+            <li>Rental Price: ¥15,000 / day</li>
+          </ul>
+          <div class="swiper car-gallery">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"><img src="assets/images/vellfire_interior1.jpg" alt="Interior 1"></div>
+              <div class="swiper-slide"><img src="assets/images/vellfire_interior2.jpg" alt="Interior 2"></div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+          <a href="rental.html" class="btn-primary">Book This Car</a>
+        </div>
+
+        <!-- Nissan Serena -->
+        <div id="serena" class="car-card">
+          <div class="car-image-container">
+            <img src="assets/images/serena.jpg" alt="Nissan Serena">
+          </div>
+
+          <h3>Nissan Serena</h3>
+          <p>Family Van</p>
+          <ul class="car-specs">
+            <li>Seats: 7</li>
+            <li>Transmission: Automatic</li>
+            <li>Fuel: Petrol</li>
+            <li>Rental Price: ¥11,000 / day</li>
+          </ul>
+          <div class="swiper car-gallery">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"><img src="assets/images/serena_interior1.jpg" alt="Interior 1"></div>
+              <div class="swiper-slide"><img src="assets/images/serena_interior2.jpg" alt="Interior 2"></div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+          <a href="rental.html" class="btn-primary">Book This Car</a>
+        </div>
+
+
+        <!-- Add more cars similarly -->
+      </div>
+    </section>
   </main>
 
   <div id="site-footer"></div>
-</body>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const swipers = document.querySelectorAll(".swiper.car-gallery");
+      swipers.forEach((gallery) => {
+        new Swiper(gallery, {
+          slidesPerView: 1,
+          spaceBetween: 10,
+          navigation: {
+            nextEl: gallery.querySelector(".swiper-button-next"),
+            prevEl: gallery.querySelector(".swiper-button-prev"),
+          },
+          loop: true,
+        });
+      });
+    });
+  </script>
+</body>
 </html>

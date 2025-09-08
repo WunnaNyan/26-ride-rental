@@ -1,4 +1,27 @@
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+// assets/js/main.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDBYpWHtaztTps2LlSItES1ZJxt_XdDztU",
+  authDomain: "ride-rental-7e38d.firebaseapp.com",
+  projectId: "ride-rental-7e38d",
+  storageBucket: "ride-rental-7e38d.firebasestorage.app",
+  messagingSenderId: "262023674030",
+  appId: "1:262023674030:web:b191ce0617ccba4140153f"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// Expose globally (so other scripts can use if needed)
+window.db = db;
+window.storage = storage;
 
 // Function to load partial HTML (header/footer)
 function loadPartial(id, file) {
@@ -64,6 +87,22 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("reservation-form-container").style.display = "block";
     });
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const swipers = document.querySelectorAll(".swiper.car-gallery");
+    swipers.forEach((gallery) => {
+      new Swiper(gallery, {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        navigation: {
+          nextEl: gallery.querySelector(".swiper-button-next"),
+          prevEl: gallery.querySelector(".swiper-button-prev"),
+        },
+        loop: true,
+      });
+    });
+  });
+
 
   // Reservation form submission
   const form = document.getElementById("rental-form");

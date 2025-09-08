@@ -5,14 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/main.js" defer></script>
+  <script type="module" src="assets/js/main.js" defer></script>
 </head>
+
 <body>
   <div id="site-header"></div>
 
   <main>
-    <h2>Welcome!</h2>
-    <p>This is the homepage of your car rental company website.</p>
+    <!-- Intro Section -->
+    <section class="intro">
+      <div class="intro-overlay">
+        <h1>Reliable & Affordable Ride Rentals</h1>
+        <p>Book your next ride with ease in Tokyo.</p>
+        <a href="rental.html" class="btn-primary">Book Your Ride</a>
+      </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="highlights">
+      <h2>Why Choose Us?</h2>
+      <div class="highlight-grid">
+        <div class="highlight">
+          <h3>Wide Range of Cars</h3>
+          <p>From family vans to premium sedans, we have it all.</p>
+        </div>
+        <div class="highlight">
+          <h3>Easy Booking</h3>
+          <p>Reserve your ride online in just a few clicks.</p>
+        </div>
+        <div class="highlight">
+          <h3>Flexible Pickups</h3>
+          <p>Convenient pickup points across Tokyo.</p>
+        </div>
+        <div class="highlight">
+          <h3>Trusted Service</h3>
+          <p>Safe, reliable, and affordable rides every time.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Cars -->
+    <section class="featured-cars">
+        <h2>Our Featured Cars</h2>
+        <div class="index-car-grid">
+            <a href="cars.html#vellfire" class="car-box-link">
+                <div class="index-car-box">
+                    <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
+                    <p><strong>Toyota Vellfire</strong> - Luxury Family Van</p>
+                </div>
+            </a>
+            <a href="cars.html#serena" class="car-box-link">
+                <div class="index-car-box">
+                    <img src="assets/images/serena.jpg" alt="Nissan Serena">
+                    <p><strong>Nissan Serena</strong> - Spacious Family Van</p>
+                </div>
+            </a>
+        </div>
+        <div style="text-align:center; margin-top:16px;">
+            <a href="cars.html" class="btn-secondary">View All Cars</a>
+        </div>
+    </section>
+
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">1. Choose Date</div>
+        <div class="step">2. Select Car</div>
+        <div class="step">3. Confirm & Pay</div>
+        <div class="step">4. Enjoy Your Ride</div>
+      </div>
+    </section>
+
+    <!-- About/CTA -->
+    <section class="about-cta">
+      <h2>About 26 Ride Rental</h2>
+      <p>We are a Myanmar-based car rental service offering reliable, affordable, and safe rides across Tokyo.</p>
+      <a href="about.html" class="btn-primary">Learn More</a>
+    </section>
   </main>
 
   <div id="site-footer"></div>
