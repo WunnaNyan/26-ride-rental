@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Hide reservation form when picking a new date
       document.getElementById("reservation-form-container").style.display = "none";
     }
-  });
+  }); 
 
   // Car selection
   const carBoxes = document.querySelectorAll(".car-box");
