@@ -1,5 +1,4 @@
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-// assets/js/main.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
@@ -29,9 +28,19 @@ function loadPartial(id, file) {
     .then(response => response.text())
     .then(data => {
       document.getElementById(id).innerHTML = data;
+
+      // Highlight active page in nav
+      const path = window.location.pathname.split("/").pop();
+      const links = document.querySelectorAll("nav a");
+      links.forEach(link => {
+        if (link.getAttribute("href") === path) {
+          link.classList.add("active");
+        }
+      });
     })
     .catch(error => console.error("Error loading partial:", error));
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const db = window.db;

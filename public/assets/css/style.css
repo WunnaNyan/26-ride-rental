@@ -35,9 +35,6 @@ nav a {
   font-weight: bold;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
 
 main {
   padding: 20px;
@@ -79,6 +76,124 @@ button:hover, .btn-primary:hover, .btn-secondary:hover {
 
 .btn-secondary:hover {
   background-color: #5a6268;
+}
+
+
+/* ---------- HEADER ---------- */
+header {
+  background: #222;
+  color: #fff;
+  padding: 2rem 1rem;       /* taller header for spacing */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Container stacks logo + nav and centers everything */
+.header-container {
+  display: flex;
+  flex-direction: column;  /* stack vertically by default */
+  align-items: center;     /* center horizontally */
+  gap: 1rem;               /* space between logo and nav */
+}
+
+/* Logo styling */
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Navigation links */
+nav {
+  display: flex;
+  gap: 40px;               /* bigger spacing between links */
+  flex-wrap: wrap;         /* wrap on smaller screens */
+  justify-content: center; /* center horizontally */
+}
+
+nav a {
+  text-decoration: none;
+  color: #ddd;
+  font-weight: 500;
+  padding: 12px 18px;      /* more clickable area */
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+nav a:hover {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+nav a.active {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  header {
+    padding: 1.5rem 1rem;
+  }
+
+  nav {
+    gap: 20px;             /* reduce gap on smaller screens */
+  }
+
+  .logo {
+    font-size: 1.8rem;
+  }
+}
+
+
+
+/* ---------- FOOTER ---------- */
+footer {
+  background: #111;
+  color: #ccc;
+  padding: 2rem;
+  margin-top: 40px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-left h3 {
+  color: #fff;
+}
+
+.footer-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+.footer-right {
+  text-align: right;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.footer-right small {
+  color: #666;
 }
 
 
