@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rental - 26 Ride Rental</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <script type="module" src="assets/js/main.js" defer></script>
 </head>
 
@@ -16,7 +16,7 @@
 
   <main>
     <h2>Book a Ride</h2>
-    <p>Here you will be able to choose cars, dates, and make a reservation.</p>
+    <p>Choose your car, select a date, and make a reservation.</p>
 
     <h2>Select Pick-up Date</h2>
     <div class="calendar-container">
@@ -44,7 +44,7 @@
 
     <div id="reservation-form-container" style="display:none;">
       <h3>Reservation Form</h3>
-      <form id="rental-form" enctype="multipart/form-data">
+      <form id="rental-form">
         <label for="name">Full Name:</label>
         <input type="text" id="name" name="name" required>
 
@@ -62,15 +62,7 @@
           <option value="JR Akihabara">JR Akihabara</option>
         </select>
 
-        <label for="payment">Proof of Payment:</label>
-        <input type="file" id="payment" name="payment" accept="image/*,.pdf" required>
-    
-        <div class="qr-info" style="text-align:center; margin-top:16px;">
-          <img src="assets/images/qr-code.jpg" alt="QR Code" style="width:300px; max-width:80%;">
-          <p style="margin-top:8px; font-weight:bold;">Scan this QR code to pay</p>
-        </div>
-
-        <button type="submit">Submit Reservation</button>
+        <button type="submit" class="btn-primary">Next</button>
       </form>
     </div>
 

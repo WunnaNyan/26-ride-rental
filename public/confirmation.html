@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Reservation - 26 Ride Rental</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script type="module" src="assets/js/confirmation.js" defer></script>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <h2>Confirm Your Reservation</h2>
+    <div id="summary-container"></div>
+
+    <h3>Cautions & Rules</h3>
+    <article class="rules">
+      <ul>
+        <li>Please bring your valid driver’s license.</li>
+        <li>Cars must be returned with the same fuel level.</li>
+        <li>No smoking or pets inside the vehicle.</li>
+        <li>Any damage must be reported immediately.</li>
+      </ul>
+    </article>
+
+    <div>
+      <input type="checkbox" id="agree"> I agree to the terms and conditions
+    </div>
+
+    <div class="confirmation-buttons">
+      <button id="back-btn" class="btn-secondary">Back & Edit</button>
+      <button id="proceed-btn" class="btn-primary" disabled>Proceed to Payment</button>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>

@@ -84,18 +84,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Car selection
   const carBoxes = document.querySelectorAll(".car-box");
-  carBoxes.forEach(box => {
-    box.addEventListener("click", () => {
-      if (box.classList.contains("disabled")) return;
+  
+  // Car selection
+carBoxes.forEach(box => {
+  box.addEventListener("click", () => {
+    if (box.classList.contains("disabled")) return;
 
-      // Deselect other cars
-      carBoxes.forEach(b => b.classList.remove("selected"));
-      box.classList.add("selected");
-
-      // Show reservation form
-      document.getElementById("reservation-form-container").style.display = "block";
+    // Deselect other cars and remove their details button
+    carBoxes.forEach(b => {
+      b.classList.remove("selected");
+      const btn = b.querySelector(".see-details-btn");
+      if (btn) btn.remove();
     });
+
+    // Mark this one as selected
+    box.classList.add("selected");
+
+    // Add "See Details" button if not already there
+    let detailsBtn = box.querySelector(".see-details-btn");
+    if (!detailsBtn) {
+      detailsBtn = document.createElement("a");
+      detailsBtn.className = "btn-secondary see-details-btn";
+      
+      // Match car names to IDs in cars.html
+      const carName = box.dataset.car;
+      let carId = "";
+      if (carName === "Toyota Vellfire") carId = "vellfire";
+      if (carName === "Nissan Serena") carId = "serena";
+      if (carName === "Toyota Crown") carId = "crown";
+
+      detailsBtn.href = `cars.html#${carId}`;
+      detailsBtn.textContent = "See Details";
+
+      box.appendChild(detailsBtn);
+    }
+
+    // Show reservation form
+    document.getElementById("reservation-form-container").style.display = "block";
   });
+});
+
+  
+
 
   document.addEventListener("DOMContentLoaded", () => {
     const swipers = document.querySelectorAll(".swiper.car-gallery");
@@ -113,43 +143,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // Reservation form submission
-  const form = document.getElementById("rental-form");
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  // Reservation form submission (Step 1 → Confirmation)
+const form = document.getElementById("rental-form");
+if (form) {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-      const selectedCar = document.querySelector(".car-box.selected")?.dataset.car;
-      const selectedDate = document.querySelector("#calendar")._flatpickr.selectedDates[0]?.toISOString().split("T")[0];
+    const selectedCar = document.querySelector(".car-box.selected")?.dataset.car;
+    const selectedDate = document.querySelector("#calendar")._flatpickr.selectedDates[0]?.toISOString().split("T")[0];
 
-      if (!selectedCar || !selectedDate) {
-        alert("❌ Please select a car and date.");
-        return;
-      }
+    if (!selectedCar || !selectedDate) {
+      alert("❌ Please select a car and date.");
+      return;
+    }
 
-      const reservation = {
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        facebook: document.getElementById("facebook").value,
-        location: document.getElementById("location").value,
-        car: selectedCar,
-        date: selectedDate,
-        createdAt: new Date()
-      };
+    // Collect data
+    const rentalData = {
+      name: document.getElementById("name").value,
+      phone: document.getElementById("phone").value,
+      facebook: document.getElementById("facebook").value,
+      location: document.getElementById("location").value,
+      car: selectedCar,
+      date: selectedDate,
+      days: 1 // default, can add input later
+    };
 
-      try {
-        await addDoc(collection(db, "reservations"), reservation);
-        alert("✅ Reservation submitted successfully!");
-        form.reset();
-        document.getElementById("reservation-form-container").style.display = "none";
-        document.getElementById("car-selection").style.display = "none";
-        carBoxes.forEach(b => b.classList.remove("selected"));
-      } catch (error) {
-        console.error("❌ Error adding reservation:", error);
-        alert("❌ " + error.message);
-      }
-    });
-  }
+    // Save in sessionStorage
+    sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
+
+    // Redirect to confirmation page
+    window.location.href = "confirmation.html";
+  });
+}
+
 
   console.log("🚗 Rental page ready with Firebase integration and header/footer loading!");
 });

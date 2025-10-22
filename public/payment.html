@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment - 26 Ride Rental</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script type="module" src="assets/js/payment.js" defer></script>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <h1>Payment Form</h1>
+
+    <div id="payment-summary">
+      <h2>Booking Summary</h2>
+      <p><strong>Car:</strong> <span id="pay-car"></span></p>
+      <p><strong>Date:</strong> <span id="pay-date"></span></p>
+      <p><strong>Days:</strong> <span id="pay-days"></span></p>
+      <p><strong>Total Cost:</strong> <span id="pay-cost"></span></p>
+    </div>
+
+    <form id="payment-form">
+      <label>Upload Proof of Payment (screenshot):</label>
+      <input type="file" id="proof" accept="image/*" required>
+       <div class="qr-info" style="text-align:center; margin-top:16px;">
+          <img src="assets/images/qr-code.jpg" alt="QR Code" style="width:300px; max-width:80%;">
+          <p style="margin-top:8px; font-weight:bold;">Scan this QR code to pay</p>
+        </div>
+      <button type="submit" class="btn-primary">Submit Payment</button>
+    </form>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>
