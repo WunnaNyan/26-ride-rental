@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Cars - 26 Ride Rental</title>
+  <link rel="stylesheet" href="assets/css/cars.css">
   <link rel="stylesheet" href="assets/css/style.css">
+
   
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
@@ -12,6 +15,7 @@
   <script type="module" src="assets/js/main.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
 </head>
+
 <body>
   <div id="site-header"></div>
 
@@ -27,60 +31,66 @@
     <!-- Cars Grid -->
     <section class="car-listing">
       <h2>Available Cars</h2>
-      <div class="cars-grid">
+      <div class="car-card">
+        <div class="car-card-content">
 
-        <!-- Toyota Vellfire -->
-        <div id="vellfire" class="car-card">
-          <div class="car-image-container">
-            <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
-          </div>
-          <h3>Toyota Vellfire</h3>
-          <p>Luxury Family Van</p>
-          <ul class="car-specs">
-            <li>Seats: 7</li>
-            <li>Transmission: Automatic</li>
-            <li>Fuel: Petrol</li>
-            <li>Rental Price: ¥15,000 / day</li>
-          </ul>
-          <div class="swiper car-gallery">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide"><img src="assets/images/vellfire_interior1.jpg" alt="Interior 1"></div>
-              <div class="swiper-slide"><img src="assets/images/vellfire_interior2.jpg" alt="Interior 2"></div>
+          <!-- Left side: images -->
+          <div class="car-images">
+            <div class="main-image">
+              <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire" id="main-vellfire">
             </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+              <div class="thumbnail-row">
+                <img src="assets/images/vellfire_interior1.jpg" alt="Interior 1" onclick="changeMainImage('vellfire', this)">
+                <img src="assets/images/vellfire_interior2.jpg" alt="Interior 2" onclick="changeMainImage('vellfire', this)">
+              </div>
           </div>
-          <a href="rental.html" class="btn-primary">Book This Car</a>
+
+          <!-- Right side: details -->
+          <div class="car-details">
+            <h3>Toyota Vellfire</h3>
+            <ul>
+              <li>Luxury Family Van</li>
+              <li>Seats: 7</li>
+              <li>Transmission: Automatic</li>
+              <li>Fuel: Petrol</li>
+              <li>Rental Price: ¥15,000 / day</li>
+            </ul>
+            <a href="rental.html" class="btn-primary">Book This Car</a>
+
+          </div>
         </div>
-
-        <!-- Nissan Serena -->
-        <div id="serena" class="car-card">
-          <div class="car-image-container">
-            <img src="assets/images/serena.jpg" alt="Nissan Serena">
-          </div>
-
-          <h3>Nissan Serena</h3>
-          <p>Family Van</p>
-          <ul class="car-specs">
-            <li>Seats: 7</li>
-            <li>Transmission: Automatic</li>
-            <li>Fuel: Petrol</li>
-            <li>Rental Price: ¥11,000 / day</li>
-          </ul>
-          <div class="swiper car-gallery">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide"><img src="assets/images/serena_interior1.jpg" alt="Interior 1"></div>
-              <div class="swiper-slide"><img src="assets/images/serena_interior2.jpg" alt="Interior 2"></div>
-            </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-          </div>
-          <a href="rental.html" class="btn-primary">Book This Car</a>
-        </div>
-
-
-        <!-- Add more cars similarly -->
       </div>
+
+      <div class="car-card">
+        <div class="car-card-content">
+
+          <!-- Left side: images -->
+          <div class="car-images">
+            <div class="main-image">
+              <img src="assets/images/serena.jpg" alt="Nissan Serena" id="main-serena">
+            </div>
+            <div class="thumbnail-row">
+              <img src="assets/images/serena_interior1.jpg" alt="Interior 1" onclick="changeMainImage('serena', this)">
+              <img src="assets/images/serena_interior2.jpg" alt="Interior 2" onclick="changeMainImage('serena', this)">
+            </div>
+          </div>
+
+          <!-- Right side: details -->
+          <div class="car-details">
+            <h3>Nissan Serena</h3>
+            <ul>
+              <li>Comfortable Family MPV</li>
+              <li>Seats: 7</li>
+              <li>Transmission: Automatic</li>
+              <li>Fuel: Hybrid</li>
+              <li>Rental Price: ¥13,000 / day</li>
+            </ul>
+            <a href="rental.html" class="btn-primary">Book This Car</a>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   </main>
 
@@ -102,5 +112,15 @@
       });
     });
   </script>
+
+  <script>
+    function changeMainImage(carId, imgElem) {
+      const mainImg = document.getElementById(`main-${carId}`);
+      if (mainImg) {
+        mainImg.src = imgElem.src;
+      }
+    }
+  </script>
+
 </body>
 </html>
