@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const bookings = {
     "Toyota Vellfire": ["2025-09-10", "2025-09-15"],
     "Nissan Serena": ["2025-09-12"],
-    "Toyota Crown": ["2025-09-11"]
+    "Toyota ALphard": ["2025-09-11"]
   };
 
   // Initialize calendar
@@ -111,7 +111,7 @@ carBoxes.forEach(box => {
       let carId = "";
       if (carName === "Toyota Vellfire") carId = "vellfire";
       if (carName === "Nissan Serena") carId = "serena";
-      if (carName === "Toyota Crown") carId = "crown";
+      if (carName === "Toyota Alphard") carId = "alphard";
 
       detailsBtn.href = `cars.html#${carId}`;
       detailsBtn.textContent = "See Details";

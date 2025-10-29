@@ -1,5 +1,15 @@
 /* ---------- GLOBAL ---------- */
 
+:root {
+    --primary-color: #00BFFF; /* Vibrant Sky Blue */
+    --primary-hover: #007BFF;
+    --background-dark: #1e1e1e; /* Sleek Dark Background */
+    --background-light: #f5f5f5; /* Light Section Background */
+    --card-background: #ffffff; /* White Boxes for Content */
+    --text-color: #333333;
+    --text-light: #cccccc;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -17,6 +27,8 @@ body {
   background-color: #f4f4f4;
   color: #333;
 }
+
+
 
 header h1 {
   margin-bottom: 0.5rem;
@@ -297,6 +309,15 @@ footer {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Highlight selected car */
+.car-box.selected {
+  border: 2px solid #007BFF;
+  box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
 
 
 

@@ -7,9 +7,7 @@
   <title>Our Cars - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/cars.css">
   <link rel="stylesheet" href="assets/css/style.css">
-
   
-  <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
   <script type="module" src="assets/js/main.js" defer></script>
@@ -20,7 +18,6 @@
   <div id="site-header"></div>
 
   <main>
-    <!-- Hero Section -->
     <section class="hero">
       <div class="hero-overlay">
         <h1>Our Cars</h1>
@@ -67,6 +64,36 @@
           <!-- Left side: images -->
           <div class="car-images">
             <div class="main-image">
+              <img src="assets/images/alphard.jpg" alt="Toyota Alphard" id="main-alphard">
+            </div>
+              <div class="thumbnail-row">
+                <img src="assets/images/alphard_interior1.jpg" alt="Interior 1" onclick="changeMainImage('alphard', this)">
+                <img src="assets/images/alphard_interior2.jpg" alt="Interior 2" onclick="changeMainImage('alphard', this)">
+              </div>
+          </div>
+
+          <!-- Right side: details -->
+          <div class="car-details">
+            <h3>Toyota Alphard</h3>
+            <ul>
+              <li>Spacious Family Van</li>
+              <li>Seats: 7</li>
+              <li>Transmission: Automatic</li>
+              <li>Fuel: Petrol</li>
+              <li>Rental Price: ¥12,000 / day</li>
+            </ul>
+            <a href="rental.html" class="btn-primary">Book This Car</a>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card">
+        <div class="car-card-content">
+
+          <!-- Left side: images -->
+          <div class="car-images">
+            <div class="main-image">
               <img src="assets/images/serena.jpg" alt="Nissan Serena" id="main-serena">
             </div>
             <div class="thumbnail-row">
@@ -89,6 +116,9 @@
           </div>
 
         </div>
+      </div>
+
+  
       </div>
 
     </section>

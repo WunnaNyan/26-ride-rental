@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const prices = {
     "Toyota Vellfire": 15000,
+    "Toyota Alphard": 12000,
     "Nissan Serena": 11000,
-    "Toyota Crown": 13000
   };
   const totalPrice = prices[rentalData.car] * rentalData.days;
 
