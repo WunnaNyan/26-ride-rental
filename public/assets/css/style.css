@@ -1,8 +1,8 @@
 /* ---------- GLOBAL ---------- */
 
 :root {
-    --primary-color: #00BFFF; /* Vibrant Sky Blue */
-    --primary-hover: #007BFF;
+    --primary-color: #007BFF; /* Vibrant Sky Blue */
+    --primary-hover: #0056b3;
     --background-dark: #1e1e1e; /* Sleek Dark Background */
     --background-light: #f5f5f5; /* Light Section Background */
     --card-background: #ffffff; /* White Boxes for Content */
@@ -99,7 +99,7 @@ header {
 }
 
 body {
-  padding-top: 200px; /* match or slightly exceed header height */
+  padding-top: 140px; /* match or slightly exceed header height */
 }
 
 
@@ -146,11 +146,73 @@ nav a.active {
   color: #fff;
 }
 
+/* Full-width hero banner */
+.hero-banner {
+  height: 320px;
+  width: 100%;
+  max-height: 400px; /* optional cap */
+  background-image: url("../images/banner.jpg");
+  background-size: cover;      /* fills entire width */
+  background-position: center; /* keeps focus centered */
+  background-repeat: no-repeat;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Optional dark overlay for readability */
+.hero-banner::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.35); /* slightly dark overlay */
+}
+
+/* Text on banner */
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.hero-overlay h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.hero-button .btn-primary {
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 1.0rem;
+    border-radius: 8px;
+    background-color: #007BFF;
+    transition: 0.3s;
+}
+
+.hero-button .btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   header {
     padding: 1.5rem 1rem;
   }
+
+  body {
+        padding-top: 200px; /* more space for taller mobile nav */
+    }
 
   nav {
     gap: 20px;             /* reduce gap on smaller screens */
@@ -159,8 +221,150 @@ nav a.active {
   .logo {
     font-size: 1.8rem;
   }
+
+  .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .hero-button .btn-primary {
+        font-size: 1rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .index-car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px; /* smaller gap between cars */
+      justify-items: center; /* centers items inside grid */
+      margin-top: 20px;
+    }
+    .index-car-box {
+        max-width: 250px; /* optional: slightly bigger boxes */
+    }
 }
 
+.info-boxes {
+    background-color: #f5f5f5; /* light gray background for contrast */
+    padding: 50px 20px;
+}
+
+.info-box-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px; /* gap between boxes */
+    max-width: 1200px;
+    margin: 0 auto; /* center the grid */
+}
+
+.info-box {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.info-box h3 {
+    margin-bottom: 15px;
+    color: #007BFF;
+}
+
+.info-box p {
+    color: #333;
+}
+
+/* ---------- INDEX PAGE HOW IT WORKS ---------- */
+.how-it-works {
+    background-color: #f5f5f5;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.how-it-works h2 {
+    color: #007BFF;
+    margin-bottom: 40px;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap; /* allows stacking on smaller screens */
+}
+
+.step-box {
+    background-color: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    position: relative;
+    min-width: 140px;
+    flex: 1;
+    max-width: 180px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.step-box img {
+  width: 60px;        /* or any size you want */
+  height: 60px;       /* maintain square or aspect ratio */
+  object-fit: contain; /* ensures it fits without stretching */
+  display: block;     /* remove inline spacing issues */
+  margin: 0 auto 10px; /* center and add spacing below */
+}
+
+
+.step-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.step-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007BFF;
+    margin-bottom: 10px;
+}
+
+.arrow {
+    font-size: 3rem; /* bigger and visually thicker */
+    color: #007BFF;
+    margin-top: 15px;
+}
+
+
+/* Remove arrow for the last step */
+.step-box:last-child .arrow {
+    display: none;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 768px) {
+    .steps-container {
+        flex-direction: column;
+    }
+
+    .arrow {
+        transform: rotate(90deg); /* make arrow point down */
+        margin: 15px 0 0 0;
+    }
+}
 
 
 /* ---------- FOOTER ---------- */
@@ -323,11 +527,6 @@ footer {
 
 /* ---------- CONFIRMATION PAGE ---------- */
 
-main {
-  max-width: 800px;
-  margin: 40px auto;
-  text-align: center;
-}
 
 #summary-container {
   background: #ffffff;
@@ -417,7 +616,7 @@ main {
 .featured-cars {
   text-align: center;
   padding: 40px 20px;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 }
 
 .featured-cars h2 {
@@ -426,12 +625,15 @@ main {
 }
 
 .index-car-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  justify-items: center;
-  margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+    max-width: 1000px;   /* keeps grid centered and not stretched too far */
+    margin: 0 auto;      /* centers the entire grid container */
+    width: 100%;
+    padding: 0 20px;     /* optional: adds side spacing */
 }
+
 
 .index-car-box {
   background: #fff;
@@ -444,9 +646,10 @@ main {
 
 .index-car-box img {
   width: 100%;
-  height: 200px;
+  height: 240px;
   object-fit: cover;
   display: block;
+  border-radius: 8px;
 }
 
 .index-car-box p {
