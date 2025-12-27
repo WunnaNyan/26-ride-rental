@@ -300,6 +300,10 @@ nav a.active {
     margin-bottom: 40px;
 }
 
+.step-icon {
+  margin: 24px 0;
+}
+
 .steps-container {
     display: flex;
     justify-content: center;
@@ -310,49 +314,57 @@ nav a.active {
 
 .step-box {
     background-color: white;
-    padding: 20px 25px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    position: relative;
+
     min-width: 140px;
-    flex: 1;
     max-width: 180px;
+    height: 280px;              /* ✅ uniform height */
+
+    display: grid;
+    grid-template-rows: 80px 1fr 50px; /* ✅ fixed layout zones */
+
     text-align: center;
     transition: transform 0.2s;
 }
 
-.step-box img {
-  width: 60px;        /* or any size you want */
-  height: 60px;       /* maintain square or aspect ratio */
-  object-fit: contain; /* ensures it fits without stretching */
-  display: block;     /* remove inline spacing issues */
-  margin: 0 auto 10px; /* center and add spacing below */
-}
-
-
-.step-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
+/* Top text area (fixed height) */
 .step-number {
     font-size: 2rem;
     font-weight: bold;
     color: #007BFF;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
+.step-box p {
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* Middle icon area (always centered) */
+.step-box img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+
+    margin: auto; /* ✅ centers vertically & horizontally */
+}
+
+/* Bottom arrow area (reserved space) */
 .arrow {
-    font-size: 3rem; /* bigger and visually thicker */
+    font-size: 3rem;
     color: #007BFF;
-    margin-top: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
-/* Remove arrow for the last step */
 .step-box:last-child .arrow {
-    display: none;
+    visibility: hidden; /* ✅ keeps space */
 }
+
 
 /* Responsive: stack vertically on small screens */
 @media (max-width: 768px) {
