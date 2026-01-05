@@ -22,14 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const summaryDiv = document.getElementById("summary-container");
-  summaryDiv.innerHTML = `
-    <div class="summary-box">
-      <p><strong>Name:</strong> ${rentalData.name}</p>
-      <p><strong>Car:</strong> ${rentalData.car}</p>
-      <p><strong>Date:</strong> ${rentalData.date}</p>
-      <p><strong>Total:</strong> ¥${rentalData.totalPrice.toLocaleString()}</p>
-    </div>
+  // Inside your DOMContentLoaded in confirmation.js
+  const container = document.getElementById("summary-container");
+  container.innerHTML = `
+      <div class="summary-item"><strong>Name:</strong> <span>${rentalData.name}</span></div>  
+      <div class="summary-item"><strong>Car:</strong> <span>${rentalData.car}</span></div>
+      <div class="summary-item"><strong>Date:</strong> <span>${rentalData.date}</span></div>
+      <div class="summary-item"><strong>Days:</strong> <span>${rentalData.days}</span></div>
+      <div class="summary-item" style="border:none; color:#007BFF; font-size:1.2rem;">
+          <strong>Total:</strong> <strong>¥${rentalData.totalPrice.toLocaleString()}</strong>
+      </div>
   `;
 
   const proceedBtn = document.getElementById("proceed-btn");

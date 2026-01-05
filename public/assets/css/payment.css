@@ -1,0 +1,117 @@
+/* ---------- PAYMENT PAGE CONTAINER ---------- */
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 40px 20px;
+}
+
+.payment-card {
+    background: #ffffff;
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.payment-card h1 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+}
+
+/* ---------- SUMMARY BOX ---------- */
+.summary-box {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.summary-grid {
+    display: flex;         /* Changed from grid to flex */
+    flex-direction: column; /* This stacks them vertically */
+    gap: 12px;             /* Space between the lines */
+}
+
+.summary-grid p {
+    margin: 0;
+    display: flex;
+    justify-content: space-between; /* This puts the Label on the left and Value on the right */
+    border-bottom: 1px solid #eee;  /* Adds a subtle line between items */
+    padding-bottom: 8px;
+}
+
+.summary-grid p:last-child {
+    border-bottom: none;   /* Removes the line from the last item (Total Cost) */
+}
+
+.total-price {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* ---------- QR SECTION & IMAGES ---------- */
+.qr-section {
+    margin-bottom: 30px;
+}
+
+.qr-image {
+    width: 200px; /* Controlled size for QR */
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin: 15px 0;
+}
+
+.qr-hint {
+    font-size: 0.85rem;
+    color: #555;
+    font-style: italic;
+}
+
+/* ---------- FORM & PREVIEW ---------- */
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.file-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+}
+
+#image-preview {
+    width: 100%;
+    max-width: 300px; /* Limits how big the screenshot looks */
+    height: auto;
+    margin-top: 10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+}
+
+.full-width {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
