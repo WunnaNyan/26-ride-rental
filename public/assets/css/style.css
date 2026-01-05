@@ -1,531 +1,506 @@
-/* ---------- GLOBAL ---------- */
-
+/* ---------- GLOBAL VARIABLES ---------- */
 :root {
-    --primary-color: #007BFF; /* Vibrant Sky Blue */
-    --primary-hover: #0056b3;
-    --background-dark: #1e1e1e; /* Sleek Dark Background */
-    --background-light: #f5f5f5; /* Light Section Background */
-    --card-background: #ffffff; /* White Boxes for Content */
-    --text-color: #333333;
-    --text-light: #cccccc;
+  --primary: #007BFF;
+  --primary-dark: #0056b3;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --text-main: #2d3436;
+  --text-muted: #636e72;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --border-radius: 12px;
+  /* Adding a variable for header height to keep things consistent */
+  --header-height: 140px; 
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-
-body, h1, h2, p {
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
+/* ---------- RESET & BASE ---------- */
+* { box-sizing: border-box; }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;
   line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  margin: 0;
+  /* Matches the new header height exactly */
+  padding-top: var(--header-height); 
 }
 
+h1, h2, h3, h4 { text-align: center; color: var(--text-main); }
+p { text-align: center; }
 
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-header h1 {
-  margin-bottom: 0.5rem;
+/* ---------- HEADER STYLES (Tall Version) ---------- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #1a1a1a; 
+    color: #fff;
+    /* Height is set here */
+    height: var(--header-height); 
+    display: flex;
+    align-items: center; /* Vertically centers the content inside */
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+/* Update header container to handle the new wrapper */
+.header-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 50px; /* Space between the Nav links and the Language Switcher */
+}
+
+.logo {
+    font-size: 2.2rem; /* Slightly larger logo for the taller header */
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+/* ---------- NAVIGATION ---------- */
+nav {
+    display: flex;
+    gap: 40px; /* Increased gap for a more premium look */
+    align-items: center;
 }
 
 nav a {
-  color: #fff;
-  margin-right: 15px;
-  text-decoration: none;
-  font-weight: bold;
+    text-decoration: none;
+    color: #ccc;
+    font-weight: 500;
+    font-size: 1rem; /* Slightly larger font */
+    transition: 0.3s;
+    text-transform: uppercase; /* Looks cleaner in tall headers */
+    letter-spacing: 1px;
 }
 
-
-main {
-  padding: 20px;
+nav a:hover, nav a.active {
+    color: var(--primary);
 }
 
-footer {
-  background: #222;
-  color: #fff;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 20px;
-}
-
-/* ---------- GLOBAL BUTTON ---------- */
-
-button, .btn-primary, .btn-secondary {
-  padding: 8px 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  background-color: #007BFF; /* Primary color */
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-  text-align: center;
+/* ---------- BUTTONS ---------- */
+.btn-primary, .btn-secondary, .btn-outline {
+  padding: 12px 28px;
+  font-weight: 600;
+  border-radius: 8px;
   display: inline-block;
   text-decoration: none;
+  transition: 0.3s;
+  cursor: pointer;
 }
 
-button:hover, .btn-primary:hover, .btn-secondary:hover {
-  background-color: #0056b3; /* Darker shade for hover */
-  transform: translateY(-2px);
-}
+.btn-primary { background: var(--primary); color: white; border: none; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-.btn-secondary {
-  background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-
-/* ---------- HEADER ---------- */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #222;
-  color: #fff;
-  padding: 1.5rem 1rem;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-body {
-  padding-top: 140px; /* match or slightly exceed header height */
-}
-
-
-/* Container stacks logo + nav and centers everything */
-.header-container {
-  display: flex;
-  flex-direction: column;  /* stack vertically by default */
-  align-items: center;     /* center horizontally */
-  gap: 1rem;               /* space between logo and nav */
-}
-
-/* Logo styling */
-.logo {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-}
-
-/* Navigation links */
-nav {
-  display: flex;
-  gap: 40px;               /* bigger spacing between links */
-  flex-wrap: wrap;         /* wrap on smaller screens */
-  justify-content: center; /* center horizontally */
-}
-
-nav a {
-  text-decoration: none;
-  color: #ddd;
-  font-weight: 500;
-  padding: 12px 18px;      /* more clickable area */
-  border-radius: 6px;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-nav a:hover {
-  background-color: #007BFF;
-  color: #fff;
-}
-
-nav a.active {
-  background-color: #0056b3;
-  color: #fff;
-}
-
-/* Full-width hero banner */
-.hero-banner {
-  height: 320px;
-  width: 100%;
-  max-height: 400px; /* optional cap */
-  background-image: url("../images/banner.jpg");
-  background-size: cover;      /* fills entire width */
-  background-position: center; /* keeps focus centered */
-  background-repeat: no-repeat;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-/* Optional dark overlay for readability */
-.hero-banner::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.35); /* slightly dark overlay */
-}
-
-/* Text on banner */
-.hero-overlay {
-    position: relative;
-    z-index: 2;
-    color: white;
-    text-align: center;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-}
-
-.hero-overlay h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.hero-overlay p {
-    font-size: 1.2rem;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
-}
-
-.hero-button .btn-primary {
-    padding: 10px 20px;
-    margin-top: 20px;
-    font-size: 1.0rem;
-    border-radius: 8px;
-    background-color: #007BFF;
-    transition: 0.3s;
-}
-
-.hero-button .btn-primary:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* ---------- GLOBAL PAGE HERO ---------- */
-
-.page-hero {
-  padding: 80px 20px;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+.btn-outline {
+  background: transparent;
   color: white;
-  text-align: center;
+  border: 2px solid white;
+  margin-left: 10px;
 }
+.btn-outline:hover { background: white; color: var(--primary); }
 
-.page-hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
+.btn-secondary { border: 2px solid var(--primary); color: var(--primary); }
+.btn-secondary:hover { background: var(--primary); color: white; }
 
-.page-hero p {
-  font-size: 1.1rem;
-}
-
-
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-  header {
-    padding: 1.5rem 1rem;
-  }
-
-  body {
-        padding-top: 200px; /* more space for taller mobile nav */
-    }
-
-  nav {
-    gap: 20px;             /* reduce gap on smaller screens */
-  }
-
-  .logo {
-    font-size: 1.8rem;
-  }
-
-  .hero-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-
-    .hero-button .btn-primary {
-        font-size: 1rem;
-    }
-
-    .hero-text h1 {
-        font-size: 2rem;
-    }
-
-    .hero-text p {
-        font-size: 1rem;
-    }
-
-    .index-car-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 15px; /* smaller gap between cars */
-      justify-items: center; /* centers items inside grid */
-      margin-top: 20px;
-    }
-    .index-car-box {
-        max-width: 250px; /* optional: slightly bigger boxes */
-    }
-}
-
-.info-boxes {
-    background-color: #f5f5f5; /* light gray background for contrast */
-    padding: 50px 20px;
-}
-
-.info-box-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px; /* gap between boxes */
-    max-width: 1200px;
-    margin: 0 auto; /* center the grid */
-}
-
-.info-box {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    padding: 25px;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.info-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.info-box h3 {
-    margin-bottom: 15px;
-    color: #007BFF;
-}
-
-.info-box p {
-    color: #333;
-}
-
-/* ---------- INDEX PAGE HOW IT WORKS ---------- */
-.how-it-works {
-    background-color: #f5f5f5;
-    padding: 50px 20px;
-    text-align: center;
-}
-
-.how-it-works h2 {
-    color: #007BFF;
-    margin-bottom: 40px;
-}
-
-.step-icon {
-  margin: 24px 0;
-}
-
-.steps-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap; /* allows stacking on smaller screens */
-}
-
-.step-box {
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-
-    min-width: 140px;
-    max-width: 180px;
-    height: 280px;              /* ✅ uniform height */
-
-    display: grid;
-    grid-template-rows: 80px 1fr 50px; /* ✅ fixed layout zones */
-
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-/* Top text area (fixed height) */
-.step-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #007BFF;
-    margin-bottom: 6px;
-}
-
-.step-box p {
-    margin: 0;
-    line-height: 1.3;
-}
-
-/* Middle icon area (always centered) */
-.step-box img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-
-    margin: auto; /* ✅ centers vertically & horizontally */
-}
-
-/* Bottom arrow area (reserved space) */
-.arrow {
-    font-size: 3rem;
-    color: #007BFF;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.step-box:last-child .arrow {
-    visibility: hidden; /* ✅ keeps space */
-}
-
-/* Manual fix for last step only */
-.step-last {
+/* ---------- HERO BANNER ---------- */
+.hero-banner {
+  height: 600px; /* Increased height to balance the taller header */
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("../images/banner.jpg");
+  background-size: cover;
+  background-position: center;
   display: flex;
-  flex-direction: column;
-  justify-content: center; /* center content vertically */
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
-/* Hide arrow but keep space */
-.step-last .arrow {
-  visibility: hidden;
-  height: 50px; /* matches arrow space in other boxes */
+.hero-content { max-width: 700px; text-align: center; }
+.hero-badge {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
 }
 
-/* Push icon toward middle */
-.step-last img {
-  margin: 20px auto;
-}
+.hero-content h1 { font-size: 3.5rem; color: white; margin: 15px 0; }
+.hero-content p { font-size: 1.3rem; color: #eee; margin-bottom: 30px; }
 
-
-/* Responsive: stack vertically on small screens */
-@media (max-width: 768px) {
-    .steps-container {
-        flex-direction: column;
-    }
-
-    .arrow {
-        transform: rotate(90deg); /* make arrow point down */
-        margin: 15px 0 0 0;
-    }
-}
-
-
-/* ---------- FOOTER ---------- */
-footer {
-  background: #111;
-  color: #ccc;
-  padding: 2rem;
-  margin-top: 40px;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+/* ---------- INFO CARDS ---------- */
+.info-section { padding: 60px 0; margin-top: -80px; } /* Deeper overlap */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
 }
 
-.footer-left h3 {
-  color: #fff;
+.info-card {
+  background: var(--bg-white);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
 }
 
-.footer-links {
+.accent-bar {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%; width: 5px;
+  background: var(--primary);
+}
+
+.info-card h3 { color: var(--primary); margin-bottom: 10px; text-align: left; }
+.info-card p { text-align: left; font-size: 0.95rem; color: var(--text-muted); }
+
+/* ---------- FEATURED CARS ---------- */
+.featured-cars { padding: 80px 0; background: var(--bg-white); }
+.section-label { 
+    display: block; text-align: center; color: var(--primary); 
+    font-weight: bold; text-transform: uppercase; font-size: 0.8rem;
+}
+.featured-cars h2 { margin: 10px 0 40px; font-size: 2rem; }
+
+.index-car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.car-card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  border: 1px solid #eee;
+  overflow: hidden;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.car-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); }
+.car-card-img img { width: 100%; height: 220px; object-fit: cover; }
+.car-card-body { padding: 20px; text-align: left; }
+.car-card-body h3 { text-align: left; font-size: 1.2rem; margin: 0; }
+.car-card-body p { text-align: left; color: var(--text-muted); margin: 5px 0 15px; }
+.card-link { color: var(--primary); font-weight: bold; font-size: 0.9rem; }
+
+/* ---------- RENTAL FLOW ---------- */
+.how-it-works { padding: 80px 0; background: var(--bg-light); }
+.steps-container {
   display: flex;
+  justify-content: space-between;
   gap: 15px;
   flex-wrap: wrap;
 }
 
-.footer-links a {
-  color: #ccc;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
-  color: #fff;
-}
-
-.footer-right {
-  text-align: right;
-  font-size: 0.9rem;
-  color: #888;
-}
-
-.footer-right small {
-  color: #666;
-}
-
-/* ---------- HOMEPAGE FEATURED CARS ---------- */
-
-.featured-cars {
+.step-card {
+  background: white;
+  flex: 1;
+  min-width: 180px;
+  padding: 30px 20px;
+  border-radius: var(--border-radius);
   text-align: center;
-  padding: 40px 20px;
-  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
 }
 
-.featured-cars h2 {
-  margin-bottom: 20px;
-  color: #007BFF;
+.step-card.highlight { border: 2px solid var(--primary); }
+
+.step-icon-wrapper {
+  width: 60px; height: 60px;
+  background: #eef6ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
 }
 
-.index-car-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 14px;
-    max-width: 1000px;
-    margin: 0 auto; 
-    width: 100%;
-    padding: 0 20px; 
-}
+.step-icon-wrapper img { width: 30px; height: 30px; }
+.step-card h4 { margin: 0; font-size: 1.1rem; color: var(--primary); }
 
-
-.index-car-box {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  max-width: 300px;
-}
-
-.index-car-box img {
-  width: 100%;
-  height: 240px;
-  object-fit: cover;
-  display: block;
-  border-radius: 8px;
-}
-
-.index-car-box p {
-  padding: 12px;
-  font-size: 0.95rem;
-  color: #333;
-}
-
-.index-car-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: #007BFF;
-  border: 2px solid #007BFF;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: 0.2s;
-  text-decoration: none;
-}
-
-.btn-secondary:hover {
-  background-color: #007BFF;
+/* ---------- ABOUT CTA ---------- */
+.about-cta { padding: 80px 0; }
+.cta-card {
+  background: linear-gradient(135deg, #2d3436, #1e1e1e);
   color: white;
+  padding: 60px;
+  border-radius: 20px;
+  text-align: center;
 }
+
+.cta-card h2 { color: white; margin-bottom: 15px; }
+.cta-card p { color: #ccc; max-width: 600px; margin: 0 auto 30px; }
+
+/* ---------- FOOTER STYLES ---------- */
+footer {
+    background: #111;
+    color: #888;
+    padding: 60px 0 30px;
+    margin-top: 80px;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.footer-left h3 { color: white; margin-bottom: 15px; text-align: left; }
+.footer-left p { text-align: left; max-width: 300px; }
+
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { color: #888; text-decoration: none; text-align: left; transition: 0.3s; }
+.footer-links a:hover { color: white; }
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #222;
+    font-size: 0.8rem;
+}
+
+/* --- LANGUAGE SWITCHER STYLES --- */
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 15px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: 0.3s;
+    letter-spacing: 1px;
+}
+
+.lang-btn:hover {
+    color: #fff;
+}
+
+.lang-btn.active {
+    color: var(--primary);
+}
+
+.lang-divider {
+    color: rgba(255, 255, 255, 0.1);
+    font-size: 0.7rem;
+    pointer-events: none;
+}
+
+/* --- MOBILE MENU ANIMATION --- */
+.menu-toggle {
+    display: none; /* Hidden on desktop */
+    flex-direction: column;
+    cursor: pointer;
+    background: none;
+    border: none;
+    gap: 6px;
+    z-index: 1001;
+}
+
+.menu-toggle .bar {
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    transition: 0.3s;
+}
+
+/* --- RESPONSIVE LOGIC --- */
+@media (max-width: 992px) {
+    header {
+        height: 80px; /* Slimmer header for mobile */
+    }
+
+    body {
+        padding-top: 80px; /* Adjust body padding for mobile header */
+    }
+
+    .menu-toggle {
+        display: flex; /* Show hamburger */
+    }
+
+    .header-right {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hide menu off-screen */
+        width: 80%;
+        height: 100vh;
+        background: #1a1a1a;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        transition: 0.4s ease-in-out;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* When menu is open */
+    .header-right.active {
+        right: 0;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    nav a {
+        font-size: 1.4rem;
+    }
+
+    .lang-switcher {
+        margin-top: 20px;
+    }
+}
+
+.menu-text {
+    color: #ffffff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 992px) {
+    /* --- HEADER HEIGHT --- */
+    header {
+        height: 90px; /* Slightly taller for a better mobile presence */
+    }
+
+    /* --- THE SIDE DRAWER --- */
+    .header-right {
+        position: fixed;
+        top: 0;
+        right: -100%; 
+        width: 300px; /* Increased from 280px for better text fit */
+        max-width: 80%;
+        height: 100vh;
+        background: #1a1a1a;
+        flex-direction: column;
+        justify-content: flex-start; 
+        align-items: flex-start;    
+        padding: 120px 40px; /* More breathing room */
+        gap: 25px;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2000;
+        box-shadow: -15px 0 40px rgba(0,0,0,0.6);
+    }
+
+    /* --- BIGGER TEXT FOR NAVIGATION --- */
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px; /* Gap between the links */
+        width: 100%;
+    }
+
+    nav a {
+        font-size: 1.4rem; /* Increased from 1.1rem - much more readable */
+        font-weight: 600;  /* Bolder look */
+        color: #ffffff;
+        width: 100%;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1); /* Subtle divider */
+        text-transform: none; /* Usually looks better when large */
+        letter-spacing: 0.5px;
+    }
+
+    nav a.active {
+        color: var(--primary);
+    }
+
+    /* --- BIGGER LANGUAGE SWITCHER --- */
+    .lang-switcher {
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px 20px; /* Larger hit area */
+        border-radius: 12px; /* Square-ish rounded looks premium with big text */
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .lang-btn {
+        font-size: 1rem; /* Bigger language labels */
+        color: #fff;
+    }
+}
+
+/* --- THE CLOSE BUTTON (X) --- */
+.close-menu {
+    display: none; /* Hidden on desktop */
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem; /* Large and easy to tap */
+    cursor: pointer;
+    line-height: 1;
+}
+
+@media (max-width: 992px) {
+    .close-menu {
+        display: block; /* Show only on mobile */
+    }
+
+    /* Dim the background when menu is open */
+    .header-right.active::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5); /* The dark tint outside the menu */
+        z-index: -1;
+        cursor: pointer;
+    }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  :root { --header-height: 100px; } /* Slimmer on mobile but still tall */
+  .hero-content h1 { font-size: 2.2rem; }
+  .steps-container { flex-direction: column; }
+  .cta-card { padding: 40px 20px; }
+  nav { gap: 15px; }
+  nav a { font-size: 0.8rem; }
+}
+

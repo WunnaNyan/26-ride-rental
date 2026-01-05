@@ -1,157 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Cars - 26 Ride Rental</title>
-  <link rel="stylesheet" href="assets/css/cars.css">
+  <title>Our Fleet - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
+  <link rel="stylesheet" href="assets/css/cars.css">
   <script type="module" src="assets/js/main.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
 </head>
 
 <body>
   <div id="site-header"></div>
 
-  <section class="page-hero">
-    <h1>Our Cars</h1>
-    <p>Explore our cars and choose the perfect ride for you</p>
-  </section>
-
   <main>
-    <!-- Cars Grid -->
-    <section class="car-listing">
-      <h2>Available Cars</h2>
-      <div class="car-card">
-        <div class="car-card-content">
+    <section class="page-hero">
+      <div class="container">
+        <h1>Our Premium Fleet</h1>
+        <p>Reliable, clean, and expertly maintained vehicles for your Tokyo journey.</p>
+      </div>
+    </section>
 
-          <!-- Left side: images Vellfire-->
-          <div class="car-images">
-            <div class="main-image">
+    <section class="car-listing">
+      <div class="container">
+        <span class="section-label">Fleet Selection</span>
+        <h2 class="listing-title">Available Vehicles</h2>
+
+        <div class="car-card-long" id="vellfire">
+          <div class="car-images-container">
+            <div class="main-image-viewport">
               <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire" id="main-vellfire">
             </div>
-              <div class="thumbnail-row">
-                <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire" onclick="changeMainImage('vellfire', this)">
-                <img src="assets/images/vellfire_interior1.jpg" alt="Interior 1" onclick="changeMainImage('vellfire', this)">
-                <img src="assets/images/vellfire_interior2.jpg" alt="Interior 2" onclick="changeMainImage('vellfire', this)">
-              </div>
+            <div class="thumbnail-grid">
+              <img src="assets/images/vellfire.jpg" alt="Vellfire Exterior" onclick="changeMainImage('vellfire', this)">
+              <img src="assets/images/vellfire_interior1.jpg" alt="Vellfire Front" onclick="changeMainImage('vellfire', this)">
+              <img src="assets/images/vellfire_interior2.jpg" alt="Vellfire Rear" onclick="changeMainImage('vellfire', this)">
+            </div>
           </div>
 
-          <!-- Right side: details Vellfire-->
-          <div class="car-details">
-            <h3>Toyota Vellfire</h3>
-            <ul>
-              <li>Luxury Family Van</li>
-              <li>Seats: 7</li>
-              <li>Transmission: Automatic</li>
-              <li>Fuel: Petrol</li>
-              <li>Rental Price: ¥15,000 / day</li>
-            </ul>
-            <a href="rental.html" class="btn-primary">Book This Car</a>
+          <div class="car-info-content">
+            <div class="car-header">
+              <h3>Toyota Vellfire</h3>
+              <span class="price-tag">¥15,000<span>/day</span></span>
+            </div>
+            <p class="car-description">
+              The pinnacle of Japanese luxury transport. The Vellfire offers a sophisticated executive cabin with premium materials, designed for those who value style and silence.
+            </p>
+            
+            <div class="specs-grid">
+              <div class="spec-item"><strong>Seats:</strong> 7 Adults</div>
+              <div class="spec-item"><strong>Luggage:</strong> 4 Large Bags</div>
+              <div class="spec-item"><strong>Fuel:</strong> Petrol / Hybrid</div>
+              <div class="spec-item"><strong>Engine:</strong> 2.5L i4</div>
+              <div class="spec-item"><strong>Trans:</strong> Automatic</div>
+              <div class="spec-item"><strong>Class:</strong> Luxury MPV</div>
+            </div>
 
+            <div class="pro-tip">
+              <p><strong>Why Rent:</strong> Best for VIP transport, business meetings, and high-end family vacations.</p>
+            </div>
+
+            <a href="rental.html" class="btn-primary">Book This Car</a>
           </div>
         </div>
-      </div>
 
-      <div class="car-card">
-        <div class="car-card-content">
-
-          <!-- Left side: images Alphard-->
-          <div class="car-images">
-            <div class="main-image">
+        <div class="car-card-long" id="alphard">
+          <div class="car-images-container">
+            <div class="main-image-viewport">
               <img src="assets/images/alphard.jpg" alt="Toyota Alphard" id="main-alphard">
             </div>
-              <div class="thumbnail-row">
-                <img src="assets/images/alphard.jpg" alt="Toyota Alphard" onclick="changeMainImage('alphard', this)">
-                <img src="assets/images/alphard_interior1.jpg" alt="Interior 1" onclick="changeMainImage('alphard', this)">
-                <img src="assets/images/alphard_interior2.jpg" alt="Interior 2" onclick="changeMainImage('alphard', this)">
-              </div>
+            <div class="thumbnail-grid">
+              <img src="assets/images/alphard.jpg" alt="Alphard Exterior" onclick="changeMainImage('alphard', this)">
+              <img src="assets/images/alphard_interior1.jpg" alt="Alphard Cabin" onclick="changeMainImage('alphard', this)">
+              <img src="assets/images/alphard_interior2.jpg" alt="Alphard Seats" onclick="changeMainImage('alphard', this)">
+            </div>
           </div>
 
-          <!-- Right side: details Alphard-->
-          <div class="car-details">
-            <h3>Toyota Alphard</h3>
-            <ul>
-              <li>Spacious Family Van</li>
-              <li>Seats: 7</li>
-              <li>Transmission: Automatic</li>
-              <li>Fuel: Petrol</li>
-              <li>Rental Price: ¥12,000 / day</li>
-            </ul>
-            <a href="rental.html" class="btn-primary">Book This Car</a>
+          <div class="car-info-content">
+            <div class="car-header">
+              <h3>Toyota Alphard</h3>
+              <span class="price-tag">¥12,000<span>/day</span></span>
+            </div>
+            <p class="car-description">
+              World-renowned for its "First Class" travel experience. The Alphard provides an exceptionally smooth ride with massive interior space for every passenger.
+            </p>
+            
+            <div class="specs-grid">
+              <div class="spec-item"><strong>Seats:</strong> 7 Adults</div>
+              <div class="spec-item"><strong>Luggage:</strong> 4 Large Bags</div>
+              <div class="spec-item"><strong>Fuel:</strong> Petrol</div>
+              <div class="spec-item"><strong>Engine:</strong> 2.5L Dual VVT-i</div>
+              <div class="spec-item"><strong>Trans:</strong> Automatic</div>
+              <div class="spec-item"><strong>Class:</strong> Premium MPV</div>
+            </div>
 
+            <div class="pro-tip">
+              <p><strong>Why Rent:</strong> Best for large families with luggage who prioritize maximum cabin room.</p>
+            </div>
+
+            <a href="rental.html" class="btn-primary">Book This Car</a>
           </div>
         </div>
-      </div>
 
-      <div class="car-card">
-        <div class="car-card-content">
-
-          <!-- Left side: images Serena-->
-          <div class="car-images">
-            <div class="main-image">
+        <div class="car-card-long" id="serena">
+          <div class="car-images-container">
+            <div class="main-image-viewport">
               <img src="assets/images/serena.jpg" alt="Nissan Serena" id="main-serena">
             </div>
-            <div class="thumbnail-row">
-              <img src="assets/images/serena.jpg" alt="Nissan Serena" onclick="changeMainImage('serena', this)">
-              <img src="assets/images/serena_interior1.jpg" alt="Interior 1" onclick="changeMainImage('serena', this)">
-              <img src="assets/images/serena_interior2.jpg" alt="Interior 2" onclick="changeMainImage('serena', this)">
+            <div class="thumbnail-grid">
+              <img src="assets/images/serena.jpg" alt="Serena Exterior" onclick="changeMainImage('serena', this)">
+              <img src="assets/images/serena_interior1.jpg" alt="Serena Dashboard" onclick="changeMainImage('serena', this)">
+              <img src="assets/images/serena_interior2.jpg" alt="Serena Rear" onclick="changeMainImage('serena', this)">
             </div>
           </div>
 
-          <!-- Right side: details Serena-->
-          <div class="car-details">
-            <h3>Nissan Serena</h3>
-            <ul>
-              <li>Comfortable Family MPV</li>
-              <li>Seats: 7</li>
-              <li>Transmission: Automatic</li>
-              <li>Fuel: Hybrid</li>
-              <li>Rental Price: ¥13,000 / day</li>
-            </ul>
+          <div class="car-info-content">
+            <div class="car-header">
+              <h3>Nissan Serena</h3>
+              <span class="price-tag">¥13,000<span>/day</span></span>
+            </div>
+            <p class="car-description">
+              A smart, modern choice for navigating Tokyo. Featuring an e-POWER hybrid system, the Serena is fuel-efficient and incredibly easy to park in city environments.
+            </p>
+            
+            <div class="specs-grid">
+              <div class="spec-item"><strong>Seats:</strong> 7 Adults</div>
+              <div class="spec-item"><strong>Luggage:</strong> 3 Large Bags</div>
+              <div class="spec-item"><strong>Fuel:</strong> Hybrid (e-Power)</div>
+              <div class="spec-item"><strong>Engine:</strong> 1.2L HR12DE</div>
+              <div class="spec-item"><strong>Trans:</strong> Automatic (CVT)</div>
+              <div class="spec-item"><strong>Class:</strong> Comfort MPV</div>
+            </div>
+
+            <div class="pro-tip">
+              <p><strong>Why Rent:</strong> Best for city sightseeing and those looking for the best fuel economy.</p>
+            </div>
+
             <a href="rental.html" class="btn-primary">Book This Car</a>
           </div>
-
         </div>
-      </div>
 
-  
       </div>
-
     </section>
   </main>
 
   <div id="site-footer"></div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const swipers = document.querySelectorAll(".swiper.car-gallery");
-      swipers.forEach((gallery) => {
-        new Swiper(gallery, {
-          slidesPerView: 1,
-          spaceBetween: 10,
-          navigation: {
-            nextEl: gallery.querySelector(".swiper-button-next"),
-            prevEl: gallery.querySelector(".swiper-button-prev"),
-          },
-          loop: true,
-        });
-      });
-    });
-  </script>
-
-  <script>
     function changeMainImage(carId, imgElem) {
       const mainImg = document.getElementById(`main-${carId}`);
-      if (mainImg) {
-        mainImg.src = imgElem.src;
-      }
+      if (mainImg) mainImg.src = imgElem.src;
     }
   </script>
-
 </body>
 </html>

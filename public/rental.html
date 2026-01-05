@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rental - 26 Ride Rental</title>
+  <title>Book Your Ride - 26 Ride Rental</title>
 
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/rental.css">
@@ -18,63 +17,163 @@
 <body>
   <div id="site-header"></div>
 
-  <section class="page-hero">
-    <h1>Book a Ride</h1>
-    <p>Choose your car, date, and pickup location</p>
-  </section>
-
   <main>
-    <h2>Select Pick-up Date</h2>
-    <div class="calendar-container">
-      <div id="calendar"></div>
-    </div>
-
-    <div id="car-selection" style="display:none;">
-      <h3>Select Available Car</h3>
-      <div class="rental-car-grid">
-        <div class="car-box" data-car="Toyota Vellfire">
-          <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
-          <p>Toyota Vellfire</p>
-        </div>
-        <div class="car-box" data-car="Toyota Alphard">
-          <img src="assets/images/alphard.jpg" alt="Toyota Alphard">
-          <p>Toyota Alphard</p>
-        </div>
-        <div class="car-box" data-car="Nissan Serena">
-          <img src="assets/images/serena.jpg" alt="Nissan Serena">
-          <p>Nissan Serena</p>
-        </div>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Book a Ride</h1>
+        <p>Select your date and vehicle to start your journey.</p>
       </div>
+    </section>
+
+    <div class="container">
+      <section class="booking-section">
+        <div class="section-title-area">
+          <span class="section-label">Step 1</span>
+          <h2>Select Pick-up Date</h2>
+        </div>
+        <div class="calendar-wrapper card-shadow">
+          <div id="calendar"></div>
+        </div>
+      </section>
+
+      <section class="booking-section" id="car-selection" style="display:none;">
+        <div class="section-title-area">
+          <span class="section-label">Step 2</span>
+          <h2>Choose Your Vehicle</h2>
+          <p>Hover to see specs; click to select.</p>
+        </div>
+        
+        <div class="rental-car-grid">
+          <div class="car-selection-box" data-car="Toyota Vellfire">
+            <div class="car-img-badge">Premium</div>
+            <div class="car-img-container">
+              <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
+              <div class="car-overlay">
+                <div class="overlay-stats">
+                  <span>7 Seats</span>
+                  <span>¥15,000/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="car-selection-info">
+              <h4>Toyota Vellfire</h4>
+            </div>
+          </div>
+
+          <div class="car-selection-box" data-car="Toyota Alphard">
+            <div class="car-img-badge">Premium</div>
+            <div class="car-img-container">
+              <img src="assets/images/alphard.jpg" alt="Toyota Alphard">
+              <div class="car-overlay">
+                <div class="overlay-stats">
+                  <span>7 Seats</span>
+                  <span>¥12,000/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="car-selection-info">
+              <h4>Toyota Alphard</h4>
+            </div>
+          </div>
+
+          <div class="car-selection-box" data-car="Nissan Serena">
+            <div class="car-img-badge">Comfort</div>
+            <div class="car-img-container">
+              <img src="assets/images/serena.jpg" alt="Nissan Serena">
+              <div class="car-overlay">
+                <div class="overlay-stats">
+                  <span>7 Seats</span>
+                  <span>¥13,000/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="car-selection-info">
+              <h4>Nissan Serena</h4>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="booking-section" id="reservation-form-container" style="display:none;">
+        <div class="section-title-area">
+          <span class="section-label">Final Step</span>
+          <h2>Your Details</h2>
+        </div>
+        
+        <div class="form-card card-shadow">
+          <div class="accent-bar"></div>
+          <form id="rental-form">
+            <input type="hidden" id="selected-car-input" name="selected_car">
+            <input type="hidden" id="selected-date-input" name="rental_date">
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Full Name" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="090-xxxx-xxxx" required>
+              </div>
+              <div class="form-group">
+                <label for="facebook">Facebook Username</label>
+                <input type="text" id="facebook" name="facebook" placeholder="Optional">
+              </div>
+              <div class="form-group">
+                <label for="location">Pick-up Location</label>
+                <select id="location" name="location" required>
+                  <option value="">Select Station</option>
+                  <option value="JR Shin-koiwa">JR Shin-koiwa</option>
+                  <option value="JR Kinshichou">JR Kinshichou</option>
+                  <option value="JR Akihabara">JR Akihabara</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+               <button type="submit" class="btn-primary">Confirm Booking</button>
+            </div>
+          </form>
+        </div>
+      </section>
     </div>
-
-
-    <div id="reservation-form-container" style="display:none;">
-      <h3>Reservation Form</h3>
-      <form id="rental-form">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required>
-
-        <label for="facebook">Facebook Username:</label>
-        <input type="text" id="facebook" name="facebook">
-
-        <label for="location">Pick-up Location:</label>
-        <select id="location" name="location" required>
-          <option value="">Select Location</option>
-          <option value="JR Shin-koiwa">JR Shin-koiwa</option>
-          <option value="JR Kinshichou">JR Kinshichou</option>
-          <option value="JR Akihabara">JR Akihabara</option>
-        </select>
-
-        <button type="submit" class="btn-primary">Next</button>
-      </form>
-    </div>
-
   </main>
 
   <div id="site-footer"></div>
-</body>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Initialize Calendar
+      const fp = flatpickr("#calendar", {
+        inline: true,
+        minDate: "today",
+        onChange: function(selectedDates, dateStr) {
+          document.getElementById('selected-date-input').value = dateStr;
+          document.getElementById('car-selection').style.display = 'block';
+          // Smooth scroll to car selection
+          document.getElementById('car-selection').scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      // 2. Car Selection Logic
+      const carBoxes = document.querySelectorAll('.car-selection-box');
+      carBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+          // Remove selected class from others
+          carBoxes.forEach(b => b.classList.remove('selected'));
+          // Add to clicked
+          box.classList.add('selected');
+          
+          // Set hidden input value
+          const carName = box.getAttribute('data-car');
+          document.getElementById('selected-car-input').value = carName;
+
+          // Show Form
+          document.getElementById('reservation-form-container').style.display = 'block';
+          // Smooth scroll to form
+          document.getElementById('reservation-form-container').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    });
+  </script>
+</body>
 </html>
