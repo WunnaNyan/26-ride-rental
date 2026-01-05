@@ -1,0 +1,57 @@
+<head>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/success.css" />
+  <script type="module" src="assets/js/main.js" defer></script>
+  <script type="module" src="assets/js/success.js" defer></script>
+</head>
+
+<body>
+  <div id="site-header"></div>
+    <div id="noti-box" class="custom-noti">
+        <div class="msg-content">
+            <strong id="noti-title">Booking Confirmed!</strong>
+            <p id="noti-id-text">#XXXXXX</p>
+        </div>
+    </div>
+
+    <main class="success-container">
+        <div class="success-card">
+            <div class="checkmark-container">
+            <div class="checkmark-circle">
+                <span class="checkmark-stem"></span>
+                <span class="checkmark-kick"></span>
+            </div>
+        </div>
+            <h1>Booking Received!</h1>
+            <p class="subtitle">Thank you for choosing 26 Ride Rental.</p>
+
+            <div class="booking-ref-box">
+                <p>Booking Number</p>
+                <h2 id="booking-id">#XXXXXX</h2>
+            </div>
+
+            <div class="summary-container">
+                <h3>Reservation Summary</h3>
+                
+                <div class="summary-item">
+                    <span class="label">Car Model</span>
+                    <span class="value" id="sum-car">-</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="label">Pick-up Date</span>
+                    <span class="value" id="sum-date">-</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="label">Total Amount</span>
+                    <span class="value highlight" id="sum-cost">-</span>
+                </div>
+            </div>
+
+            <a href="index.html" class="btn-primary full-width">Return to Homepage</a>
+        </div>
+    </main>
+
+  <div id="site-footer"></div>
+</body>

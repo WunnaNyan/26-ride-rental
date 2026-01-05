@@ -1,0 +1,139 @@
+.success-card {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.checkmark-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.checkmark-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e8f5e9; /* Light green background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Simple CSS Checkmark */
+.checkmark-circle::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 40px;
+    border: solid #28a745;
+    border-width: 0 5px 5px 0;
+    transform: rotate(45deg);
+    margin-top: -5px;
+}
+
+.booking-ref-box {
+    background: #f8f9fa;
+    border: 2px dashed #007BFF;
+    padding: 15px 20px; /* Reduced vertical padding */
+    margin: 20px auto;  /* 'auto' centers it horizontally */
+    border-radius: 10px;
+    
+    /* The Fix: Limit width */
+    max-width: 280px;   /* Prevents it from stretching too far */
+    width: fit-content; /* Shrinks the box to fit the text inside */
+    text-align: center; 
+}
+
+.booking-ref-box p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.booking-ref-box h2 {
+    color: #007BFF;
+    letter-spacing: 2px;
+    margin: 5px 0 0 0; /* Tightened margins */
+    font-size: 1.5rem;
+}
+
+/* Custom Push Notification Style */
+.custom-noti {
+    position: fixed;
+    top: 20px;
+    right: -300px; /* Hidden by default */
+    background: #28a745;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: right 0.5s ease-in-out;
+    z-index: 9999;
+}
+
+.custom-noti.show {
+    right: 20px; /* Slide in */
+}
+
+/* Container Box */
+/* Container Box */
+.summary-container {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    
+    /* THE FIX IS HERE */
+    max-width: 350px;    /* Limits how wide the box can get */
+    margin: 20px auto;   /* Centers the box horizontally */
+    width: 90%;          /* Gives it a little breathing room on mobile screens */
+    
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Optional: adds a soft professional depth */
+}
+
+.summary-container h3 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* Individual Rows */
+.summary-item {
+    display: flex;
+    justify-content: space-between; /* This stops the jumbling */
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.summary-item:last-child {
+    border-bottom: none; /* Remove line from the last item */
+}
+
+/* Label & Value Styling */
+.label {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.value {
+    font-weight: 600;
+    color: #222;
+    font-size: 0.95rem;
+}
+
+/* Make the price stand out */
+.value.highlight {
+    color: #007BFF;
+    font-size: 1.1rem;
+}

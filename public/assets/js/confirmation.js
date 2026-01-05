@@ -1,18 +1,3 @@
-function loadPartial(id, file) {
-  fetch(file)
-    .then(r => r.text())
-    .then(data => {
-      document.getElementById(id).innerHTML = data;
-      const path = window.location.pathname.split("/").pop();
-      document.querySelectorAll("nav a").forEach(link => {
-        if (link.getAttribute("href") === path) link.classList.add("active");
-      });
-    })
-    .catch(err => console.error("Error loading partial:", err));
-}
-
-loadPartial("site-header", "partials/header.html");
-loadPartial("site-footer", "partials/footer.html");
 
 document.addEventListener("DOMContentLoaded", () => {
   const rentalData = JSON.parse(sessionStorage.getItem("rentalData"));

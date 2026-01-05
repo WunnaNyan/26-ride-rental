@@ -1,35 +1,22 @@
+// At the top of payment.js
 import { db, storage } from "./firebase.js";
+
+// Firestore imports
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+// Storage imports -> MAKE SURE 'ref' IS HERE!
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
-
-// 1. Load header/footer (Same as before)
-function loadPartial(id, file) {
-  fetch(file)
-    .then(r => r.text())
-    .then(html => {
-      document.getElementById(id).innerHTML = html;
-      const path = window.location.pathname.split("/").pop();
-      document.querySelectorAll("nav a").forEach(link => {
-        if (link.getAttribute("href") === path) link.classList.add("active");
-      });
-    })
-    .catch(err => console.error("Error loading partial:", err));
-}
-
-loadPartial("site-header", "partials/header.html");
-loadPartial("site-footer", "partials/footer.html");
 
 document.addEventListener("DOMContentLoaded", () => {
   const rentalData = JSON.parse(sessionStorage.getItem("rentalData"));
 
-  // Safety check: if no data, go back
   if (!rentalData) {
     alert("No data found, returning to start.");
     window.location.href = "rental.html";
     return;
   }
 
-  // 2. Display summary in the HTML spans
+  // Display Summary
   document.getElementById("pay-car").textContent = rentalData.car;
   document.getElementById("pay-date").textContent = rentalData.date;
   document.getElementById("pay-days").textContent = rentalData.days;
@@ -37,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const form = document.getElementById("payment-form");
   
-  // 3. Handle Form Submission
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -49,46 +35,44 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // UI Feedback: Disable button
-    const btn = e.target.querySelector("button");
+    // UI Feedback
+    const btn = document.getElementById("submit-btn");
     btn.disabled = true;
-    btn.textContent = "Uploading Proof & Saving...";
+    btn.textContent = "Processing Booking...";
 
     try {
-      // --- STEP A: UPLOAD TO STORAGE ---
-      // We create a unique name using the current time + original filename
-      const storagePath = `payment_proofs/${Date.now()}_${file.name}`;
+      // 1. Generate a professional Booking Number
+      const bookingNumber = Math.random().toString(36).toUpperCase().substring(2, 8);
+
+      // 2. Upload Screenshot to Storage
+      const storagePath = `payment_proofs/${bookingNumber}_${file.name}`;
       const storageRef = ref(storage, storagePath);
-      
       const uploadSnapshot = await uploadBytes(storageRef, file);
-      
-      // --- STEP B: GET IMAGE URL ---
       const downloadURL = await getDownloadURL(uploadSnapshot.ref);
 
-      // --- STEP C: SAVE TO FIRESTORE ---
+      // 3. Save to Firestore with the Booking Number
       const finalDoc = {
-        ...rentalData,              // All data from main.js (name, car, price, etc.)
-        paymentScreenshot: downloadURL, // The link to the image in Storage
-        status: "Pending Verification", // Updated status
-        createdAt: new Date()        // Server timestamp
+        ...rentalData,
+        bookingID: bookingNumber,       // Added ID to the database
+        paymentScreenshot: downloadURL,
+        status: "Pending Verification",
+        createdAt: new Date()
       };
 
-      const docRef = await addDoc(collection(db, "reservations"), finalDoc);
+      await addDoc(collection(db, "reservations"), finalDoc);
 
-      console.log("Booking confirmed with ID: ", docRef.id);
-      alert("✅ Payment submitted! We will verify your booking shortly.");
-      
-      // Clear session and redirect
-      sessionStorage.removeItem("rentalData");
-      window.location.href = "index.html"; 
+      // 4. Store the Booking ID for the Success Page
+      sessionStorage.setItem("latestBookingID", bookingNumber);
+
+      // 5. Success! Clear data and redirect
+      // We don't remove rentalData yet so the success page can show it if needed
+      window.location.href = "success.html"; 
 
     } catch (err) {
       console.error("Submission error: ", err);
       alert("Error: " + err.message);
-      
-      // Reset button if error occurs
       btn.disabled = false;
-      btn.textContent = "Submit Payment";
+      btn.textContent = "Submit & Confirm Booking";
     }
   });
 });
