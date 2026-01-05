@@ -11,28 +11,57 @@
 <body>
   <div id="site-header"></div>
 
-  <main>
-    <h1>Payment Form</h1>
+  <main class="payment-container">
+    <div class="payment-card">
+      <h1>Finalize Your Booking</h1>
+      <p class="subtitle">Complete your transfer and upload the receipt below.</p>
 
-    <div id="payment-summary">
-      <h2>Booking Summary</h2>
-      <p><strong>Car:</strong> <span id="pay-car"></span></p>
-      <p><strong>Date:</strong> <span id="pay-date"></span></p>
-      <p><strong>Days:</strong> <span id="pay-days"></span></p>
-      <p><strong>Total Cost:</strong> <span id="pay-cost"></span></p>
-    </div>
-
-    <form id="payment-form">
-      <label>Upload Proof of Payment (screenshot):</label>
-      <input type="file" id="proof" accept="image/*" required>
-       <div class="qr-info" style="text-align:center; margin-top:16px;">
-          <img src="assets/images/qr-code.jpg" alt="QR Code" style="width:300px; max-width:80%;">
-          <p style="margin-top:8px; font-weight:bold;">Scan this QR code to pay</p>
+      <section id="payment-summary" class="summary-box">
+        <h3>Booking Summary</h3>
+        <div class="summary-grid">
+          <p><strong>Car:</strong> <span id="pay-car">---</span></p>
+          <p><strong>Date:</strong> <span id="pay-date">---</span></p>
+          <p><strong>Days:</strong> <span id="pay-days">---</span></p>
+          <p class="total-price"><strong>Total Cost:</strong> <span id="pay-cost">¥0</span></p>
         </div>
-      <button type="submit" class="btn-primary">Submit Payment</button>
-    </form>
+      </section>
+
+      <section class="qr-section">
+        <h3>Payment via Bank Transfer / QR</h3>
+        <div class="qr-info">
+          <img src="assets/images/qr-code.jpg" alt="Scan to Pay" class="qr-image">
+          <p class="qr-hint">Scan the QR code above with your banking app</p>
+        </div>
+      </section>
+
+      <form id="payment-form">
+        <div class="form-group">
+          <label for="proof">Upload Proof of Payment (Screenshot):</label>
+          <input type="file" id="proof" accept="image/*" required class="file-input">
+          
+          <div id="image-preview-container" style="display:none; margin-top: 10px;">
+            <p style="font-size: 0.8rem; color: #666;">Preview:</p>
+            <img id="image-preview" src="#" alt="Preview" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-primary full-width">
+          Submit & Confirm Booking
+        </button>
+      </form>
+    </div>
   </main>
 
   <div id="site-footer"></div>
+
+  <script>
+    document.getElementById('proof').onchange = function (evt) {
+      const [file] = this.files;
+      if (file) {
+        document.getElementById('image-preview-container').style.display = 'block';
+        document.getElementById('image-preview').src = URL.createObjectURL(file);
+      }
+    }
+  </script>
 </body>
 </html>

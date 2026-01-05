@@ -16,48 +16,34 @@ loadPartial("site-footer", "partials/footer.html");
 
 document.addEventListener("DOMContentLoaded", () => {
   const rentalData = JSON.parse(sessionStorage.getItem("rentalData"));
-  console.log("rentalData from session:", sessionStorage.getItem("rentalData"));
 
   if (!rentalData) {
-    alert("No reservation data found!");
     window.location.href = "rental.html";
     return;
   }
 
-  const prices = {
-    "Toyota Vellfire": 15000,
-    "Toyota Alphard": 12000,
-    "Nissan Serena": 11000,
-  };
-  const totalPrice = prices[rentalData.car] * rentalData.days;
-
   const summaryDiv = document.getElementById("summary-container");
   summaryDiv.innerHTML = `
-    <h3>Reservation Summary</h3>
-    <div class="summary-item"><strong>Name:</strong> ${rentalData.name}</div>
-    <div class="summary-item"><strong>Phone:</strong> ${rentalData.phone}</div>
-    <div class="summary-item"><strong>Facebook:</strong> ${rentalData.facebook}</div>
-    <div class="summary-item"><strong>Pickup Location:</strong> ${rentalData.location}</div>
-    <div class="summary-item"><strong>Car:</strong> ${rentalData.car}</div>
-    <div class="summary-item"><strong>Date:</strong> ${rentalData.date}</div>
-    <div class="summary-item"><strong>Days:</strong> ${rentalData.days}</div>
-    <div class="summary-item"><strong>Total Price:</strong>¥${totalPrice.toLocaleString()}</div>
+    <div class="summary-box">
+      <p><strong>Name:</strong> ${rentalData.name}</p>
+      <p><strong>Car:</strong> ${rentalData.car}</p>
+      <p><strong>Date:</strong> ${rentalData.date}</p>
+      <p><strong>Total:</strong> ¥${rentalData.totalPrice.toLocaleString()}</p>
+    </div>
   `;
 
-  document.getElementById("back-btn").addEventListener("click", () => {
-    window.location.href = "rental.html";
-  });
-
-  const agreeBox = document.getElementById("agree");
   const proceedBtn = document.getElementById("proceed-btn");
+  const agreeBox = document.getElementById("agree");
 
   agreeBox.addEventListener("change", () => {
     proceedBtn.disabled = !agreeBox.checked;
   });
 
   proceedBtn.addEventListener("click", () => {
-    rentalData.totalPrice = totalPrice;
-    sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
     window.location.href = "payment.html";
+  });
+
+  document.getElementById("back-btn").addEventListener("click", () => {
+    window.history.back();
   });
 });

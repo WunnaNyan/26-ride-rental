@@ -1,24 +1,8 @@
-// --- payment.js ---
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+import { db, storage } from "./firebase.js";
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDBYpWHtaztTps2LlSItES1ZJxt_XdDztU",
-  authDomain: "ride-rental-7e38d.firebaseapp.com",
-  projectId: "ride-rental-7e38d",
-  storageBucket: "ride-rental-7e38d.firebasestorage.app",
-  messagingSenderId: "262023674030",
-  appId: "1:262023674030:web:b191ce0617ccba4140153f"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// Load header/footer
+// 1. Load header/footer (Same as before)
 function loadPartial(id, file) {
   fetch(file)
     .then(r => r.text())
@@ -35,63 +19,76 @@ function loadPartial(id, file) {
 loadPartial("site-header", "partials/header.html");
 loadPartial("site-footer", "partials/footer.html");
 
-// --- Main logic ---
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ payment.js loaded!");
-
   const rentalData = JSON.parse(sessionStorage.getItem("rentalData"));
-  console.log("rentalData from session:", rentalData);
 
+  // Safety check: if no data, go back
   if (!rentalData) {
-    alert("No booking data found. Please start again.");
+    alert("No data found, returning to start.");
     window.location.href = "rental.html";
     return;
   }
 
-  // Populate summary
+  // 2. Display summary in the HTML spans
   document.getElementById("pay-car").textContent = rentalData.car;
   document.getElementById("pay-date").textContent = rentalData.date;
   document.getElementById("pay-days").textContent = rentalData.days;
-  document.getElementById("pay-cost").textContent = `¥${rentalData.days * 10000}`;
+  document.getElementById("pay-cost").textContent = `¥${rentalData.totalPrice.toLocaleString()}`;
 
-  // Attach form listener
   const form = document.getElementById("payment-form");
-  console.log("Form found?", !!form);
-
+  
+  // 3. Handle Form Submission
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("🟡 Submit button clicked!");
 
-    const file = document.getElementById("proof").files[0];
-    console.log("File selected?", !!file);
+    const fileInput = document.getElementById("proof");
+    const file = fileInput.files[0];
 
     if (!file) {
-      alert("Please upload proof of payment.");
+      alert("Please upload your payment screenshot first.");
       return;
     }
 
-    try {
-      console.log("⏳ Uploading to Firebase Storage...");
-      const storageRef = ref(storage, `paymentProofs/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const proofUrl = await getDownloadURL(storageRef);
-      console.log("✅ Upload done, URL:", proofUrl);
+    // UI Feedback: Disable button
+    const btn = e.target.querySelector("button");
+    btn.disabled = true;
+    btn.textContent = "Uploading Proof & Saving...";
 
-      const reservation = {
-        ...rentalData,
-        proofUrl,
-        createdAt: new Date()
+    try {
+      // --- STEP A: UPLOAD TO STORAGE ---
+      // We create a unique name using the current time + original filename
+      const storagePath = `payment_proofs/${Date.now()}_${file.name}`;
+      const storageRef = ref(storage, storagePath);
+      
+      const uploadSnapshot = await uploadBytes(storageRef, file);
+      
+      // --- STEP B: GET IMAGE URL ---
+      const downloadURL = await getDownloadURL(uploadSnapshot.ref);
+
+      // --- STEP C: SAVE TO FIRESTORE ---
+      const finalDoc = {
+        ...rentalData,              // All data from main.js (name, car, price, etc.)
+        paymentScreenshot: downloadURL, // The link to the image in Storage
+        status: "Pending Verification", // Updated status
+        createdAt: new Date()        // Server timestamp
       };
 
-      console.log("🧾 Adding reservation to Firestore:", reservation);
-      await addDoc(collection(db, "reservations"), reservation);
+      const docRef = await addDoc(collection(db, "reservations"), finalDoc);
 
-      alert("✅ Payment submitted successfully!");
+      console.log("Booking confirmed with ID: ", docRef.id);
+      alert("✅ Payment submitted! We will verify your booking shortly.");
+      
+      // Clear session and redirect
       sessionStorage.removeItem("rentalData");
-      window.location.href = "thankyou.html";
+      window.location.href = "index.html"; 
+
     } catch (err) {
-      console.error("❌ Error submitting payment:", err);
-      alert("❌ " + err.message);
+      console.error("Submission error: ", err);
+      alert("Error: " + err.message);
+      
+      // Reset button if error occurs
+      btn.disabled = false;
+      btn.textContent = "Submit Payment";
     }
   });
 });

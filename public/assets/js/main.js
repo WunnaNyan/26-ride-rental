@@ -1,35 +1,18 @@
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDBYpWHtaztTps2LlSItES1ZJxt_XdDztU",
-  authDomain: "ride-rental-7e38d.firebaseapp.com",
-  projectId: "ride-rental-7e38d",
-  storageBucket: "ride-rental-7e38d.firebasestorage.app",
-  messagingSenderId: "262023674030",
-  appId: "1:262023674030:web:b191ce0617ccba4140153f"
+
+// Helper for price calculation
+const carPrices = {
+  "Toyota Vellfire": 15000,
+  "Toyota Alphard": 12000,
+  "Nissan Serena": 11000
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// Expose globally (so other scripts can use if needed)
-window.db = db;
-window.storage = storage;
-
-// Function to load partial HTML (header/footer)
+// 2. Load Partial HTML (Header/Footer)
 function loadPartial(id, file) {
   fetch(file)
     .then(response => response.text())
     .then(data => {
       document.getElementById(id).innerHTML = data;
-
-      // Highlight active page in nav
       const path = window.location.pathname.split("/").pop();
       const links = document.querySelectorAll("nav a");
       links.forEach(link => {
@@ -41,22 +24,19 @@ function loadPartial(id, file) {
     .catch(error => console.error("Error loading partial:", error));
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-  const db = window.db;
-
-  // Load header and footer
+  // Load UI components
   loadPartial("site-header", "partials/header.html");
   loadPartial("site-footer", "partials/footer.html");
 
-  // Mock bookings (used to disable cars on certain dates)
+  // Mock bookings
   const bookings = {
     "Toyota Vellfire": ["2025-09-10", "2025-09-15"],
     "Nissan Serena": ["2025-09-12"],
-    "Toyota ALphard": ["2025-09-11"]
+    "Toyota Alphard": ["2025-09-11"]
   };
 
-  // Initialize calendar
+  // 3. Initialize Flatpickr Calendar
   flatpickr("#calendar", {
     inline: true,
     dateFormat: "Y-m-d",
@@ -71,111 +51,88 @@ document.addEventListener("DOMContentLoaded", () => {
       carBoxes.forEach(box => {
         const carName = box.dataset.car;
         if (bookings[carName]?.includes(dateStr)) {
-          box.classList.add("disabled"); // mark car as booked
+          box.classList.add("disabled");
         } else {
           box.classList.remove("disabled");
         }
       });
-
-      // Hide reservation form when picking a new date
       document.getElementById("reservation-form-container").style.display = "none";
     }
   }); 
 
-  // Car selection
+  // 4. Car Selection Logic
   const carBoxes = document.querySelectorAll(".car-box");
-  
-  // Car selection
-carBoxes.forEach(box => {
-  box.addEventListener("click", () => {
-    if (box.classList.contains("disabled")) return;
+  carBoxes.forEach(box => {
+    box.addEventListener("click", () => {
+      if (box.classList.contains("disabled")) return;
 
-    // Deselect other cars and remove their details button
-    carBoxes.forEach(b => {
-      b.classList.remove("selected");
-      const btn = b.querySelector(".see-details-btn");
-      if (btn) btn.remove();
-    });
-
-    // Mark this one as selected
-    box.classList.add("selected");
-
-    // Add "See Details" button if not already there
-    let detailsBtn = box.querySelector(".see-details-btn");
-    if (!detailsBtn) {
-      detailsBtn = document.createElement("a");
-      detailsBtn.className = "btn-secondary see-details-btn";
-      
-      // Match car names to IDs in cars.html
-      const carName = box.dataset.car;
-      let carId = "";
-      if (carName === "Toyota Vellfire") carId = "vellfire";
-      if (carName === "Nissan Serena") carId = "serena";
-      if (carName === "Toyota Alphard") carId = "alphard";
-
-      detailsBtn.href = `cars.html#${carId}`;
-      detailsBtn.textContent = "See Details";
-
-      box.appendChild(detailsBtn);
-    }
-
-    // Show reservation form
-    document.getElementById("reservation-form-container").style.display = "block";
-  });
-});
-
-  
-
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const swipers = document.querySelectorAll(".swiper.car-gallery");
-    swipers.forEach((gallery) => {
-      new Swiper(gallery, {
-        slidesPerView: 1,
-        spaceBetween: 10,
-        navigation: {
-          nextEl: gallery.querySelector(".swiper-button-next"),
-          prevEl: gallery.querySelector(".swiper-button-prev"),
-        },
-        loop: true,
+      carBoxes.forEach(b => {
+        b.classList.remove("selected");
+        const btn = b.querySelector(".see-details-btn");
+        if (btn) btn.remove();
       });
+
+      box.classList.add("selected");
+
+      // Add "See Details" button
+      let detailsBtn = box.querySelector(".see-details-btn");
+      if (!detailsBtn) {
+        detailsBtn = document.createElement("a");
+        detailsBtn.className = "btn-secondary see-details-btn";
+        const carName = box.dataset.car;
+        let carId = carName.split(' ').pop().toLowerCase(); // e.g., "vellfire"
+        detailsBtn.href = `cars.html#${carId}`;
+        detailsBtn.textContent = "See Details";
+        box.appendChild(detailsBtn);
+      }
+      document.getElementById("reservation-form-container").style.display = "block";
     });
   });
 
-
-  // Reservation form submission (Step 1 → Confirmation)
-const form = document.getElementById("rental-form");
-if (form) {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const selectedCar = document.querySelector(".car-box.selected")?.dataset.car;
-    const selectedDate = document.querySelector("#calendar")._flatpickr.selectedDates[0]?.toISOString().split("T")[0];
-
-    if (!selectedCar || !selectedDate) {
-      alert("❌ Please select a car and date.");
-      return;
-    }
-
-    // Collect data
-    const rentalData = {
-      name: document.getElementById("name").value,
-      phone: document.getElementById("phone").value,
-      facebook: document.getElementById("facebook").value,
-      location: document.getElementById("location").value,
-      car: selectedCar,
-      date: selectedDate,
-      days: 1 // default, can add input later
-    };
-
-    // Save in sessionStorage
-    sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
-
-    // Redirect to confirmation page
-    window.location.href = "confirmation.html";
+  // 5. Swiper Gallery (If exists on page)
+  const swipers = document.querySelectorAll(".swiper.car-gallery");
+  swipers.forEach((gallery) => {
+    new Swiper(gallery, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: gallery.querySelector(".swiper-button-next"),
+        prevEl: gallery.querySelector(".swiper-button-prev"),
+      },
+      loop: true,
+    });
   });
-}
 
+  // 6. Handle Form Submission (Moving to Confirmation)
+  const form = document.getElementById("rental-form");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-  console.log("🚗 Rental page ready with Firebase integration and header/footer loading!");
+      const selectedCar = document.querySelector(".car-box.selected")?.dataset.car;
+      const calendarInstance = document.querySelector("#calendar")._flatpickr;
+      const selectedDate = calendarInstance.selectedDates[0]?.toISOString().split("T")[0];
+
+      if (!selectedCar || !selectedDate) {
+        alert("❌ Please select a car and date.");
+        return;
+      }
+
+      // Collect everything for sessionStorage
+      const rentalData = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        facebook: document.getElementById("facebook").value,
+        location: document.getElementById("location").value,
+        car: selectedCar,
+        date: selectedDate,
+        days: 1,
+        totalPrice: carPrices[selectedCar] || 0 // Store price here so it carries over
+      };
+
+      sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
+      console.log("Data saved to session, redirecting...");
+      window.location.href = "confirmation.html";
+    });
+  }
 });
