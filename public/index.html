@@ -5,94 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>26 Ride Rental | Reliable Ride Rentals in Tokyo</title>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="assets/js/main.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
-
 <body>
   <div id="site-header"></div>
 
   <main>
     <section class="hero-banner">
       <div class="hero-content">
-        <span class="hero-badge">Premium Rental Service</span>
+        <span class="hero-badge">Premium Van Rental Tokyo</span>
         <h1>Reliable & Affordable Ride Rentals</h1>
-        <p>Book your next ride with ease in Tokyo. Premium cars, honest pricing.</p>
-        <div class="hero-actions">
-          <a href="rental.html" class="btn-primary">Book Now</a>
-          <a href="cars.html" class="btn-outline">View Fleet</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="info-section">
-      <div class="container">
-        <div class="info-grid">
-          <div class="info-card">
-            <div class="accent-bar"></div>
-            <h3>Wide Range of Cars</h3>
-            <p>From family vans to premium sedans, we have it all.</p>
-          </div>
-          <div class="info-card">
-            <div class="accent-bar"></div>
-            <h3>Easy Booking</h3>
-            <p>Reserve your ride online in just a few clicks.</p>
-          </div>
-          <div class="info-card">
-            <div class="accent-bar"></div>
-            <h3>Flexible Pickups</h3>
-            <p>Convenient pickup points across Tokyo.</p>
-          </div>
-          <div class="info-card">
-            <div class="accent-bar"></div>
-            <h3>Trusted Service</h3>
-            <p>Safe, reliable, and affordable rides every time.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="featured-cars">
-      <div class="container">
-        <span class="section-label">Our Fleet</span>
-        <h2>Featured Vehicles</h2>
+        <p>Select your date to see available vehicles instantly.</p>
         
-        <div class="index-car-grid">
-          <a href="cars.html#vellfire" class="car-card">
-            <div class="car-card-img">
-              <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
+        <div class="hero-search-container">
+          <div class="booking-search-bar">
+            <div class="search-item">
+              <label><i class="fas fa-calendar-alt"></i> Pick-up Date</label>
+              <input type="date" id="pickup-date">
             </div>
-            <div class="car-card-body">
-              <h3>Toyota Vellfire</h3>
-              <p>Luxury Family Van</p>
-              <span class="card-link">View Details →</span>
-            </div>
-          </a>
-
-          <a href="cars.html#alphard" class="car-card">
-            <div class="car-card-img">
-              <img src="assets/images/alphard.jpg" alt="Toyota Alphard">
-            </div>
-            <div class="car-card-body">
-              <h3>Toyota Alphard</h3>
-              <p>Spacious Family Van</p>
-              <span class="card-link">View Details →</span>
-            </div>
-          </a>
-          
-          <a href="cars.html#serena" class="car-card">
-            <div class="car-card-img">
-              <img src="assets/images/serena.jpg" alt="Nissan Serena">
-            </div>
-            <div class="car-card-body">
-              <h3>Nissan Serena</h3>
-              <p>Comfortable Family Van</p>
-              <span class="card-link">View Details →</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="section-footer">
-          <a href="cars.html" class="btn-secondary">View All Cars</a>
+            <button type="button" class="btn-search" id="check-avail-btn">Check Availability</button>
+          </div>
+          <div id="availability-dropdown" class="availability-results"></div>
         </div>
       </div>
     </section>
@@ -102,59 +37,84 @@
         <h2>Rental Flow</h2>
         <div class="steps-container">
           <div class="step-card">
-            <div class="step-icon-wrapper">
-              <img src="assets/images/calendar-days-svgrepo-com.svg" alt="Step 1">
-            </div>
-            <h4>Step 1</h4>
-            <p>Choose Date</p>
+            <div class="step-icon-wrapper"><img src="assets/images/calendar-days-svgrepo-com.svg" alt="Step 1"></div>
+            <h4>Step 1</h4><p>Choose Date</p>
           </div>
-
           <div class="step-card">
-            <div class="step-icon-wrapper">
-              <img src="assets/images/car-side-svgrepo-com.svg" alt="Step 2">
-            </div>
-            <h4>Step 2</h4>
-            <p>Select Car</p>
+            <div class="step-icon-wrapper"><img src="assets/images/car-side-svgrepo-com.svg" alt="Step 2"></div>
+            <h4>Step 2</h4><p>Select Car</p>
           </div>
-
           <div class="step-card">
-            <div class="step-icon-wrapper">
-              <img src="assets/images/approval-notice-notice-of-approval-get-approved-svgrepo-com.svg" alt="Step 3">
-            </div>
-            <h4>Step 3</h4>
-            <p>Agree to Terms</p>
+            <div class="step-icon-wrapper"><img src="assets/images/approval-notice-notice-of-approval-get-approved-svgrepo-com.svg" alt="Step 3"></div>
+            <h4>Step 3</h4><p>Agree to Terms and Pay</p>
           </div>
-
-          <div class="step-card">
-            <div class="step-icon-wrapper">
-              <img src="assets/images/payment-svgrepo-com.svg" alt="Step 4">
-            </div>
-            <h4>Step 4</h4>
-            <p>Confirm & Pay</p>
-          </div>
-
           <div class="step-card highlight">
-            <div class="step-icon-wrapper">
-              <img src="assets/images/happy-alt-svgrepo-com.svg" alt="Finally">
-            </div>
-            <h4>Finally!</h4>
-            <p>Enjoy Your Ride</p>
+            <div class="step-icon-wrapper"><img src="assets/images/happy-alt-svgrepo-com.svg" alt="Finally"></div>
+            <h4>Finally!</h4><p>Enjoy Your Ride</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="about-cta">
+    <section class="info-section">
       <div class="container">
-        <div class="cta-card">
-          <h2>About 26 Ride Rental</h2>
-          <p>We are a Myanmar-based car rental service offering reliable, affordable, and safe rides across Tokyo.</p>
-          <a href="about.html" class="btn-primary">Learn More</a>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="accent-bar"></div><i class="fas fa-shield-alt trust-icon"></i>
+            <h3>Safe & Insured</h3><p>Vehicle Body insurance included with every rental for your peace of mind.</p>
+          </div>
+          <div class="info-card">
+            <div class="accent-bar"></div><i class="fas fa-hand-holding-usd trust-icon"></i>
+            <h3>Honest Pricing</h3><p>No hidden seasonal spikes. What you see is what you pay.</p>
+          </div>
+          <div class="info-card">
+            <div class="accent-bar"></div><i class="fas fa-broom trust-icon"></i>
+            <h3>Deep Cleaned</h3><p>Every vehicle undergoes professional sanitization before pick-up.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-cars">
+      <div class="container">
+        <span class="section-label">Our Fleet</span>
+        <h2>Featured Vehicles</h2>
+        <div class="index-car-grid">
+          <a href="cars.html#vellfire" class="car-card">
+            <div class="car-card-img"><img src="assets/images/vellfire.jpg"><div class="price-badge">From ¥15,000 / Day</div></div>
+            <div class="car-card-body"><h3>Toyota Vellfire</h3><p>Premium</p><span class="card-link">View Details →</span></div>
+          </a>
+          <a href="cars.html#alphard" class="car-card">
+            <div class="car-card-img"><img src="assets/images/alphard.jpg"><div class="price-badge">From ¥13,000 / Day</div></div>
+            <div class="car-card-body"><h3>Toyota Alphard</h3><p>Premium</p><span class="card-link">View Details →</span></div>
+          </a>
+          <a href="cars.html#serena" class="car-card">
+            <div class="car-card-img"><img src="assets/images/serena.jpg"><div class="price-badge">From ¥12,000 / Day</div></div>
+            <div class="car-card-body"><h3>Nissan Serena</h3><p>Economy Comfort</p><span class="card-link">View Details →</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <div class="container">
+        <span class="section-label">Reviews</span>
+        <h2>What Our Customers Say</h2>
+        <div class="testimonial-grid">
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"Car ka s yn thant dl byr. Kyike dl"</p>
+            <cite>— Ko Aung Aung</cite>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★</div>
+            <p>"Car lr yu tk maung ly ka station hti pyn lite ma poh bu taw. Bad service"</p>
+            <cite>— Zin Mar</cite>
+          </div>
         </div>
       </div>
     </section>
   </main>
-
   <div id="site-footer"></div>
 </body>
 </html>

@@ -150,6 +150,26 @@
     margin-top: 30px;
 }
 
+.car-selection-box.disabled {
+    filter: grayscale(1);
+    cursor: not-allowed;
+    position: relative;
+}
+
+.car-selection-box.disabled::after {
+    content: "RESERVED";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    z-index: 10;
+}
+
 @media (max-width: 600px) {
     .form-grid { grid-template-columns: 1fr; }
 }

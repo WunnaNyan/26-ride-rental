@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - 26 Ride Rental</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/terms.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="module" src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main class="terms-page">
+        <div class="container">
+            <div class="terms-main-header">
+                <h1>Terms & Conditions</h1>
+                <p class="last-updated-tag">Last Updated: January 2026</p>
+            </div>
+
+            <div class="terms-content card-shadow">
+                <section class="terms-section urgent">
+                    <h2>1. Mandatory Insurance & Liability</h2>
+                    <p><strong>Vehicle-Only Coverage:</strong> 26 Ride Rental provides insurance for the vehicle body only.</p>
+                    <p><strong>Personal Liability:</strong> Our company insurance <strong>DOES NOT</strong> cover the driver or passengers for personal injury, medical expenses, or third-party liability.</p>
+                    <p><strong>Independent Requirement:</strong> All hirers are strictly required to purchase their own <strong>"1-Day Automobile Insurance"</strong> (available via Japanese convenience stores) prior to the rental. Proof must be presented at pick-up.</p>
+                </section>
+
+                <section class="terms-section">
+                    <h2>2. Rental Periods, Pick-up & Return</h2>
+                    <ul>
+                        <li><strong>Standard Rental:</strong> Automated bookings are for single-day rentals only.</li>
+                        <li><strong>Early Pick-up:</strong> For a booking on a specific date, you may pick up the vehicle <strong>after 9:00 PM the night before</strong> at no extra cost.</li>
+                        <li><strong>Return Deadline:</strong> The vehicle must be returned and parked in the designated area before <strong>11:59 PM</strong> on the day of your booking.</li>
+                        <li><strong>Multi-day Inquiries:</strong> For rentals exceeding 24 hours, customers must contact us directly for special rates.</li>
+                        <li><strong>Trip Completion:</strong> Your trip is officially over only when the car is parked in the designated area with a <strong>completely full tank</strong> of fuel.</li>
+                        <li><strong>Late Fees:</strong> Unauthorized late returns will incur a penalty fee plus an additional full day’s rental charge.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>3. Zero-Odor & Cleanliness Policy</h2>
+                    <p>To maintain our premium fleet standards, a professional deep-cleaning fee of <strong>¥30,000</strong> will be charged if any of the following are detected:</p>
+                    <ul>
+                        <li><strong>No Smoking/Vaping:</strong> Strictly prohibited inside the vehicle.</li>
+                        <li><strong>Prohibited Items:</strong> Transporting items with strong odors (live fish, unsealed fishing equipment, raw bait, hunted animals, or unsealed high-odor food like durian).</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>4. Booking & Verification</h2>
+                    <ul>
+                        <li><strong>Request Status:</strong> All bookings are considered "Requests" until the payment screenshot is manually verified by our team.</li>
+                        <li><strong>Finalization:</strong> A Booking ID is for tracking only; reservations are confirmed only upon receipt of a confirmation notice from our staff.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>5. Driver Requirements</h2>
+                    <ul>
+                        <li><strong>Documentation:</strong> Hirers must possess a valid Japanese Driver’s License or an International Driving Permit (IDP) under the 1949 Geneva Convention.</li>
+                        <li><strong>Age:</strong> Drivers must be at least 21 years old with at least one year of driving experience.</li>
+                        <li><strong>ID Verification:</strong> Passport and license copies must be provided at pick-up.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>6. Emergency Procedures & Damage</h2>
+                    <ul>
+                        <li><strong>Mandatory Reporting:</strong> All accidents, including minor scratches, must be reported to the Police (110) and 26 Ride Rental immediately.</li>
+                        <li><strong>Tire Issues:</strong> The hirer is responsible for the cost of repairs/replacements for punctures occurring during the rental.</li>
+                        <li><strong>Breakdowns:</strong> Contact us immediately for any mechanical issues or dashboard warning lights.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>7. Prohibited Acts</h2>
+                    <ul>
+                        <li><strong>Zero Tolerance:</strong> No driving under the influence of alcohol (Japan 0.00% BAC policy).</li>
+                        <li><strong>Restricted Use:</strong> No off-roading, racing, towing, or subletting.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2>8. Cancellation Policy</h2>
+                    <table class="cancel-table">
+                        <tr><td>7+ Days Notice</td><td>100% Refund</td></tr>
+                        <tr><td>2–6 Days Notice</td><td>50% Refund</td></tr>
+                        <tr><td>Less than 48 Hours</td><td>No Refund</td></tr>
+                    </table>
+                </section>
+            </div>
+            
+            <div class="terms-footer">
+                <p id="terms-instruction">Please use the button below to return.</p>
+                <button id="terms-back-btn" class="btn-primary">
+                    <i class="fas fa-chevron-left"></i> Go Back
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script>
+        // SMART BUTTON LOGIC
+        const backBtn = document.getElementById('terms-back-btn');
+        const instruction = document.getElementById('terms-instruction');
+        if (window.opener || window.history.length === 1) {
+            backBtn.innerHTML = '<i class="fas fa-times-circle"></i> Close Tab';
+            instruction.textContent = "Click below to return to your booking.";
+            backBtn.onclick = () => window.close();
+        } else {
+            backBtn.innerHTML = '<i class="fas fa-home"></i> Return Home';
+            backBtn.onclick = () => window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

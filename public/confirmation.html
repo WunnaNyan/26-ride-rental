@@ -1,8 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Booking - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/confirmation.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="assets/js/main.js" defer></script>
   <script type="module" src="assets/js/confirmation.js" defer></script>
 </head>
@@ -18,14 +22,34 @@
       <section id="summary-container" class="summary-box">
         </section>
 
-      <h3>Cautions & Rules</h3>
+      <h3>Important Rental Rules</h3>
       <article class="rules-box">
-        <ul>
-          <li>Please bring your valid driver’s license.</li>
-          <li>Cars must be returned with the same fuel level.</li>
-          <li>No smoking or pets inside the vehicle.</li>
-          <li>Any damage must be reported immediately.</li>
-        </ul>
+        <div class="compact-rules">
+          <div class="rule-item">
+            <i class="fas fa-clock"></i>
+            <span><strong>Timing:</strong> Pick-up after 9PM (night before); Return by 11:59PM.</span>
+          </div>
+          <div class="rule-item">
+            <i class="fas fa-shield-alt"></i>
+            <span><strong>Insurance:</strong> You <b>MUST</b> buy "1-Day Insurance" for personal liability.</span>
+          </div>
+          <div class="rule-item">
+            <i class="fas fa-ban"></i>
+            <span><strong>No Odors:</strong> No smoking/vaping or fishing gear (¥30,000 fine).</span>
+          </div>
+          <div class="rule-item">
+            <i class="fas fa-gas-pump"></i>
+            <span><strong>Fuel:</strong> Return with a <b>completely full tank</b> to finish trip.</span>
+          </div>
+          <div class="rule-item">
+            <i class="fas fa-phone-alt"></i>
+            <span><strong>Emergency:</strong> Call us immediately for any accident or breakdown.</span>
+          </div>
+        </div>
+        
+        <a href="terms.html" target="_blank" rel="noopener noreferrer" class="read-more-btn">
+            Read Full Terms & Conditions <i class="fas fa-arrow-right"></i>
+        </a>
       </article>
 
       <div class="agreement-section">
@@ -44,3 +68,4 @@
 
   <div id="site-footer"></div>
 </body>
+</html>

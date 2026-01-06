@@ -139,41 +139,5 @@
   </main>
 
   <div id="site-footer"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Initialize Calendar
-      const fp = flatpickr("#calendar", {
-        inline: true,
-        minDate: "today",
-        onChange: function(selectedDates, dateStr) {
-          document.getElementById('selected-date-input').value = dateStr;
-          document.getElementById('car-selection').style.display = 'block';
-          // Smooth scroll to car selection
-          document.getElementById('car-selection').scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-
-      // 2. Car Selection Logic
-      const carBoxes = document.querySelectorAll('.car-selection-box');
-      carBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-          // Remove selected class from others
-          carBoxes.forEach(b => b.classList.remove('selected'));
-          // Add to clicked
-          box.classList.add('selected');
-          
-          // Set hidden input value
-          const carName = box.getAttribute('data-car');
-          document.getElementById('selected-car-input').value = carName;
-
-          // Show Form
-          document.getElementById('reservation-form-container').style.display = 'block';
-          // Smooth scroll to form
-          document.getElementById('reservation-form-container').scrollIntoView({ behavior: 'smooth' });
-        });
-      });
-    });
-  </script>
 </body>
 </html>

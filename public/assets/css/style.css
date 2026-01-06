@@ -253,37 +253,97 @@ nav a:hover, nav a.active {
 .cta-card h2 { color: white; margin-bottom: 15px; }
 .cta-card p { color: #ccc; max-width: 600px; margin: 0 auto 30px; }
 
-/* ---------- FOOTER STYLES ---------- */
+/* ---------- PROFESSIONAL FOOTER REFINEMENT ---------- */
 footer {
     background: #111;
-    color: #888;
-    padding: 60px 0 30px;
+    color: #bbb;
+    padding: 80px 0 40px; /* More breathing room */
     margin-top: 80px;
 }
 
 .footer-container {
     max-width: 1100px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1.5fr; /* Custom widths for columns */
+    gap: 60px;
     padding: 0 20px;
 }
 
-.footer-left h3 { color: white; margin-bottom: 15px; text-align: left; }
-.footer-left p { text-align: left; max-width: 300px; }
+.footer-section h3 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: left;
+}
 
-.footer-links { display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { color: #888; text-decoration: none; text-align: left; transition: 0.3s; }
-.footer-links a:hover { color: white; }
+.footer-section h3 span {
+    color: var(--primary);
+}
+
+.footer-section h4 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-section p {
+    text-align: left;
+    line-height: 1.8;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+/* Contact Icons */
+.footer-contact i {
+    color: var(--primary);
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-links a {
+    color: #bbb;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    padding-left: 5px; /* Subtle slide effect on hover */
+}
 
 .footer-bottom {
     text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 60px;
+    padding-top: 30px;
     border-top: 1px solid #222;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-container {
+        grid-template-columns: 1fr; /* Stack everything on mobile */
+        gap: 40px;
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+    
+    .footer-section h3, .footer-section h4, .footer-section p, .footer-links a {
+        text-align: center;
+    }
 }
 
 /* --- LANGUAGE SWITCHER STYLES --- */
@@ -504,3 +564,190 @@ footer {
   nav a { font-size: 0.8rem; }
 }
 
+/* ---------- HERO SEARCH BAR ---------- */
+.hero-search-container {
+    margin-top: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 800px;
+    width: 90%;
+}
+
+.booking-search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-item {
+    flex: 1;
+    min-width: 150px;
+    text-align: left;
+}
+
+.search-item label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.search-item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+}
+
+.btn-search {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-search:hover { background: var(--primary-dark); }
+
+/* ---------- TRUST BADGES (Info Section Icons) ---------- */
+.trust-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* ---------- CAR PRICE BADGE ---------- */
+.car-card-img { position: relative; }
+
+.price-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* ---------- TESTIMONIALS ---------- */
+.testimonials { padding: 80px 0; background: var(--bg-light); text-align: center; }
+.testimonial-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px; 
+    margin-top: 40px; 
+}
+.testimonial-card { 
+    padding: 40px 30px; 
+    background: white; 
+    border-radius: var(--border-radius); 
+    box-shadow: var(--shadow);
+}
+.stars { color: #f1c40f; margin-bottom: 10px; font-size: 1.2rem; }
+.testimonial-card p { font-style: italic; color: var(--text-muted); margin-bottom: 15px; text-align: center; }
+.testimonial-card cite { font-weight: 700; color: var(--text-main); font-style: normal; }
+
+/* Responsive Search Bar */
+@media (max-width: 768px) {
+    .booking-search-bar { flex-direction: column; align-items: stretch; }
+    .hero-search-container { margin-top: 20px; }
+}
+
+/* ---------- AVAILABILITY DROPDOWN STYLES ---------- */
+.availability-results {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
+    background: #fff;
+    text-align: left;
+    border-radius: 0 0 12px 12px;
+    opacity: 0;
+}
+
+/* This class is added by JS when the button is clicked */
+.availability-results.show {
+    max-height: 1000px; /* Large enough to fit content */
+    opacity: 1;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+.availability-results h4 {
+    text-align: left;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: var(--text-main);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-item span {
+    color: #2d3436;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.result-item small {
+    color: var(--primary);
+    margin-left: 5px;
+}
+
+.btn-tiny {
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    padding: 6px 15px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.btn-tiny:hover {
+    background: var(--primary-dark);
+}
+
+.no-availability {
+    text-align: center;
+    padding: 20px;
+}
+
+.no-availability i {
+    font-size: 2rem;
+    color: #ccc;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.no-availability p {
+    font-weight: 700;
+    margin: 0;
+}
+
+.no-availability span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}

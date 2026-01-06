@@ -1,0 +1,81 @@
+/* No need for extra padding-top here because body already has 140px in style.css */
+.terms-page {
+    padding: 60px 0;
+    background-color: #f4f7f6;
+}
+
+.terms-main-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Style the 'Last Updated' as a nice badge */
+.last-updated-tag {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+.terms-content {
+    background: var(--bg-white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.terms-section h2 {
+    font-size: 1.4rem;
+    color: var(--primary);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    text-align: left; /* Legal text looks better left-aligned */
+}
+
+/* Using your red urgent style */
+.terms-section.urgent {
+    background: #fffafa;
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 5px solid #dc3545;
+    margin-bottom: 40px;
+}
+
+.terms-section.urgent h2 {
+    color: #dc3545;
+    border-bottom-color: #f8d7da;
+}
+
+.terms-section p, .terms-section li {
+    text-align: left; /* Overriding the center align in your style.css */
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.cancel-table {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.cancel-table td {
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.terms-footer {
+    text-align: center;
+    margin-top: 50px;
+    padding-bottom: 40px;
+}
