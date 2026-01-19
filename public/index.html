@@ -15,17 +15,17 @@
   <main>
     <section class="hero-banner">
       <div class="hero-content">
-        <span class="hero-badge">Premium Van Rental Tokyo</span>
-        <h1>Reliable & Affordable Ride Rentals</h1>
-        <p>Select your date to see available vehicles instantly.</p>
+        <span class="hero-badge" data-i18n="hero_badge">Premium Van Rental Tokyo</span>
+        <h1 data-i18n="hero_title">Reliable & Affordable Ride Rentals</h1>
+        <p data-i18n="hero_subtitle">Select your date to see available vehicles instantly.</p>
         
         <div class="hero-search-container">
           <div class="booking-search-bar">
             <div class="search-item">
-              <label><i class="fas fa-calendar-alt"></i> Pick-up Date</label>
+              <label><i class="fas fa-calendar-alt"></i> <span data-i18n="search_label">Pick-up Date</span></label>
               <input type="date" id="pickup-date">
             </div>
-            <button type="button" class="btn-search" id="check-avail-btn">Check Availability</button>
+            <button type="button" class="btn-search" id="check-avail-btn" data-i18n="search_btn">Check Availability</button>
           </div>
           <div id="availability-dropdown" class="availability-results"></div>
         </div>
@@ -34,23 +34,23 @@
 
     <section class="how-it-works">
       <div class="container">
-        <h2>Rental Flow</h2>
+        <h2 data-i18n="flow_title">Rental Flow</h2>
         <div class="steps-container">
           <div class="step-card">
             <div class="step-icon-wrapper"><img src="assets/images/calendar-days-svgrepo-com.svg" alt="Step 1"></div>
-            <h4>Step 1</h4><p>Choose Date</p>
+            <h4 data-i18n="step1_title">Step 1</h4><p data-i18n="step1_text">Choose Date</p>
           </div>
           <div class="step-card">
             <div class="step-icon-wrapper"><img src="assets/images/car-side-svgrepo-com.svg" alt="Step 2"></div>
-            <h4>Step 2</h4><p>Select Car</p>
+            <h4 data-i18n="step2_title">Step 2</h4><p data-i18n="step2_text">Select Car</p>
           </div>
           <div class="step-card">
             <div class="step-icon-wrapper"><img src="assets/images/approval-notice-notice-of-approval-get-approved-svgrepo-com.svg" alt="Step 3"></div>
-            <h4>Step 3</h4><p>Agree to Terms and Pay</p>
+            <h4 data-i18n="step3_title">Step 3</h4><p data-i18n="step3_text">Agree to Terms and Pay</p>
           </div>
           <div class="step-card highlight">
             <div class="step-icon-wrapper"><img src="assets/images/happy-alt-svgrepo-com.svg" alt="Finally"></div>
-            <h4>Finally!</h4><p>Enjoy Your Ride</p>
+            <h4 data-i18n="step_final">Finally!</h4><p data-i18n="step_enjoy">Enjoy Your Ride</p>
           </div>
         </div>
       </div>
@@ -61,15 +61,15 @@
         <div class="info-grid">
           <div class="info-card">
             <div class="accent-bar"></div><i class="fas fa-shield-alt trust-icon"></i>
-            <h3>Safe & Insured</h3><p>Vehicle Body insurance included with every rental for your peace of mind.</p>
+            <h3 data-i18n="trust1_h">Safe & Insured</h3><p data-i18n="trust1_p">Vehicle Body insurance included with every rental.</p>
           </div>
           <div class="info-card">
             <div class="accent-bar"></div><i class="fas fa-hand-holding-usd trust-icon"></i>
-            <h3>Honest Pricing</h3><p>No hidden seasonal spikes. What you see is what you pay.</p>
+            <h3 data-i18n="trust2_h">Honest Pricing</h3><p data-i18n="trust2_p">No hidden seasonal spikes. What you see is what you pay.</p>
           </div>
           <div class="info-card">
             <div class="accent-bar"></div><i class="fas fa-broom trust-icon"></i>
-            <h3>Deep Cleaned</h3><p>Every vehicle undergoes professional sanitization before pick-up.</p>
+            <h3 data-i18n="trust3_h">Deep Cleaned</h3><p data-i18n="trust3_p">Every vehicle undergoes professional sanitization.</p>
           </div>
         </div>
       </div>
@@ -77,41 +77,22 @@
 
     <section class="featured-cars">
       <div class="container">
-        <span class="section-label">Our Fleet</span>
-        <h2>Featured Vehicles</h2>
+        <span class="section-label" data-i18n="fleet_label">Our Fleet</span>
+        <h2 data-i18n="fleet_h2">Featured Vehicles</h2>
         <div class="index-car-grid">
           <a href="cars.html#vellfire" class="car-card">
-            <div class="car-card-img"><img src="assets/images/vellfire.jpg"><div class="price-badge">From ¥15,000 / Day</div></div>
-            <div class="car-card-body"><h3>Toyota Vellfire</h3><p>Premium</p><span class="card-link">View Details →</span></div>
+            <div class="car-card-img"><img src="assets/images/vellfire.jpg"><div class="price-badge">¥15,000 / Day</div></div>
+            <div class="car-card-body"><h3>Toyota Vellfire</h3><p>Premium</p><span class="card-link" data-i18n="view_details">View Details →</span></div>
           </a>
           <a href="cars.html#alphard" class="car-card">
-            <div class="car-card-img"><img src="assets/images/alphard.jpg"><div class="price-badge">From ¥13,000 / Day</div></div>
-            <div class="car-card-body"><h3>Toyota Alphard</h3><p>Premium</p><span class="card-link">View Details →</span></div>
+            <div class="car-card-img"><img src="assets/images/alphard.jpg"><div class="price-badge">¥13,000 / Day</div></div>
+            <div class="car-card-body"><h3>Toyota Alphard</h3><p>Premium</p><span class="card-link" data-i18n="view_details">View Details →</span></div>
           </a>
           <a href="cars.html#serena" class="car-card">
-            <div class="car-card-img"><img src="assets/images/serena.jpg"><div class="price-badge">From ¥12,000 / Day</div></div>
-            <div class="car-card-body"><h3>Nissan Serena</h3><p>Economy Comfort</p><span class="card-link">View Details →</span></div>
+            <div class="car-card-img"><img src="assets/images/serena.jpg"><div class="price-badge">¥11,000 / Day</div></div>
+            <div class="car-card-body"><h3>Nissan Serena</h3><p>Comfort</p><span class="card-link" data-i18n="view_details">View Details →</span></div>
           </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="testimonials">
-      <div class="container">
-        <span class="section-label">Reviews</span>
-        <h2>What Our Customers Say</h2>
-        <div class="testimonial-grid">
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>"Car ka s yn thant dl byr. Kyike dl"</p>
-            <cite>— Ko Aung Aung</cite>
           </div>
-          <div class="testimonial-card">
-            <div class="stars">★</div>
-            <p>"Car lr yu tk maung ly ka station hti pyn lite ma poh bu taw. Bad service"</p>
-            <cite>— Zin Mar</cite>
-          </div>
-        </div>
       </div>
     </section>
   </main>

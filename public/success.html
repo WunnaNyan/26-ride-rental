@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,54 +8,26 @@
   <script type="module" src="assets/js/main.js" defer></script>
   <script type="module" src="assets/js/success.js" defer></script>
 </head>
-
 <body>
   <div id="site-header"></div>
-    <div id="noti-box" class="custom-noti">
-        <div class="msg-content">
-            <strong id="noti-title">Booking Confirmed!</strong>
-            <p id="noti-id-text">#XXXXXX</p>
-        </div>
+  <main class="success-container">
+    <div class="success-card">
+      <div class="checkmark-container">...</div>
+      <h1 data-i18n="succ_h1">Booking Received!</h1>
+      <p class="subtitle" data-i18n="succ_sub">Thank you...</p>
+      <div class="booking-ref-box">
+        <p data-i18n="succ_ref">Booking Number</p>
+        <h2 id="booking-id">#XXXXXX</h2>
+      </div>
+      <div class="summary-container">
+        <h3 data-i18n="succ_sum_h3">Reservation Summary</h3>
+        <div class="summary-item"><span class="label" data-i18n="sum_car">Car Model</span><span class="value" id="sum-car">-</span></div>
+        <div class="summary-item"><span class="label" data-i18n="sum_date">Pick-up Date</span><span class="value" id="sum-date">-</span></div>
+        <div class="summary-item"><span class="label" data-i18n="sum_total">Total Amount</span><span class="value highlight" id="sum-cost">-</span></div>
+      </div>
+      <a href="index.html" class="btn-primary full-width" data-i18n="btn_home">Return to Homepage</a>
     </div>
-
-    <main class="success-container">
-        <div class="success-card">
-            <div class="checkmark-container">
-            <div class="checkmark-circle">
-                <span class="checkmark-stem"></span>
-                <span class="checkmark-kick"></span>
-            </div>
-        </div>
-            <h1>Booking Received!</h1>
-            <p class="subtitle">Thank you for choosing 26 Ride Rental.</p>
-
-            <div class="booking-ref-box">
-                <p>Booking Number</p>
-                <h2 id="booking-id">#XXXXXX</h2>
-            </div>
-
-            <div class="summary-container">
-                <h3>Reservation Summary</h3>
-                
-                <div class="summary-item">
-                    <span class="label">Car Model</span>
-                    <span class="value" id="sum-car">-</span>
-                </div>
-
-                <div class="summary-item">
-                    <span class="label">Pick-up Date</span>
-                    <span class="value" id="sum-date">-</span>
-                </div>
-
-                <div class="summary-item">
-                    <span class="label">Total Amount</span>
-                    <span class="value highlight" id="sum-cost">-</span>
-                </div>
-            </div>
-
-            <a href="index.html" class="btn-primary full-width">Return to Homepage</a>
-        </div>
-    </main>
-
+  </main>
   <div id="site-footer"></div>
 </body>
+</html>

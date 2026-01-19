@@ -149,27 +149,32 @@
 .form-actions {
     margin-top: 30px;
 }
-
-.car-selection-box.disabled {
+.car-selection-box.booked {
+    opacity: 0.4;
     filter: grayscale(1);
+    pointer-events: none; /* Makes it unclickable */
     cursor: not-allowed;
     position: relative;
 }
 
-.car-selection-box.disabled::after {
+/* The Reserved Stamp */
+.car-selection-box.booked::after {
     content: "RESERVED";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-15deg);
-    background: rgba(255, 0, 0, 0.8);
+    background-color: rgba(255, 71, 87, 0.9);
     color: white;
-    padding: 5px 15px;
-    font-weight: bold;
+    padding: 10px 20px;
+    font-weight: 800;
+    font-size: 1.4rem;
+    border: 3px solid white;
     border-radius: 4px;
     z-index: 10;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-
 @media (max-width: 600px) {
     .form-grid { grid-template-columns: 1fr; }
 }

@@ -3,69 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirm Booking - 26 Ride Rental</title>
+  <title data-i18n="conf_h1">Confirm Booking - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/confirmation.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="assets/js/main.js" defer></script>
   <script type="module" src="assets/js/confirmation.js" defer></script>
 </head>
-
 <body>
   <div id="site-header"></div>
-
   <main class="confirmation-container">
     <div class="confirmation-card">
-      <h1>Confirm Your Reservation</h1>
-      <p class="subtitle">Please review your details and agree to the terms below.</p>
-
-      <section id="summary-container" class="summary-box">
-        </section>
-
-      <h3>Important Rental Rules</h3>
+      <h1 data-i18n="conf_h1">Confirm Your Reservation</h1>
+      <p class="subtitle" data-i18n="conf_sub">Please review your details and agree to the terms below.</p>
+      <section id="summary-container" class="summary-box"></section>
+      <h3 data-i18n="rules_h3">Important Rental Rules</h3>
       <article class="rules-box">
         <div class="compact-rules">
-          <div class="rule-item">
-            <i class="fas fa-clock"></i>
-            <span><strong>Timing:</strong> Pick-up after 9PM (night before); Return by 11:59PM.</span>
-          </div>
-          <div class="rule-item">
-            <i class="fas fa-shield-alt"></i>
-            <span><strong>Insurance:</strong> You <b>MUST</b> buy "1-Day Insurance" for personal liability.</span>
-          </div>
-          <div class="rule-item">
-            <i class="fas fa-ban"></i>
-            <span><strong>No Odors:</strong> No smoking/vaping or fishing gear (¥30,000 fine).</span>
-          </div>
-          <div class="rule-item">
-            <i class="fas fa-gas-pump"></i>
-            <span><strong>Fuel:</strong> Return with a <b>completely full tank</b> to finish trip.</span>
-          </div>
-          <div class="rule-item">
-            <i class="fas fa-phone-alt"></i>
-            <span><strong>Emergency:</strong> Call us immediately for any accident or breakdown.</span>
-          </div>
+          <div class="rule-item"><i class="fas fa-clock"></i><span data-i18n="rule_time">Timing...</span></div>
+          <div class="rule-item"><i class="fas fa-shield-alt"></i><span data-i18n="rule_ins">Insurance...</span></div>
+          <div class="rule-item"><i class="fas fa-ban"></i><span data-i18n="rule_odor">No Odors...</span></div>
+          <div class="rule-item"><i class="fas fa-gas-pump"></i><span data-i18n="rule_gas">Fuel...</span></div>
+          <div class="rule-item"><i class="fas fa-phone-alt"></i><span data-i18n="rule_emg">Emergency...</span></div>
         </div>
-        
-        <a href="terms.html" target="_blank" rel="noopener noreferrer" class="read-more-btn">
-            Read Full Terms & Conditions <i class="fas fa-arrow-right"></i>
-        </a>
+        <a href="terms.html" target="_blank" class="read-more-btn"><span data-i18n="read_full">Read Full Terms</span> <i class="fas fa-arrow-right"></i></a>
       </article>
-
       <div class="agreement-section">
         <label class="checkbox-label">
           <input type="checkbox" id="agree"> 
-          <span>I agree to the terms and conditions</span>
+          <span data-i18n="agree_check">I agree to the terms and conditions</span>
         </label>
       </div>
-
       <div class="confirmation-buttons">
-        <button id="back-btn" class="btn-secondary">Back & Edit</button>
-        <button id="proceed-btn" class="btn-primary full-width" disabled>Proceed to Payment</button>
+        <button id="back-btn" class="btn-secondary" data-i18n="btn_back">Back & Edit</button>
+        <button id="proceed-btn" class="btn-primary full-width" disabled data-i18n="btn_pay">Proceed to Payment</button>
       </div>
     </div>
   </main>
-
   <div id="site-footer"></div>
 </body>
 </html>

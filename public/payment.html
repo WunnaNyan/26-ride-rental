@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,61 +8,37 @@
   <script type="module" src="assets/js/main.js" defer></script>
   <script type="module" src="assets/js/payment.js" defer></script>
 </head>
-
 <body>
   <div id="site-header"></div>
-
   <main class="payment-container">
     <div class="payment-card">
-      <h1>Finalize Your Booking</h1>
-      <p class="subtitle">Complete your transfer and upload the receipt below.</p>
-
+      <h1 data-i18n="pay_h1">Finalize Your Booking</h1>
+      <p class="subtitle" data-i18n="pay_sub">Complete your transfer...</p>
       <section id="payment-summary" class="summary-box">
-        <h3>Booking Summary</h3>
+        <h3 data-i18n="pay_sum_h3">Booking Summary</h3>
         <div class="summary-grid">
-          <p><strong>Car:</strong> <span id="pay-car">---</span></p>
-          <p><strong>Date:</strong> <span id="pay-date">---</span></p>
-          <p><strong>Days:</strong> <span id="pay-days">---</span></p>
-          <p class="total-price"><strong>Total Cost:</strong> <span id="pay-cost">¥0</span></p>
+          <p><strong data-i18n="pay_car">Car:</strong> <span id="pay-car">---</span></p>
+          <p><strong data-i18n="pay_date">Date:</strong> <span id="pay-date">---</span></p>
+          <p><strong data-i18n="pay_days">Days:</strong> <span id="pay-days">---</span></p>
+          <p class="total-price"><strong data-i18n="pay_total">Total Cost:</strong> <span id="pay-cost">¥0</span></p>
         </div>
       </section>
-
       <section class="qr-section">
-        <h3>Payment via Bank Transfer / QR</h3>
+        <h3 data-i18n="qr_h3">Payment via Bank Transfer / QR</h3>
         <div class="qr-info">
           <img src="assets/images/qr-code.jpg" alt="Scan to Pay" class="qr-image">
-          <p class="qr-hint">Scan the QR code above with your banking app</p>
+          <p class="qr-hint" data-i18n="qr_hint">Scan the QR code...</p>
         </div>
       </section>
-
       <form id="payment-form">
         <div class="form-group">
-          <label for="proof">Upload Proof of Payment (Screenshot):</label>
+          <label for="proof" data-i18n="upload_label">Upload Proof...</label>
           <input type="file" id="proof" accept="image/*" required class="file-input">
-          
-          <div id="image-preview-container" style="display:none; margin-top: 10px;">
-            <p style="font-size: 0.8rem; color: #666;">Preview:</p>
-            <img id="image-preview" src="#" alt="Preview" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
-          </div>
         </div>
-
-        <button type="submit" id="submit-btn" class="btn-primary full-width">
-          Submit & Confirm Booking
-        </button>
+        <button type="submit" id="submit-btn" class="btn-primary full-width" data-i18n="btn_submit">Submit & Confirm Booking</button>
       </form>
     </div>
   </main>
-
   <div id="site-footer"></div>
-
-  <script>
-    document.getElementById('proof').onchange = function (evt) {
-      const [file] = this.files;
-      if (file) {
-        document.getElementById('image-preview-container').style.display = 'block';
-        document.getElementById('image-preview').src = URL.createObjectURL(file);
-      }
-    }
-  </script>
 </body>
 </html>

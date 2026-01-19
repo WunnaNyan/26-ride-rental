@@ -3,33 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book Your Ride - 26 Ride Rental</title>
-
+  <title data-i18n="book_h1">Book Your Ride - 26 Ride Rental</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/rental.css">
-
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-
   <script type="module" src="assets/js/main.js" defer></script>
 </head>
-
 <body>
   <div id="site-header"></div>
-
   <main>
     <section class="page-hero">
       <div class="container">
-        <h1>Book a Ride</h1>
-        <p>Select your date and vehicle to start your journey.</p>
+        <h1 data-i18n="book_h1">Book a Ride</h1>
+        <p data-i18n="book_subtitle">Select your date and vehicle to start your journey.</p>
       </div>
     </section>
 
     <div class="container">
       <section class="booking-section">
         <div class="section-title-area">
-          <span class="section-label">Step 1</span>
-          <h2>Select Pick-up Date</h2>
+          <span class="section-label" data-i18n="step1_title">Step 1</span>
+          <h2 data-i18n="select_date_h2">Select Pick-up Date</h2>
         </div>
         <div class="calendar-wrapper card-shadow">
           <div id="calendar"></div>
@@ -38,9 +33,9 @@
 
       <section class="booking-section" id="car-selection" style="display:none;">
         <div class="section-title-area">
-          <span class="section-label">Step 2</span>
-          <h2>Choose Your Vehicle</h2>
-          <p>Hover to see specs; click to select.</p>
+          <span class="section-label" data-i18n="step2_title">Step 2</span>
+          <h2 data-i18n="choose_veh_h2">Choose Your Vehicle</h2>
+          <p data-i18n="hover_hint">Hover to see specs; click to select.</p>
         </div>
         
         <div class="rental-car-grid">
@@ -50,94 +45,83 @@
               <img src="assets/images/vellfire.jpg" alt="Toyota Vellfire">
               <div class="car-overlay">
                 <div class="overlay-stats">
-                  <span>7 Seats</span>
+                  <span>7 <span data-i18n="seats">Seats</span></span>
                   <span>¥15,000/day</span>
                 </div>
               </div>
             </div>
-            <div class="car-selection-info">
-              <h4>Toyota Vellfire</h4>
-            </div>
+            <div class="car-selection-info"><h4>Toyota Vellfire</h4></div>
           </div>
-
           <div class="car-selection-box" data-car="Toyota Alphard">
             <div class="car-img-badge">Premium</div>
             <div class="car-img-container">
               <img src="assets/images/alphard.jpg" alt="Toyota Alphard">
               <div class="car-overlay">
                 <div class="overlay-stats">
-                  <span>7 Seats</span>
-                  <span>¥12,000/day</span>
+                  <span>7 <span data-i18n="seats">Seats</span></span>
+                  <span>¥13,000/day</span>
                 </div>
               </div>
             </div>
-            <div class="car-selection-info">
-              <h4>Toyota Alphard</h4>
-            </div>
+            <div class="car-selection-info"><h4>Toyota Alphard</h4></div>
           </div>
-
           <div class="car-selection-box" data-car="Nissan Serena">
             <div class="car-img-badge">Comfort</div>
             <div class="car-img-container">
               <img src="assets/images/serena.jpg" alt="Nissan Serena">
               <div class="car-overlay">
                 <div class="overlay-stats">
-                  <span>7 Seats</span>
-                  <span>¥13,000/day</span>
+                  <span>7 <span data-i18n="seats">Seats</span></span>
+                  <span>¥11,000/day</span>
                 </div>
               </div>
             </div>
-            <div class="car-selection-info">
-              <h4>Nissan Serena</h4>
-            </div>
+            <div class="car-selection-info"><h4>Nissan Serena</h4></div>
           </div>
-        </div>
+          </div>
       </section>
 
       <section class="booking-section" id="reservation-form-container" style="display:none;">
         <div class="section-title-area">
-          <span class="section-label">Final Step</span>
-          <h2>Your Details</h2>
+          <span class="section-label" data-i18n="step3_title">Final Step</span>
+          <h2 data-i18n="details_h2">Your Details</h2>
         </div>
-        
         <div class="form-card card-shadow">
           <div class="accent-bar"></div>
           <form id="rental-form">
             <input type="hidden" id="selected-car-input" name="selected_car">
             <input type="hidden" id="selected-date-input" name="rental_date">
-
             <div class="form-grid">
               <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Full Name" required>
+                <label for="name" data-i18n="form_name">Full Name</label>
+                <input type="text" id="name" name="name" data-i18n="form_name" placeholder="Full Name" required>
               </div>
               <div class="form-group">
-                <label for="phone">Phone Number</label>
+                <label for="phone" data-i18n="form_phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" placeholder="090-xxxx-xxxx" required>
               </div>
               <div class="form-group">
-                <label for="facebook">Facebook Username</label>
-                <input type="text" id="facebook" name="facebook" placeholder="Optional">
+                <label for="facebook" data-i18n="form_fb">Facebook Username</label>
+                <input type="text" id="facebook" name="facebook" data-i18n="form_fb" placeholder="Optional">
               </div>
               <div class="form-group">
-                <label for="location">Pick-up Location</label>
+                <label for="location" data-i18n="form_loc">Pick-up Location</label>
                 <select id="location" name="location" required>
-                  <option value="">Select Station</option>
-                  <option value="JR Shin-koiwa">JR Shin-koiwa</option>
-                  <option value="JR Kinshichou">JR Kinshichou</option>
-                  <option value="JR Akihabara">JR Akihabara</option>
+                  <option value="" data-i18n="form_loc_default">Select Station</option>
+                  <option value="JR Shin-koiwa" data-i18n="loc_shinkoiwa">JR Shin-koiwa</option>
+                  <option value="JR Kinshichou" data-i18n="loc_kinshicho">JR Kinshichou</option>
+                  <option value="JR Akihabara" data-i18n="loc_akihabara">JR Akihabara</option>
                 </select>
               </div>
             </div>
             <div class="form-actions">
-               <button type="submit" class="btn-primary">Confirm Booking</button>
+               <button type="submit" class="btn-primary" data-i18n="btn_confirm">Confirm Booking</button>
             </div>
           </form>
         </div>
       </section>
     </div>
   </main>
-
   <div id="site-footer"></div>
 </body>
 </html>
