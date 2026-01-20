@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Active 26 Car Rental</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script type="module" src="assets/js/dashboard.js" defer></script>
+</head>
+<body class="admin-body">
+    <aside class="admin-sidebar">
+        <div class="sidebar-header"><h2 class="logo">ACTIVE <span>26</span></h2></div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" id="nav-calendar">Calendar View</button>
+            <button class="nav-item" id="nav-fleet">Manage Fleet</button>
+            <button id="btnOpenAddModal" class="nav-item" style="color: #10b981;">+ Manual Booking</button>
+            <button class="nav-item" onclick="window.location.href='../index.html'">View Site</button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <section id="calendar-section">
+            <div id="calendar-container"><div id="calendar"></div></div>
+        </section>
+
+        <section id="fleet-section" style="display:none;">
+            <div class="section-header">
+                <h2>Vehicle Inventory</h2>
+                <button class="btn-primary" id="btnAddNewCar" style="width: auto; padding: 10px 20px;">+ Add New Car</button>
+            </div>
+            <div id="admin-car-grid" class="admin-fleet-grid"></div>
+        </section>
+    </main>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalCarTitle">Car Details</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-grid">
+                <div class="modal-info-pane">
+                    <div class="info-row"><label>Customer Name</label><p id="modalName"></p></div>
+                    <div class="info-row"><label>Booking ID</label><p id="modalID" class="id-tag-display"></p></div>
+                    <div class="info-row"><label>Rental Date</label><p id="modalDate"></p></div>
+                    <div class="info-row"><label>Status</label><div><span id="modalStatus" class="status-badge"></span></div></div>
+                    <div class="modal-actions-footer">
+                        <button id="btnApprove" class="btn-primary">Approve Reservation</button>
+                        <button id="btnDelete" class="btn-danger-link">Delete Permanently</button>
+                    </div>
+                </div>
+                <div class="modal-media-pane">
+                    <div class="media-box"><label>Receipt</label><div class="image-wrapper"><img id="modalPaymentImg" src=""></div></div>
+                    <div class="media-box"><label>License</label><div class="image-wrapper"><img id="modalLicenseImg" src=""></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="carModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header"><h2>Vehicle Editor</h2><span class="close-car-btn">&times;</span></div>
+            <form id="carForm" class="modal-info-pane" style="border:none;">
+                <input type="hidden" id="editCarId">
+                <div class="modal-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <div class="info-row"><label>Car Name (ID)</label><input type="text" id="carIdInput" class="admin-input" required></div>
+                        <div class="info-row"><label>Daily Price (¥)</label><input type="number" id="carPriceInput" class="admin-input" required></div>
+                        <div class="info-row"><label>Class</label><input type="text" id="carClassInput" class="admin-input"></div>
+                        <div class="info-row"><label>Status</label>
+                            <select id="carStatusInput" class="admin-input">
+                                <option value="active">Active</option>
+                                <option value="maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-row"><label>Seats</label><input type="text" id="specSeats" class="admin-input"></div>
+                        <div class="info-row"><label>Fuel</label><input type="text" id="specFuel" class="admin-input"></div>
+                        <div class="info-row"><label>Trans</label><input type="text" id="specTrans" class="admin-input"></div>
+                        <div class="info-row"><label>Engine</label><input type="text" id="specEngine" class="admin-input"></div>
+                        <div class="info-row"><label>Luggage</label><input type="text" id="specLuggage" class="admin-input"></div>
+                    </div>
+                </div>
+                <div class="info-row"><label>Description</label><textarea id="carDescInput" class="admin-input"></textarea></div>
+                <button type="submit" class="btn-primary">Save Vehicle</button>
+                <button type="button" id="btnDeleteCar" class="btn-danger-link">Delete Vehicle</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addBookingModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header"><h2>Manual Booking</h2><span class="close-add-btn">&times;</span></div>
+            <form id="manualBookingForm" class="modal-info-pane" style="border:none;">
+                <div class="info-row"><label>Vehicle</label><select id="addCar" class="admin-input" required></select></div>
+                <div class="info-row"><label>Customer Name</label><input type="text" id="addName" class="admin-input" required></div>
+                <div class="info-row"><label>Rental Date</label><input type="date" id="addDate" class="admin-input" required></div>
+                <div class="info-row"><label>Phone Number</label><input type="tel" id="addPhone" class="admin-input" required></div>
+                <div class="info-row"><label>Pick-up Location</label><select id="addLocation" class="admin-input"><option value="JR Shin-koiwa">JR Shin-koiwa</option></select></div>
+                <button type="submit" class="btn-primary" style="background: #10b981;">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
