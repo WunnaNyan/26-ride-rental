@@ -29,47 +29,74 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("payment-form");
     const submitBtn = document.getElementById("submit-btn");
 
+    // --- NEW: PREVIEW LOGIC ---
+    const setupPreview = (inputId, previewId) => {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        
+        input.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    };
+
+    setupPreview("proof", "proof-preview");
+    setupPreview("license", "license-preview");
+    // --------------------------
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const fileInput = document.getElementById("proof");
-        const file = fileInput.files[0];
+        const proofFile = document.getElementById("proof").files[0];
+        const licenseFile = document.getElementById("license").files[0];
 
-        if (!file) {
-            alert("Please upload your payment screenshot.");
+        if (!proofFile || !licenseFile) {
+            alert("Please upload both the payment proof and your driving license.");
             return;
         }
 
-        // UI Feedback: Loading state
         submitBtn.disabled = true;
         submitBtn.textContent = "Verifying availability...";
 
         try {
-            // 1. THE DOUBLE-CHECK: Ensure no one booked this car/date while user was paying
+            // 1. Double-check availability
             const q = query(
                 collection(db, "reservations"),
                 where("car", "==", rentalData.car),
                 where("date", "==", rentalData.date)
             );
-            
             const checkSnapshot = await getDocs(q);
             
             if (!checkSnapshot.empty) {
-                alert("This car was just reserved by someone else for this date. Please choose another date.");
+                alert("This car was just reserved. Please choose another date.");
                 window.location.href = "rental.html";
                 return;
             }
 
-            submitBtn.textContent = "Uploading Receipt...";
-
-            // 2. GENERATE BOOKING ID
+            // 2. Generate Booking ID
             const bookingNumber = Math.random().toString(36).toUpperCase().substring(2, 8);
+            submitBtn.textContent = "Uploading Documents...";
 
-            // 3. UPLOAD TO STORAGE
-            const storagePath = `payment_proofs/${bookingNumber}_${file.name}`;
-            const storageRef = ref(storage, storagePath);
-            const uploadSnapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(uploadSnapshot.ref);
+            // Helper function for Storage upload
+            const uploadFile = async (file, folder) => {
+                const path = `${folder}/${bookingNumber}_${file.name}`;
+                const storageRef = ref(storage, path);
+                const snapshot = await uploadBytes(storageRef, file);
+                return await getDownloadURL(snapshot.ref);
+            };
+
+            // 3. UPLOAD BOTH (Running at the same time)
+            const [proofURL, licenseURL] = await Promise.all([
+                uploadFile(proofFile, "payment_proofs"),
+                uploadFile(licenseFile, "license_images")
+            ]);
 
             submitBtn.textContent = "Finalizing Booking...";
 
@@ -77,7 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const finalBooking = {
                 ...rentalData,
                 bookingID: bookingNumber,
-                paymentScreenshot: downloadURL,
+                paymentScreenshot: proofURL,
+                drivingLicenseURL: licenseURL, // Added this field
                 status: "Pending Verification",
                 createdAt: new Date()
             };

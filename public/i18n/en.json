@@ -66,6 +66,7 @@
   "qr_h3": "Payment via Bank Transfer / QR", 
   "qr_hint": "Scan the QR code above with your banking app", 
   "upload_label": "Upload Proof of Payment (Screenshot):", 
+  "license_label": "Upload Front of Driving License",
   "btn_submit": "Submit & Confirm Booking",
   "succ_h1": "Booking Received!", 
   "succ_sub": "Thank you for choosing 26 Ride Rental.", 
