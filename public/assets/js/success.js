@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. Show Summary Data
     if (rentalData) {
+        document.getElementById("sum-name").textContent = rentalData.name;
+        document.getElementById("sum-LicNum").textContent = rentalData.licenseNumber ;
+        document.getElementById("sum-location").textContent = rentalData.location;
         document.getElementById("sum-car").textContent = rentalData.car;
         document.getElementById("sum-date").textContent = rentalData.date;
         document.getElementById("sum-cost").textContent = `¥${rentalData.totalPrice.toLocaleString()}`;

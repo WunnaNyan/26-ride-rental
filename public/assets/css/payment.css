@@ -68,11 +68,12 @@
 }
 
 .qr-image {
-    width: 200px; /* Controlled size for QR */
+    width: 200px;
     height: auto;
     border-radius: 10px;
     border: 1px solid #ddd;
-    margin: 15px 0;
+    margin: 15px auto; /* 15px top/bottom, auto left/right centers it */
+    display: block;    /* Required for margin: auto to work */
 }
 
 .qr-hint {

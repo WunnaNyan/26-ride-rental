@@ -34,14 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("summary-container");
   if (container) {
     container.innerHTML = `
-      <div class="summary-item"><strong>Name:</strong> <span>${rentalData.name}</span></div>  
-      <div class="summary-item"><strong>License No:</strong> <span>${rentalData.licenseNumber || 'N/A'}</span></div>
-      <div class="summary-item"><strong>Car:</strong> <span>${rentalData.car}</span></div>
-      <div class="summary-item"><strong>Location:</strong> <span>${rentalData.location}</span></div>
-      <div class="summary-item"><strong>Rental Date:</strong> <span>${dateDisplay}</span></div>
-      <div class="summary-item"><strong>Total Days:</strong> <span>${rentalData.days || 1} Day(s)</span></div>
+      <div class="summary-item"><strong data-i18n="sum_name">Name:</strong> <span>${rentalData.name}</span></div>  
+      <div class="summary-item"><strong data-i18n="sum_LicNum">License No:</strong> <span>${rentalData.licenseNumber || 'N/A'}</span></div>
+      <div class="summary-item"><strong data-i18n="sum_car">Car:</strong> <span>${rentalData.car}</span></div>
+      <div class="summary-item"><strong data-i18n="sum_location">Location:</strong> <span>${rentalData.location}</span></div>
+      <div class="summary-item"><strong data-i18n="sum_date">Rental Date:</strong> <span>${dateDisplay}</span></div>
+      <div class="summary-item"><strong data-i18n="pay_days">Total Days:</strong> <span>${rentalData.days || 1} Day(s)</span></div>
       <div class="summary-item" style="border:none; color:#2563eb; font-size:1.4rem; margin-top:15px;">
-          <strong>Total Price:</strong> <strong>¥${(rentalData.totalPrice || 0).toLocaleString()}</strong>
+          <strong data-i18n="pay_total">Total Price:</strong> <strong>¥${(rentalData.totalPrice || 0).toLocaleString()}</strong>
       </div>
     `;
   }

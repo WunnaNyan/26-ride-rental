@@ -1,13 +1,13 @@
 import { db } from "../../../public/assets/js/firebase.js";
 import { 
-    collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, setDoc 
+    collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, setDoc, getDoc 
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', function() {
+    // --- ELEMENT SELECTORS ---
     const calendarEl = document.getElementById('calendar');
     const viewModal = document.getElementById("bookingModal");
     const addModal = document.getElementById("addBookingModal");
-    const carModal = document.getElementById("carModal");
     const successModal = document.getElementById("successPopup"); 
     
     const closeViewBtn = document.querySelector(".close-btn");
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentDocId = null; 
 
+    // --- TAB SWITCHING ---
     const switchTab = (tab) => {
         document.getElementById("calendar-section").style.display = tab === 'calendar' ? 'block' : 'none';
         document.getElementById("fleet-section").style.display = tab === 'fleet' ? 'block' : 'none';
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     btnNavCalendar.onclick = () => switchTab('calendar');
     btnNavFleet.onclick = () => switchTab('fleet');
 
+    // --- HELPER: CAR COLORS ---
     const getCarColor = (carName) => {
         const car = (carName || "").toLowerCase();
         if (car.includes("alphard")) return "#2563eb"; 
@@ -40,21 +42,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!calendarEl) return;
 
+    // --- CALENDAR INITIALIZATION ---
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,next today', 
             center: 'title',
-            right: 'dayGridMonth,multiMonthYear,listYear' // Added multiMonthYear
+            right: 'dayGridMonth,multiMonthYear,listYear'
         },
         views: {
-            multiMonthYear: {
-                buttonText: 'Year' // Label the button as "Year"
-            }
+            multiMonthYear: { buttonText: 'Year' }
         },
         height: '750px',
         dayMaxEvents: true,
-        // FIXED: Apply classes for the list view tints
         eventClassNames: function(arg) {
             const status = arg.event.extendedProps.status || 'Pending';
             return [ status === 'Approved' ? 'status-approved-event' : 'status-pending-event' ];
@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = info.event.extendedProps;
             currentDocId = info.event.id;
             
-            document.getElementById("modalCarTitle").innerText = data.carName || "Details";
-            document.getElementById("modalID").innerText = data.customBookingID || 'N/A';
-            document.getElementById("modalName").innerText = data.customerName || 'N/A';
+            document.getElementById("modalCarTitle").innerText = data.car || "Details";
+            document.getElementById("modalID").innerText = data.bookingID || 'N/A';
+            document.getElementById("modalName").innerText = data.name || 'N/A';
             document.getElementById("modalPhone").innerText = data.phone || 'N/A';
             document.getElementById("modalLicenseNo").innerText = data.licenseNumber || 'N/A';
             document.getElementById("modalLoc").innerText = data.location || 'N/A';
@@ -81,115 +81,63 @@ document.addEventListener('DOMContentLoaded', function() {
             statusEl.className = status === 'Approved' ? "status-badge status-approved" : "status-badge status-pending";
             document.getElementById("btnApprove").style.display = status === 'Approved' ? "none" : "block";
             
+            // Image Logic
             const payImgEl = document.getElementById("modalPaymentImg");
             const licImgEl = document.getElementById("modalLicenseImg");
+            const payUrl = data.paymentScreenshot || data.paymentUrl;
+            const licUrl = data.drivingLicenseURL || data.licenseUrl;
 
-            if (data.paymentUrl) {
-                payImgEl.src = data.paymentUrl;
-                payImgEl.style.display = "block";
-                document.getElementById("linkFullPayment").style.display = "block";
-                document.getElementById("linkFullPayment").href = data.paymentUrl;
-            } else {
-                payImgEl.style.display = "none";
-                document.getElementById("linkFullPayment").style.display = "none";
-            }
+            payImgEl.src = payUrl || "";
+            payImgEl.style.display = payUrl ? "block" : "none";
+            document.getElementById("linkFullPayment").style.display = payUrl ? "block" : "none";
+            document.getElementById("linkFullPayment").href = payUrl || "#";
 
-            if (data.licenseUrl) {
-                licImgEl.src = data.licenseUrl;
-                licImgEl.style.display = "block";
-                document.getElementById("linkFullLicense").style.display = "block";
-                document.getElementById("linkFullLicense").href = data.licenseUrl;
-            } else {
-                licImgEl.style.display = "none";
-                document.getElementById("linkFullLicense").style.display = "none";
-            }
+            licImgEl.src = licUrl || "";
+            licImgEl.style.display = licUrl ? "block" : "none";
+            document.getElementById("linkFullLicense").style.display = licUrl ? "block" : "none";
+            document.getElementById("linkFullLicense").href = licUrl || "#";
             
             viewModal.style.display = "block";
         }
     });
     calendar.render();
 
-    // FIXED: Delete Permanent Booking Function
+    // --- RESERVATION ACTIONS ---
     document.getElementById("btnDelete").onclick = async () => {
-        if (!currentDocId) return;
-        if (confirm("Are you sure you want to PERMANENTLY delete this booking? This cannot be undone.")) {
-            try {
-                await deleteDoc(doc(db, "reservations", currentDocId));
-                viewModal.style.display = "none";
-                currentDocId = null;
-            } catch (err) {
-                alert("Error deleting: " + err.message);
-            }
-        }
+        if (!currentDocId || !confirm("PERMANENTLY delete this booking?")) return;
+        await deleteDoc(doc(db, "reservations", currentDocId));
+        viewModal.style.display = "none";
     };
 
-    window.openEditCar = (id, data) => {
-        document.getElementById("editCarId").value = id;
-        document.getElementById("carIdInput").value = id;
-        document.getElementById("carIdInput").disabled = true;
-        document.getElementById("carPriceInput").value = data.price || 0;
-        document.getElementById("carStatusInput").value = data.status || "active";
-        document.getElementById("carClassInput").value = data.class || "Premium";
-        document.getElementById("carDescInput").value = data.description || "";
-        
-        document.getElementById("specSeats").value = data.specs?.seats || "7";
-        document.getElementById("specFuel").value = data.specs?.fuel || "Petrol";
-        document.getElementById("specTrans").value = data.specs?.trans || "Auto";
-        document.getElementById("specEngine").value = data.specs?.engine || "2.5L";
-        document.getElementById("specLuggage").value = data.specs?.luggage || "4 Bags";
-        
-        document.getElementById("btnDeleteCar").style.display = "block";
-        carModal.style.display = "block";
+    document.getElementById("btnApprove").onclick = async () => {
+        await updateDoc(doc(db, "reservations", currentDocId), { status: "Approved" });
+        viewModal.style.display = "none";
     };
 
-    document.getElementById("btnDeleteCar").onclick = async () => {
-        const id = document.getElementById("carIdInput").value;
-        if (confirm(`Delete ${id}?`)) {
-            await deleteDoc(doc(db, "cars", id));
-            carModal.style.display = "none";
-        }
-    };
-
-    document.getElementById("carForm").onsubmit = async (e) => {
-        e.preventDefault();
-        const id = document.getElementById("carIdInput").value;
-        const carData = {
-            status: document.getElementById("carStatusInput").value,
-            price: Number(document.getElementById("carPriceInput").value),
-            description: document.getElementById("carDescInput").value,
-            class: document.getElementById("carClassInput").value,
-            specs: {
-                engine: document.getElementById("specEngine").value,
-                fuel: document.getElementById("specFuel").value,
-                luggage: document.getElementById("specLuggage").value,
-                seats: document.getElementById("specSeats").value,
-                trans: document.getElementById("specTrans").value
-            }
-        };
-        await setDoc(doc(db, "cars", id), carData, { merge: true });
-        carModal.style.display = "none";
-    };
-
+    // --- MANUAL BOOKING (MULTI-DATE SUPPORT) ---
     const manualForm = document.getElementById("manualBookingForm");
     manualForm.onsubmit = async (e) => {
         e.preventDefault();
-        const carId = document.getElementById("addCar").value;
         const startDateVal = document.getElementById("addDate").value;
-        const endDateVal = document.getElementById("addEndDate").value || startDateVal;
-
+        const endDateVal = document.getElementById("addEndDate")?.value || startDateVal;
+        const licenseInput = document.getElementById("addLicense").value;
+        const licenseRegex = /^\d{12}$/;
         const datesArray = [];
         let curr = new Date(startDateVal);
         const end = new Date(endDateVal);
-        
-        while(curr <= end) {
+        while(curr < end) {
             datesArray.push(curr.toISOString().split('T')[0]);
             curr.setDate(curr.getDate() + 1);
         }
 
-        // Fetch car price from local state or simple lookup to ensure total price is saved
-        // (Assuming you might want to track revenue in the dashboard later)
+        if (!licenseRegex.test(licenseInput)) {
+            alert("Invalid License Number! Please enter exactly 12 digits.");
+            document.getElementById("addLicense").focus();
+            return; // Stop the function here
+        }
+
         const manualData = {
-            car: carId,
+            car: document.getElementById("addCar").value,
             name: document.getElementById("addName").value,
             dates: datesArray,
             date: datesArray[0],
@@ -199,71 +147,47 @@ document.addEventListener('DOMContentLoaded', function() {
             location: document.getElementById("addLocation").value,
             status: "Approved",
             bookingID: "MAN-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
-            paymentScreenshot: "",
-            drivingLicenseURL: "",
             createdAt: new Date()
         };
 
         try {
             await addDoc(collection(db, "reservations"), manualData);
             addModal.style.display = "none";
-            
-            // Update Success Modal UI
-            document.getElementById("successID").innerText = manualData.bookingID;
-            document.getElementById("successCust").innerText = manualData.name;
-            document.getElementById("successDates").innerText = datesArray.length > 1 
-                ? `${datesArray[0].replace(/-/g, '/')} to ${datesArray[datesArray.length-1].replace(/-/g, '/')}` 
-                : datesArray[0].replace(/-/g, '/');
-                
-            successModal.style.display = "block";
+            if(successModal) {
+                document.getElementById("successID").innerText = manualData.bookingID;
+                document.getElementById("successCust").innerText = manualData.name;
+                document.getElementById("successDates").innerText = datesArray.length > 1 
+                    ? `${datesArray[0]} to ${datesArray[datesArray.length-1]}` : datesArray[0];
+                successModal.style.display = "block";
+            }
             manualForm.reset();
-        } catch (err) {
-            alert("Manual booking failed: " + err.message);
-        }
+        } catch (err) { alert("Error: " + err.message); }
     };
 
+    // --- SHARED UI CONTROLS ---
     btnOpenAdd.onclick = () => addModal.style.display = "block";
     closeViewBtn.onclick = () => viewModal.style.display = "none";
     closeAddBtn.onclick = () => addModal.style.display = "none";
     closeCarBtn.onclick = () => carModal.style.display = "none";
     if(closeSuccessBtn) closeSuccessBtn.onclick = () => successModal.style.display = "none";
 
-    document.getElementById("btnApprove").onclick = async () => {
-        await updateDoc(doc(db, "reservations", currentDocId), { status: "Approved" });
-        viewModal.style.display = "none";
-    };
-
-  onSnapshot(collection(db, "reservations"), (snapshot) => {
+    // --- REAL-TIME SYNC: RESERVATIONS ---
+    onSnapshot(collection(db, "reservations"), (snapshot) => {
         calendar.removeAllEvents();
-        
-        // Initialize counters
-        let manualCount = 0;
-        let onlineCount = 0;
-        let pendingCount = 0;
-        let approvedCount = 0;
+        let stats = { manual: 0, online: 0, pending: 0, approved: 0 };
 
         snapshot.forEach((bookingDoc) => {
             const data = bookingDoc.data();
             
-            // 1. Calculate Stats
-            // Manual bookings start with "MAN-", online ones don't
-            if (data.bookingID && data.bookingID.startsWith("MAN-")) {
-                manualCount++;
-            } else {
-                onlineCount++;
-            }
+            // Stats logic
+            if (data.bookingID?.startsWith("MAN-")) stats.manual++; else stats.online++;
+            if (data.status === "Approved") stats.approved++; else stats.pending++;
 
-            if (data.status === "Approved") {
-                approvedCount++;
-            } else {
-                pendingCount++;
-            }
-
-            // 2. Add Calendar Events (Existing logic)
+            // Calendar Event Logic (Fixed for multi-day display)
             const dates = data.dates || [data.date];
             let calEnd = dates[dates.length - 1];
             const endObj = new Date(calEnd);
-            endObj.setDate(endObj.getDate() + 1);
+            endObj.setDate(endObj.getDate() + 1); 
             calEnd = endObj.toISOString().split('T')[0];
 
             calendar.addEvent({
@@ -278,44 +202,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // 3. Update UI Elements
-        document.getElementById("stat-manual").innerText = manualCount;
-        document.getElementById("stat-online").innerText = onlineCount;
-        document.getElementById("stat-pending").innerText = pendingCount;
-        document.getElementById("stat-approved").innerText = approvedCount;
+        // Update Dashboard UI
+        if(document.getElementById("stat-manual")) document.getElementById("stat-manual").innerText = stats.manual;
+        if(document.getElementById("stat-online")) document.getElementById("stat-online").innerText = stats.online;
+        if(document.getElementById("stat-pending")) document.getElementById("stat-pending").innerText = stats.pending;
+        if(document.getElementById("stat-approved")) document.getElementById("stat-approved").innerText = stats.approved;
 
-        // 4. Toggle Red Tint if pending > 0
         const pendingBox = document.getElementById("stat-pending-box");
-        if (pendingCount > 0) {
-            pendingBox.classList.add("has-pending");
-        } else {
-            pendingBox.classList.remove("has-pending");
-        }
+        if (pendingBox) pendingBox.classList.toggle("has-pending", stats.pending > 0);
     });
 
-    onSnapshot(collection(db, "cars"), (snapshot) => {
-        const grid = document.getElementById("admin-car-grid");
-        const select = document.getElementById("addCar");
-        grid.innerHTML = ""; 
-        select.innerHTML = '<option value="" disabled selected>Select a vehicle</option>';
-        snapshot.forEach((carDoc) => {
-            const c = carDoc.data();
-            const isMaintenance = c.status === 'maintenance';
-            grid.innerHTML += `
-                <div class="admin-car-card" style="opacity: ${isMaintenance ? '0.6' : '1'}; border-top: 4px solid ${isMaintenance ? '#ef4444' : getCarColor(carDoc.id)}">
-                    <div class="car-card-header">
-                        <div class="color-dot" style="background:${isMaintenance ? '#ef4444' : getCarColor(carDoc.id)}"></div>
-                        <h4>${carDoc.id}</h4>
-                    </div>
-                    <p style="color:#3b82f6; font-weight:700;">¥${c.price?.toLocaleString()}</p>
-                    <button class="btn-danger-link" onclick='openEditCar("${carDoc.id}", ${JSON.stringify(c)})'>Edit Details</button>
-                </div>`;
-            if (!isMaintenance) {
-                const opt = document.createElement("option");
-                opt.value = carDoc.id;
-                opt.textContent = carDoc.id;
-                select.appendChild(opt);
-            }
-        });
-    });
 });

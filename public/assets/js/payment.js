@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update UI Summary
     document.getElementById("pay-car").textContent = rentalData.car;
     document.getElementById("pay-cost").textContent = `¥${rentalData.totalPrice.toLocaleString()}`;
+    document.getElementById("pay-days").textContent = `${rentalData.days || 1}`;
 
     // Handle Multi-day Date Display for the UI
     let dateDisplay = "";

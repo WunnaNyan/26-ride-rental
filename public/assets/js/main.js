@@ -23,8 +23,7 @@ function watchFleet() {
         if (document.querySelector('.index-car-grid')) renderIndexFleet();
         if (document.getElementById('dynamic-car-list')) renderFleetPage();
         
-        // Refresh display if a date is already picked
-        const dateVal = document.getElementById('selected-date-input').value;
+        const dateVal = document.getElementById('selected-date-input')?.value;
         if (dateVal) {
             const dates = JSON.parse(dateVal);
             updateCarDisplay(dates);
@@ -37,16 +36,15 @@ function watchReservations() {
         bookedDates = {}; 
         snapshot.forEach(doc => {
             const d = doc.data();
-            // Supports both legacy 'date' and new 'dates' array
             const dates = d.dates || [d.date];
             dates.forEach(dateStr => {
                 if (!bookedDates[dateStr]) bookedDates[dateStr] = [];
                 bookedDates[dateStr].push(d.car);
             });
         });
-        const dateVal = document.getElementById('selected-date-input').value;
-        if (dateVal) {
-            const dates = JSON.parse(dateVal);
+        const dateInput = document.getElementById('selected-date-input');
+        if (dateInput && dateInput.value) {
+            const dates = JSON.parse(dateInput.value);
             updateCarDisplay(dates);
         }
     });
@@ -99,18 +97,12 @@ function renderIndexFleet() {
     applyTranslations();
 }
 
-/**
- * FIXED: updateCarDisplay now accepts an ARRAY of dates.
- * If a car is booked on ANY of the selected dates, it shows as booked.
- */
 function updateCarDisplay(datesArray) {
     const container = document.querySelector(".rental-car-grid");
     if (!container || !datesArray || datesArray.length === 0) return;
 
     container.innerHTML = allCarsData.map(car => {
-        // Check if car is booked on ANY of the picked dates
         const isBooked = datesArray.some(date => (bookedDates[date] || []).includes(car.id));
-        
         return `
             <div class="car-selection-box ${isBooked ? 'booked' : ''}" data-car="${car.id}">
                 <div class="car-img-badge">${car.class || 'Premium'}</div>
@@ -139,8 +131,9 @@ function attachBoxListeners() {
             document.querySelectorAll('.car-selection-box').forEach(b => b.classList.remove('selected'));
             box.classList.add('selected');
             document.getElementById('selected-car-input').value = box.dataset.car;
-            document.getElementById('reservation-form-container').style.display = 'block';
-            document.getElementById('reservation-form-container').scrollIntoView({ behavior: 'smooth' });
+            const formContainer = document.getElementById('reservation-form-container');
+            formContainer.style.display = 'block';
+            formContainer.scrollIntoView({ behavior: 'smooth' });
         };
     });
 }
@@ -195,27 +188,31 @@ function initNavigationLogic() {
     });
 }
 
-// --- 4. RENTAL LOGIC (MULTI-DAY + VALIDATION) ---
+// --- 4. RENTAL LOGIC ---
 async function initRentalLogic() {
     const calendarEl = document.getElementById("calendar");
     const multiDayToggle = document.getElementById("multi-day-switch");
+    const checkBtn = document.getElementById('check-avail-btn');
+    const dropdown = document.getElementById('availability-dropdown');
+    const pickupDateInput = document.getElementById('pickup-date');
+
+    let fp; // Reference for later use
 
     if (calendarEl) {
-        const fp = flatpickr("#calendar", {
+        fp = flatpickr("#calendar", {
             inline: true,
             mode: "single", 
             dateFormat: "Y-m-d",
             minDate: "today",
             onChange: (selectedDates, dateStr, instance) => {
-                // If range mode, wait for both dates to be picked
                 if (instance.config.mode === "range" && selectedDates.length < 2) return;
 
                 let datesArray = [];
                 if (selectedDates.length === 2) {
                     let curr = new Date(selectedDates[0]);
-                    // Create deep copy to avoid reference issues while looping
                     let stopDate = new Date(selectedDates[1]);
-                    while(curr <= stopDate) {
+                    // Only add dates while curr is LESS THAN stopDate (Excludes return day)
+                    while(curr < stopDate) {
                         datesArray.push(curr.toISOString().split('T')[0]);
                         curr.setDate(curr.getDate() + 1);
                     }
@@ -225,7 +222,6 @@ async function initRentalLogic() {
 
                 document.getElementById('selected-date-input').value = JSON.stringify(datesArray);
                 document.getElementById('car-selection').style.display = 'block';
-                // Trigger availability check for the full array
                 updateCarDisplay(datesArray);
             }
         });
@@ -239,13 +235,60 @@ async function initRentalLogic() {
                 document.getElementById('reservation-form-container').style.display = 'none';
             });
         }
+
+        // --- URL PARAMETER AUTO-FILL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const preDate = urlParams.get('date');
+        const preCar = urlParams.get('car');
+
+        if (preDate) {
+            fp.setDate(preDate, true); 
+            if (preCar) {
+                setTimeout(() => {
+                    const box = document.querySelector(`.car-selection-box[data-car="${preCar}"]`);
+                    if (box) box.click();
+                }, 600);
+            }
+        }
+    }
+
+    // --- HOMEPAGE SEARCH LOGIC (WITH TRANSITION) ---
+    if (checkBtn && pickupDateInput && dropdown) {
+        checkBtn.onclick = () => {
+            const selectedDate = pickupDateInput.value;
+            if (!selectedDate) { alert("Please select a date."); return; }
+
+            dropdown.innerHTML = '';
+            const carsBooked = bookedDates[selectedDate] || [];
+            const availableCars = allCarsData.filter(car => !carsBooked.includes(car.id));
+
+            if (availableCars.length === 0) {
+                dropdown.innerHTML = `
+                    <div class="no-availability">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No Vehicles Available</p>
+                        <span>Try another date</span>
+                    </div>`;
+            } else {
+                let html = `<h4 data-i18n="available_vehicles">Available Vehicles</h4>`;
+                availableCars.forEach(car => {
+                    html += `
+                        <div class="result-item">
+                            <span>${car.id} <small>¥${car.price.toLocaleString()}</small></span>
+                            <a href="rental.html?car=${encodeURIComponent(car.id)}&date=${selectedDate}" class="btn-tiny">Book Now</a>
+                        </div>`;
+                });
+                dropdown.innerHTML = html;
+            }
+            dropdown.classList.add('show');
+            applyTranslations();
+        };
     }
 
     const rentalForm = document.getElementById("rental-form");
     if (rentalForm) {
         rentalForm.onsubmit = (e) => {
             e.preventDefault();
-
             const name = document.getElementById("name").value;
             const phone = document.getElementById("phone").value;
             const license = document.getElementById("license-input").value;
@@ -253,34 +296,17 @@ async function initRentalLogic() {
             const datesJson = document.getElementById('selected-date-input').value;
             const dates = JSON.parse(datesJson || "[]");
 
-            // --- STRICT VALIDATIONS ---
-            if (!/^[A-Za-z\s]+$/.test(name)) {
-                alert("Please enter a valid name (Alphabets only).");
-                return;
-            }
-            if (!/^\d+$/.test(phone)) {
-                alert("Please enter a valid phone number (Digits only).");
-                return;
-            }
-            if (!/^\d{12}$/.test(license)) {
-                alert(translations["err_license"] || "Please enter a valid 12-digit license number.");
-                return;
-            }
-            if (dates.length === 0) {
-                alert("Please select a rental date.");
-                return;
-            }
+            if (!/^[A-Za-z\s]+$/.test(name)) return alert("Invalid Name");
+            if (!/^\d+$/.test(phone)) return alert("Invalid Phone");
+            if (!/^\d{12}$/.test(license)) return alert(translations["err_license"] || "Invalid License");
+            if (dates.length === 0) return alert("Select a date");
 
-            // --- PREPARE DATA ---
             const rentalData = {
-                name: name,
-                phone: phone,
+                name, phone, car, dates,
                 licenseNumber: license,
                 facebook: document.getElementById("facebook").value,
                 location: document.getElementById("location").value,
-                car: car,
-                dates: dates, // The Array
-                date: dates[0], // Primary date for legacy sorting
+                date: dates[0],
                 days: dates.length,
                 totalPrice: (carPrices[car] || 0) * dates.length
             };

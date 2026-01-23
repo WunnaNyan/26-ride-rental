@@ -77,6 +77,9 @@
   "sum_car": "車種", 
   "sum_date": "受取日", 
   "sum_total": "合計金額", 
+  "sum_name": "お名前",
+  "sum_LicNum": "運転免許証番号",
+  "sum_location": "受取場所",
   "btn_home": "ホームページへ戻る", 
   "reserved_stamp": "予約済み",
 

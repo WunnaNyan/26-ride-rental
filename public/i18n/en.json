@@ -77,6 +77,9 @@
   "sum_car": "Car Model", 
   "sum_date": "Pick-up Date", 
   "sum_total": "Total Amount", 
+  "sum_name": "Name",
+  "sum_LicNum": "License Number",
+  "sum_location": "Location",
   "btn_home": "Return to Homepage", 
   "reserved_stamp": "RESERVED",
   
