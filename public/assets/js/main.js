@@ -9,7 +9,6 @@ let currentLang = localStorage.getItem('preferredLang') || 'en';
 let translations = {};
 
 // --- 1. DATABASE WATCHERS ---
-
 function watchFleet() {
     onSnapshot(collection(db, "cars"), (snapshot) => {
         carPrices = {}; 
@@ -21,11 +20,8 @@ function watchFleet() {
                 allCarsData.push({ id: doc.id, ...data });
             }
         });
-
-        // Trigger UI Renders
         if (document.querySelector('.index-car-grid')) renderIndexFleet();
         if (document.getElementById('dynamic-car-list')) renderFleetPage();
-        
         const dateInput = document.getElementById('selected-date-input');
         if (dateInput && dateInput.value) updateCarDisplay(dateInput.value);
     });
@@ -36,8 +32,12 @@ function watchReservations() {
         bookedDates = {}; 
         snapshot.forEach(doc => {
             const d = doc.data();
-            if (!bookedDates[d.date]) bookedDates[d.date] = [];
-            bookedDates[d.date].push(d.car);
+            // Supports both old 'date' string and new 'dates' array
+            const dates = d.dates || [d.date];
+            dates.forEach(dateStr => {
+                if (!bookedDates[dateStr]) bookedDates[dateStr] = [];
+                bookedDates[dateStr].push(d.car);
+            });
         });
         const dateInput = document.getElementById('selected-date-input');
         if (dateInput && dateInput.value) updateCarDisplay(dateInput.value);
@@ -45,37 +45,23 @@ function watchReservations() {
 }
 
 // --- 2. RENDERING LOGIC ---
-
-// NEW: Render the Detailed Fleet Page
 function renderFleetPage() {
     const container = document.getElementById('dynamic-car-list');
     if (!container) return;
-
     container.innerHTML = allCarsData.map(car => {
         const carIdSafe = car.id.replace(/\s+/g, '');
-        // Default specs if missing from DB
         const specs = car.specs || {};
-        
         return `
         <div class="car-card-long" id="${car.id.toLowerCase().replace(/\s+/g, '-')}">
           <div class="car-images-container">
-            <div class="main-image-viewport">
-              <img src="${car.images[0]}" alt="${car.id}" id="main-${carIdSafe}">
-            </div>
+            <div class="main-image-viewport"><img src="${car.images[0]}" alt="${car.id}" id="main-${carIdSafe}"></div>
             <div class="thumbnail-grid">
-                ${car.images.map(imgUrl => `
-                    <img src="${imgUrl}" alt="Thumbnail" onclick="changeMainImage('${carIdSafe}', '${imgUrl}')">
-                `).join('')}
+                ${car.images.map(imgUrl => `<img src="${imgUrl}" alt="Thumbnail" onclick="changeMainImage('${carIdSafe}', '${imgUrl}')">`).join('')}
             </div>
           </div>
-
           <div class="car-info-content">
-            <div class="car-header">
-              <h3>${car.id}</h3>
-              <span class="price-tag">¥${car.price.toLocaleString()}<span>/day</span></span>
-            </div>
+            <div class="car-header"><h3>${car.id}</h3><span class="price-tag">¥${car.price.toLocaleString()}<span>/day</span></span></div>
             <p class="car-description">${car.description || ''}</p>
-            
             <div class="specs-grid">
               <div class="spec-item"><strong>Seats:</strong> ${specs.seats || '7'}</div>
               <div class="spec-item"><strong>Luggage:</strong> ${specs.luggage || '4 Bags'}</div>
@@ -84,43 +70,31 @@ function renderFleetPage() {
               <div class="spec-item"><strong>Trans:</strong> ${specs.trans || 'Auto'}</div>
               <div class="spec-item"><strong>Class:</strong> ${car.class || 'Premium'}</div>
             </div>
-
             <a href="rental.html?car=${encodeURIComponent(car.id)}" class="btn-primary" data-i18n="book_now">Book This Car</a>
           </div>
-        </div>
-        `;
+        </div>`;
     }).join('');
     applyTranslations();
 }
 
-// Render Featured cars (Home/About)
 function renderIndexFleet() {
     const container = document.querySelector('.index-car-grid');
     if (!container) return;
-    
     container.innerHTML = allCarsData.map(car => `
         <a href="cars.html#${car.id.toLowerCase().replace(/\s+/g, '-')}" class="car-card">
             <div class="car-card-img">
                 <img src="${car.images ? car.images[0] : 'assets/images/placeholder.jpg'}">
                 <div class="price-badge">¥${car.price.toLocaleString()} / Day</div>
             </div>
-            <div class="car-card-body">
-                <h3>${car.id}</h3>
-                <p>${car.class || 'Premium'}</p>
-                <span class="card-link" data-i18n="view_details">View Details →</span>
-            </div>
-        </a>
-    `).join('');
+            <div class="car-card-body"><h3>${car.id}</h3><p>${car.class || 'Premium'}</p><span class="card-link" data-i18n="view_details">View Details →</span></div>
+        </a>`).join('');
     applyTranslations();
 }
 
-// Render Rental Selection
 function updateCarDisplay(dateStr) {
     const container = document.querySelector(".rental-car-grid");
     if (!container || !dateStr) return;
-
     const carsBooked = bookedDates[dateStr] || [];
-    
     container.innerHTML = allCarsData.map(car => {
         const isBooked = carsBooked.includes(car.id);
         return `
@@ -136,16 +110,13 @@ function updateCarDisplay(dateStr) {
                     </div>
                 </div>
                 <div class="car-selection-info"><h4>${car.id}</h4></div>
-            </div>
-        `;
+            </div>`;
     }).join('');
-
     attachBoxListeners();
     applyTranslations();
 }
 
-// --- 3. CORE UTILITIES (Translations, Partials, Nav) ---
-
+// --- 3. CORE UTILITIES ---
 function attachBoxListeners() {
     document.querySelectorAll('.car-selection-box').forEach(box => {
         box.onclick = () => {
@@ -212,13 +183,10 @@ function initNavigationLogic() {
 
 async function initRentalLogic() {
     const calendarEl = document.getElementById("calendar");
-    const dateInput = document.getElementById('pickup-date');
-    const checkBtn = document.getElementById('check-avail-btn');
-    const dropdown = document.getElementById('availability-dropdown');
-
     if (calendarEl) {
         const fp = flatpickr("#calendar", {
             inline: true,
+            mode: "single", // Currently single, we can change to "range" later
             dateFormat: "Y-m-d",
             minDate: "today",
             onChange: (selectedDates, dateStr) => {
@@ -230,43 +198,52 @@ async function initRentalLogic() {
         calendarEl._flatpickr = fp;
     }
 
-    if (checkBtn) {
-        checkBtn.onclick = () => {
-            const selectedDate = dateInput.value;
-            if (!selectedDate) return alert("Please select a date.");
-            dropdown.innerHTML = '';
-            dropdown.classList.add('show');
-            const carsBooked = bookedDates[selectedDate] || [];
-            const availableCars = allCarsData.filter(car => !carsBooked.includes(car.id));
-
-            if (availableCars.length === 0) {
-                dropdown.innerHTML = `<p>No cars available.</p>`;
-            } else {
-                availableCars.forEach(car => {
-                    dropdown.innerHTML += `
-                        <div class="result-item">
-                            <span>${car.id} (¥${car.price.toLocaleString()})</span>
-                            <a href="rental.html?date=${selectedDate}" class="btn-tiny">Book Now</a>
-                        </div>`;
-                });
-            }
-        };
-    }
-
     const rentalForm = document.getElementById("rental-form");
     if (rentalForm) {
         rentalForm.onsubmit = (e) => {
             e.preventDefault();
+
+            // 1. INPUT VALIDATION
+            const nameInput = document.getElementById("name").value;
+            const phoneInput = document.getElementById("phone").value;
+            const licenseInput = document.getElementById("license-input").value; // Matches the ID we added to HTML
+            
+            // Alphabets and spaces only for name
+            if (!/^[A-Za-z\s]+$/.test(nameInput)) {
+                alert("Please enter a valid name (Alphabets only).");
+                return;
+            }
+
+            // Numbers only for phone
+            if (!/^\d+$/.test(phoneInput)) {
+                alert("Please enter a valid phone number (Digits only).");
+                return;
+            }
+
             const car = document.getElementById('selected-car-input').value;
             const date = document.getElementById('selected-date-input').value;
+            
+            // For now, we assume 1 day because multi-day is Phase 2
+            const days = 1; 
+
             const rentalData = {
-                name: document.getElementById("name").value,
-                phone: document.getElementById("phone").value,
+                name: nameInput,
+                phone: phoneInput,
+                licenseNumber: licenseInput, // Storing license
                 facebook: document.getElementById("facebook").value,
                 location: document.getElementById("location").value,
-                car, date,
-                totalPrice: carPrices[car] || 0
+                car, 
+                date,
+                days: days, // NEW: Storing number of days
+                totalPrice: (carPrices[car] || 0) * days
             };
+
+            const licenseRegex = /^\d{12}$/; 
+            if (!licenseRegex.test(licenseInput)) {
+                alert(translations["err_license"] || "Please enter a valid 12-digit license number.");
+                return;
+            }
+
             sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
             window.location.href = "confirmation.html";
         };

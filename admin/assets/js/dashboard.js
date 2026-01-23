@@ -62,8 +62,17 @@ document.addEventListener('DOMContentLoaded', function() {
             statusEl.innerText = status;
             statusEl.className = status === 'Approved' ? "status-badge status-approved" : "status-badge status-pending";
             document.getElementById("btnApprove").style.display = status === 'Approved' ? "none" : "block";
-            document.getElementById("modalPaymentImg").src = data.paymentUrl || '';
-            document.getElementById("modalLicenseImg").src = data.licenseUrl || '';
+            const payImg = data.paymentUrl || '';
+            const licImg = data.licenseUrl || '';
+            
+            document.getElementById("modalPaymentImg").src = payImg;
+            document.getElementById("linkFullPayment").href = payImg; // NEW
+            document.getElementById("linkFullPayment").style.display = payImg ? "block" : "none"; // Hide if no img
+
+            document.getElementById("modalLicenseImg").src = licImg;
+            document.getElementById("linkFullLicense").href = licImg; // NEW
+            document.getElementById("linkFullLicense").style.display = licImg ? "block" : "none"; // Hide if no img
+            
             viewModal.style.display = "block";
         }
     });
@@ -124,38 +133,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- MANUAL BOOKING ACTION (WITH MAINTENANCE CHECK) ---
     const manualForm = document.getElementById("manualBookingForm");
     manualForm.onsubmit = async (e) => {
-        e.preventDefault();
-        const selectedCarId = document.getElementById("addCar").value;
+    e.preventDefault();
+    const selectedCarId = document.getElementById("addCar").value;
+    const customerName = document.getElementById("addName").value;
 
-        try {
-            // Safety check: Verify current status in DB before allowing booking
-            const carRef = doc(db, "cars", selectedCarId);
-            const carSnap = await getDoc(carRef);
-
-            if (carSnap.exists() && carSnap.data().status === 'maintenance') {
-                alert("⚠️ Cannot book: This vehicle was just moved to maintenance.");
-                return;
-            }
-
-            const manualData = {
-                car: selectedCarId,
-                name: document.getElementById("addName").value,
-                date: document.getElementById("addDate").value,
-                phone: document.getElementById("addPhone").value,
-                location: document.getElementById("addLocation").value,
-                status: "Approved",
-                bookingID: "MAN-" + Math.random().toString(36).substr(2, 7).toUpperCase(),
-                paymentScreenshot: "",
-                drivingLicenseURL: ""
-            };
-
-            await addDoc(collection(db, "reservations"), manualData);
-            manualForm.reset();
-            addModal.style.display = "none";
-        } catch (err) {
-            alert("Booking error: " + err.message);
-        }
+    const manualData = {
+        car: selectedCarId,
+        name: customerName,
+        date: document.getElementById("addDate").value,
+        phone: document.getElementById("addPhone").value,
+        licenseNumber: document.getElementById("addLicense").value, // NEW
+        location: document.getElementById("addLocation").value,
+        status: "Approved",
+        bookingID: "MAN-" + Math.random().toString(36).substr(2, 7).toUpperCase(),
+        paymentScreenshot: "",
+        drivingLicenseURL: ""
     };
+
+    try {
+        await addDoc(collection(db, "reservations"), manualData);
+        manualForm.reset();
+        addModal.style.display = "none";
+        
+        // SUCCESS POP-UP
+        alert(`✅ Booking Confirmed!\n\nID: ${manualData.bookingID}\nCustomer: ${manualData.name}\nCar: ${manualData.car}\nDate: ${manualData.date}`);
+    } catch (err) {
+        alert("Booking error: " + err.message);
+    }
+};
 
     // --- SHARED MODAL CONTROLS ---
     btnOpenAdd.onclick = () => addModal.style.display = "block";

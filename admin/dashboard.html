@@ -52,8 +52,16 @@
                     </div>
                 </div>
                 <div class="modal-media-pane">
-                    <div class="media-box"><label>Receipt</label><div class="image-wrapper"><img id="modalPaymentImg" src=""></div></div>
-                    <div class="media-box"><label>License</label><div class="image-wrapper"><img id="modalLicenseImg" src=""></div></div>
+                    <div class="media-box">
+                        <label>Receipt</label>
+                        <div class="image-wrapper"><img id="modalPaymentImg" src=""></div>
+                        <a id="linkFullPayment" href="#" target="_blank" class="view-link">View Full Receipt</a>
+                    </div>
+                    <div class="media-box">
+                        <label>License</label>
+                        <div class="image-wrapper"><img id="modalLicenseImg" src=""></div>
+                        <a id="linkFullLicense" href="#" target="_blank" class="view-link">View Full License</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,6 +107,7 @@
                 <div class="info-row"><label>Customer Name</label><input type="text" id="addName" class="admin-input" required></div>
                 <div class="info-row"><label>Rental Date</label><input type="date" id="addDate" class="admin-input" required></div>
                 <div class="info-row"><label>Phone Number</label><input type="tel" id="addPhone" class="admin-input" required></div>
+                <div class="info-row"><label>License Number</label><input type="text" id="addLicense" class="admin-input" required></div>
                 <div class="info-row"><label>Pick-up Location</label>
                     <select id="addLocation" class="admin-input">
                         <option value="JR Shin-koiwa">JR Shin-koiwa</option>

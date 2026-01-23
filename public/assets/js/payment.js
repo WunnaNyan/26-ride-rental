@@ -29,22 +29,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("payment-form");
     const submitBtn = document.getElementById("submit-btn");
 
-    // --- NEW: PREVIEW LOGIC ---
+    const dateDisplay = Array.isArray(rentalData.dates) 
+        ? `${rentalData.dates[0]} to ${rentalData.dates[rentalData.dates.length - 1]}`
+        : (rentalData.date || "---");
+    document.getElementById("pay-date").innerText = dateDisplay;
+
+    // Image Previews (Clean UI)
     const setupPreview = (inputId, previewId) => {
-        const input = document.getElementById(inputId);
-        const preview = document.getElementById(previewId);
-        
-        input.addEventListener("change", function() {
-            const file = this.files[0];
+        document.getElementById(inputId).onchange = (e) => {
+            const [file] = e.target.files;
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    preview.src = e.target.result;
-                    preview.style.display = "block";
-                };
-                reader.readAsDataURL(file);
+                const preview = document.getElementById(previewId);
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "block";
             }
-        });
+        };
     };
 
     setupPreview("proof", "proof-preview");

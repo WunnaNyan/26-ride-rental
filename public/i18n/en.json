@@ -67,6 +67,8 @@
   "qr_hint": "Scan the QR code above with your banking app", 
   "upload_label": "Upload Proof of Payment (Screenshot):", 
   "license_label": "Upload Front of Driving License",
+  "form_license_no": "Driving License Number",
+  "err_license": "Please enter a valid 12-digit license number.",
   "btn_submit": "Submit & Confirm Booking",
   "succ_h1": "Booking Received!", 
   "succ_sub": "Thank you for choosing 26 Ride Rental.", 

@@ -47,3 +47,18 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.clear();
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const lastBooking = JSON.parse(sessionStorage.getItem("lastConfirmedBooking"));
+    
+    if (lastBooking) {
+        document.getElementById("booking-id").innerText = `#${lastBooking.bookingID}`;
+        document.getElementById("sum-car").innerText = lastBooking.car;
+        document.getElementById("sum-cost").innerText = `¥${lastBooking.totalPrice.toLocaleString()}`;
+        
+        const dateDisplay = Array.isArray(lastBooking.dates) 
+            ? `${lastBooking.dates[0]} to ${lastBooking.dates[lastBooking.dates.length - 1]}`
+            : (lastBooking.date || "---");
+        document.getElementById("sum-date").innerText = dateDisplay;
+    }
+});
