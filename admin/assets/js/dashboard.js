@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
             price: Number(document.getElementById("carPriceInput").value),
             description: document.getElementById("carDescInput").value,
             class: document.getElementById("carClassInput").value,
-            images: [],
             specs: {
                 engine: document.getElementById("specEngine").value,
                 fuel: document.getElementById("specFuel").value,
@@ -113,8 +112,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 trans: document.getElementById("specTrans").value
             }
         };
-        await setDoc(doc(db, "cars", id), carData, { merge: true });
-        carModal.style.display = "none";
+        try {
+            await setDoc(doc(db, "cars", id), carData, { merge: true });
+            carModal.style.display = "none";
+            alert("Vehicle updated successfully!");
+        } catch (error) {
+            console.error("Update failed:", error);
+        }
     };
 
     // --- MANUAL BOOKING ACTION (WITH MAINTENANCE CHECK) ---
@@ -164,10 +168,18 @@ document.addEventListener('DOMContentLoaded', function() {
         viewModal.style.display = "none";
     };
 
-    document.getElementById("btnDelete").onclick = async () => {
-        if (confirm("Delete this booking?")) {
-            await deleteDoc(doc(db, "reservations", currentDocId));
-            viewModal.style.display = "none";
+    document.getElementById("btnDeleteCar").onclick = async () => {
+        const id = document.getElementById("carIdInput").value;
+        if (!id) return;
+
+        if (confirm(`Are you sure you want to delete ${id}? This cannot be undone.`)) {
+            try {
+                await deleteDoc(doc(db, "cars", id));
+                carModal.style.display = "none";
+                alert("Vehicle deleted successfully.");
+            } catch (err) {
+                alert("Error deleting vehicle: " + err.message);
+            }
         }
     };
 

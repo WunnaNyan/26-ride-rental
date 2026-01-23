@@ -85,10 +85,6 @@ function renderFleetPage() {
               <div class="spec-item"><strong>Class:</strong> ${car.class || 'Premium'}</div>
             </div>
 
-            <div class="pro-tip">
-              <p><strong>Why Rent:</strong> ${car.proTip || 'Perfect for group travel and luxury comfort in Tokyo.'}</p>
-            </div>
-
             <a href="rental.html?car=${encodeURIComponent(car.id)}" class="btn-primary" data-i18n="book_now">Book This Car</a>
           </div>
         </div>
