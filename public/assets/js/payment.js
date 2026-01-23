@@ -21,25 +21,43 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // --- HELPER: FORMAT DATES (YYYY/MM/DD) ---
+    const formatDisplayDate = (dateStr) => {
+        if (!dateStr) return "";
+        return dateStr.replace(/-/g, '/');
+    };
+
     // Update UI Summary
     document.getElementById("pay-car").textContent = rentalData.car;
-    document.getElementById("pay-date").textContent = rentalData.date;
     document.getElementById("pay-cost").textContent = `¥${rentalData.totalPrice.toLocaleString()}`;
+
+    // Handle Multi-day Date Display for the UI
+    let dateDisplay = "";
+    if (Array.isArray(rentalData.dates) && rentalData.dates.length > 0) {
+        if (rentalData.dates.length > 1) {
+            const start = formatDisplayDate(rentalData.dates[0]);
+            const end = formatDisplayDate(rentalData.dates[rentalData.dates.length - 1]);
+            dateDisplay = `${start} to ${end}`;
+        } else {
+            dateDisplay = formatDisplayDate(rentalData.dates[0]);
+        }
+    } else {
+        dateDisplay = formatDisplayDate(rentalData.date) || "---";
+    }
+    document.getElementById("pay-date").innerText = dateDisplay;
 
     const form = document.getElementById("payment-form");
     const submitBtn = document.getElementById("submit-btn");
 
-    const dateDisplay = Array.isArray(rentalData.dates) 
-        ? `${rentalData.dates[0]} to ${rentalData.dates[rentalData.dates.length - 1]}`
-        : (rentalData.date || "---");
-    document.getElementById("pay-date").innerText = dateDisplay;
-
     // Image Previews (Clean UI)
     const setupPreview = (inputId, previewId) => {
-        document.getElementById(inputId).onchange = (e) => {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
+
+        input.onchange = (e) => {
             const [file] = e.target.files;
             if (file) {
-                const preview = document.getElementById(previewId);
                 preview.src = URL.createObjectURL(file);
                 preview.style.display = "block";
             }
@@ -48,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupPreview("proof", "proof-preview");
     setupPreview("license", "license-preview");
-    // --------------------------
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -65,16 +82,28 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.textContent = "Verifying availability...";
 
         try {
-            // 1. Double-check availability
+            // 1. Double-check availability for ALL selected dates
+            // We fetch all reservations for this specific car
             const q = query(
                 collection(db, "reservations"),
-                where("car", "==", rentalData.car),
-                where("date", "==", rentalData.date)
+                where("car", "==", rentalData.car)
             );
             const checkSnapshot = await getDocs(q);
             
-            if (!checkSnapshot.empty) {
-                alert("This car was just reserved. Please choose another date.");
+            let alreadyBooked = false;
+            const requestedDates = rentalData.dates || [rentalData.date];
+
+            checkSnapshot.forEach((doc) => {
+                const existingData = doc.data();
+                const existingDates = existingData.dates || [existingData.date];
+                
+                // Check if any requested date exists in this existing reservation
+                const overlap = requestedDates.some(d => existingDates.includes(d));
+                if (overlap) alreadyBooked = true;
+            });
+
+            if (alreadyBooked) {
+                alert("One or more of your selected dates are no longer available. Please choose another date range.");
                 window.location.href = "rental.html";
                 return;
             }
@@ -91,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return await getDownloadURL(snapshot.ref);
             };
 
-            // 3. UPLOAD BOTH (Running at the same time)
+            // 3. UPLOAD BOTH
             const [proofURL, licenseURL] = await Promise.all([
                 uploadFile(proofFile, "payment_proofs"),
                 uploadFile(licenseFile, "license_images")
@@ -104,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ...rentalData,
                 bookingID: bookingNumber,
                 paymentScreenshot: proofURL,
-                drivingLicenseURL: licenseURL, // Added this field
+                drivingLicenseURL: licenseURL,
                 status: "Pending Verification",
                 createdAt: new Date()
             };

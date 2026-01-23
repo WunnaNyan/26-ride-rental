@@ -83,8 +83,11 @@
   "form_loc_default": "Select Station",
   "loc_shinkoiwa": "JR Shin-koiwa Station",
   "loc_kinshicho": "JR Kinshichou Station",
-  "loc_akihabara": "JR Akihabara Station"
+  "loc_akihabara": "JR Akihabara Station",
 
-
+  "multi_day_prompt": "Rent for multiple days?",
+  "step1_title": "Step 1",
+  "select_date_h2": "Select Rental Period",
+  "days_count": "Day(s)"
 
 }

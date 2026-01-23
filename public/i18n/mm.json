@@ -83,5 +83,10 @@
   "form_loc_default": "Select Station",
   "loc_shinkoiwa": "JR Shin-koiwa Station",
   "loc_kinshicho": "JR Kinshichou Station",
-  "loc_akihabara": "JR Akihabara Station"
+  "loc_akihabara": "JR Akihabara Station",
+
+  "multi_day_prompt": "ရက်အများကြီး ငှားမှာလား?",
+  "step1_title": "အဆင့် ၁",
+  "select_date_h2": "ငှားရမ်းမည့်ရက်ကို ရွေးချယ်ပါ",
+  "days_count": "ရက်"
 }

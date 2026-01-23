@@ -22,7 +22,28 @@
 
     <main class="admin-main">
         <section id="calendar-section">
-            <div id="calendar-container"><div id="calendar"></div></div>
+            <div id="stats-bar" class="stats-container">
+                <div class="stat-box">
+                    <label>Manual</label>
+                    <span id="stat-manual">0</span>
+                </div>
+                <div class="stat-box">
+                    <label>Online</label>
+                    <span id="stat-online">0</span>
+                </div>
+                <div id="stat-pending-box" class="stat-box">
+                    <label>Pending</label>
+                    <span id="stat-pending">0</span>
+                </div>
+                <div class="stat-box">
+                    <label>Approved</label>
+                    <span id="stat-approved">0</span>
+                </div>
+            </div>
+
+            <div id="calendar-container">
+                <div id="calendar"></div>
+            </div>
         </section>
 
         <section id="fleet-section" style="display:none;">
@@ -43,9 +64,13 @@
             <div class="modal-grid">
                 <div class="modal-info-pane">
                     <div class="info-row"><label>Customer Name</label><p id="modalName"></p></div>
+                    <div class="info-row"><label>Phone Number</label><p id="modalPhone"></p></div>
+                    <div class="info-row"><label>License No.</label><p id="modalLicenseNo"></p></div>
                     <div class="info-row"><label>Booking ID</label><p id="modalID" class="id-tag-display"></p></div>
-                    <div class="info-row"><label>Rental Date</label><p id="modalDate"></p></div>
+                    <div class="info-row"><label>Rental Dates</label><p id="modalDate"></p></div>
+                    <div class="info-row"><label>Pick-up Location</label><p id="modalLoc"></p></div>
                     <div class="info-row"><label>Status</label><div><span id="modalStatus" class="status-badge"></span></div></div>
+                    
                     <div class="modal-actions-footer">
                         <button id="btnApprove" class="btn-primary">Approve Reservation</button>
                         <button id="btnDelete" class="btn-danger-link">Delete Permanently</button>
@@ -53,13 +78,13 @@
                 </div>
                 <div class="modal-media-pane">
                     <div class="media-box">
-                        <label>Receipt</label>
-                        <div class="image-wrapper"><img id="modalPaymentImg" src=""></div>
+                        <label>Receipt Proof</label>
+                        <div class="image-wrapper"><img id="modalPaymentImg" src="" style="display:none;"></div>
                         <a id="linkFullPayment" href="#" target="_blank" class="view-link">View Full Receipt</a>
                     </div>
                     <div class="media-box">
-                        <label>License</label>
-                        <div class="image-wrapper"><img id="modalLicenseImg" src=""></div>
+                        <label>Driving License</label>
+                        <div class="image-wrapper"><img id="modalLicenseImg" src="" style="display:none;"></div>
                         <a id="linkFullLicense" href="#" target="_blank" class="view-link">View Full License</a>
                     </div>
                 </div>
@@ -105,7 +130,13 @@
             <form id="manualBookingForm" class="modal-info-pane" style="border:none;">
                 <div class="info-row"><label>Vehicle</label><select id="addCar" class="admin-input" required></select></div>
                 <div class="info-row"><label>Customer Name</label><input type="text" id="addName" class="admin-input" required></div>
-                <div class="info-row"><label>Rental Date</label><input type="date" id="addDate" class="admin-input" required></div>
+                <div class="info-row">
+                    <label>Rental Period</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="date" id="addDate" class="admin-input" required>
+                        <input type="date" id="addEndDate" class="admin-input" placeholder="End Date">
+                    </div>
+                </div>
                 <div class="info-row"><label>Phone Number</label><input type="tel" id="addPhone" class="admin-input" required></div>
                 <div class="info-row"><label>License Number</label><input type="text" id="addLicense" class="admin-input" required></div>
                 <div class="info-row"><label>Pick-up Location</label>
@@ -117,6 +148,19 @@
                 </div>
                 <button type="submit" class="btn-primary" style="background: #10b981;">Confirm Booking</button>
             </form>
+        </div>
+    </div>
+
+    <div id="successPopup" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center; border-top: 5px solid #10b981;">
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">✅</div>
+            <h2 style="color: #111827;">Booking Successful!</h2>
+            <div style="background: #f3f4f6; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; font-size: 0.9rem;">
+                <p style="margin-bottom: 8px;"><strong>ID:</strong> <span id="successID"></span></p>
+                <p style="margin-bottom: 8px;"><strong>Customer:</strong> <span id="successCust"></span></p>
+                <p><strong>Dates:</strong> <span id="successDates"></span></p>
+            </div>
+            <button class="btn-primary close-success-btn" style="width: 100%;">Return to Dashboard</button>
         </div>
     </div>
 </body>

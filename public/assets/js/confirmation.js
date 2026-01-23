@@ -6,15 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // --- HELPER: FORMAT DATES (YYYY/MM/DD) ---
+  const formatDisplayDate = (dateStr) => {
+    if (!dateStr) return "";
+    return dateStr.replace(/-/g, '/');
+  };
+
   // Handle Date Display (Support for both single string and array)
   let dateDisplay = "";
-  if (Array.isArray(rentalData.dates)) {
-    // If it's a range, show "Start to End"
-    dateDisplay = rentalData.dates.length > 1 
-      ? `${rentalData.dates[0]} to ${rentalData.dates[rentalData.dates.length - 1]}`
-      : rentalData.dates[0];
+  if (Array.isArray(rentalData.dates) && rentalData.dates.length > 0) {
+    if (rentalData.dates.length > 1) {
+      // If it's a range, show "2026/1/29 to 2026/2/3"
+      const start = formatDisplayDate(rentalData.dates[0]);
+      const end = formatDisplayDate(rentalData.dates[rentalData.dates.length - 1]);
+      dateDisplay = `${start} to ${end}`;
+    } else {
+      // If it's only one day, show "2026/1/29"
+      dateDisplay = formatDisplayDate(rentalData.dates[0]);
+    }
+  } else if (rentalData.date) {
+    // Fallback for legacy data
+    dateDisplay = formatDisplayDate(rentalData.date);
   } else {
-    dateDisplay = rentalData.date || "Not Selected";
+    dateDisplay = "Not Selected";
   }
 
   const container = document.getElementById("summary-container");
@@ -24,8 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="summary-item"><strong>License No:</strong> <span>${rentalData.licenseNumber || 'N/A'}</span></div>
       <div class="summary-item"><strong>Car:</strong> <span>${rentalData.car}</span></div>
       <div class="summary-item"><strong>Location:</strong> <span>${rentalData.location}</span></div>
-      <div class="summary-item"><strong>Dates:</strong> <span>${dateDisplay}</span></div>
-      <div class="summary-item"><strong>Total Days:</strong> <span>${rentalData.days || 1} Days</span></div>
+      <div class="summary-item"><strong>Rental Date:</strong> <span>${dateDisplay}</span></div>
+      <div class="summary-item"><strong>Total Days:</strong> <span>${rentalData.days || 1} Day(s)</span></div>
       <div class="summary-item" style="border:none; color:#2563eb; font-size:1.4rem; margin-top:15px;">
           <strong>Total Price:</strong> <strong>¥${(rentalData.totalPrice || 0).toLocaleString()}</strong>
       </div>

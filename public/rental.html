@@ -25,7 +25,16 @@
         <div class="section-title-area">
           <span class="section-label" data-i18n="step1_title">Step 1</span>
           <h2 data-i18n="select_date_h2">Select Pick-up Date</h2>
+          
+          <div class="toggle-container">
+            <span data-i18n="multi_day_prompt">Rent for multiple days?</span>
+            <label class="switch">
+              <input type="checkbox" id="multi-day-switch">
+              <span class="slider round"></span>
+            </label>
+          </div>
         </div>
+        
         <div class="calendar-wrapper card-shadow">
           <div id="calendar"></div>
         </div>
@@ -51,6 +60,7 @@
           <form id="rental-form">
             <input type="hidden" id="selected-car-input" name="selected_car">
             <input type="hidden" id="selected-date-input" name="rental_date">
+            
             <div class="form-grid">
               <div class="form-group">
                 <label for="name" data-i18n="form_name">Full Name</label>
@@ -65,7 +75,7 @@
                 <input type="text" id="facebook" name="facebook" data-i18n="form_fb" placeholder="Optional">
               </div>
               <div class="form-group">
-                <label for="license-input"  data-i18n="form_license_no">Driving License Number</label>
+                <label for="license-input" data-i18n="form_license_no">Driving License Number</label>
                 <input type="text" id="license-input" name="license_no" data-i18n="err_license" placeholder="Enter License Number" required>
               </div>
               <div class="form-group">

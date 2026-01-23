@@ -87,6 +87,11 @@
   "btn_confirm": "予約を確定する",
   "btn_pay": "お支払いへ進む",
   "btn_submit": "送信して予約を確定する",
-  "btn_home": "ホームページへ戻る"
+  "btn_home": "ホームページへ戻る",
+
+  "multi_day_prompt": "複数日レンタルしますか？",
+  "step1_title": "ステップ 1",
+  "select_date_h2": "レンタル期間の選択",
+  "days_count": "日間"
 
 }

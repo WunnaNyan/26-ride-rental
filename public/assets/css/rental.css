@@ -9,6 +9,17 @@
     margin-bottom: 40px;
 }
 
+.section-label {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 .card-shadow {
     background: white;
     border-radius: 15px;
@@ -16,13 +27,97 @@
     overflow: hidden;
 }
 
-/* ---------- CALENDAR ---------- */
+/* ---------- NEW: TOGGLE SWITCH ---------- */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.toggle-container span {
+    font-weight: 600;
+    color: #444;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* ---------- CALENDAR & FLATPICKR RANGE ---------- */
 .calendar-wrapper {
     max-width: 450px;
     margin: 0 auto;
     padding: 20px;
 }
+
 .flatpickr-input { display: none; }
+
+/* Styling for selected range highlights */
+.flatpickr-day.selected.startRange, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.flatpickr-day.inRange {
+    background: #e9f2ff !important;
+    border-color: transparent !important;
+    box-shadow: -5px 0 0 #e9f2ff, 5px 0 0 #e9f2ff !important;
+}
 
 /* ---------- CAR SELECTION GRID ---------- */
 .rental-car-grid {
@@ -149,15 +244,16 @@
 .form-actions {
     margin-top: 30px;
 }
+
+/* --- BOOKED STATUS --- */
 .car-selection-box.booked {
     opacity: 0.4;
     filter: grayscale(1);
-    pointer-events: none; /* Makes it unclickable */
+    pointer-events: none;
     cursor: not-allowed;
     position: relative;
 }
 
-/* The Reserved Stamp */
 .car-selection-box.booked::after {
     content: "RESERVED";
     position: absolute;
@@ -175,6 +271,9 @@
     letter-spacing: 2px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
+
+/* --- RESPONSIVE --- */
 @media (max-width: 600px) {
     .form-grid { grid-template-columns: 1fr; }
+    .toggle-container { flex-direction: column; gap: 5px; }
 }

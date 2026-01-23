@@ -22,8 +22,13 @@ function watchFleet() {
         });
         if (document.querySelector('.index-car-grid')) renderIndexFleet();
         if (document.getElementById('dynamic-car-list')) renderFleetPage();
-        const dateInput = document.getElementById('selected-date-input');
-        if (dateInput && dateInput.value) updateCarDisplay(dateInput.value);
+        
+        // Refresh display if a date is already picked
+        const dateVal = document.getElementById('selected-date-input').value;
+        if (dateVal) {
+            const dates = JSON.parse(dateVal);
+            updateCarDisplay(dates);
+        }
     });
 }
 
@@ -32,15 +37,18 @@ function watchReservations() {
         bookedDates = {}; 
         snapshot.forEach(doc => {
             const d = doc.data();
-            // Supports both old 'date' string and new 'dates' array
+            // Supports both legacy 'date' and new 'dates' array
             const dates = d.dates || [d.date];
             dates.forEach(dateStr => {
                 if (!bookedDates[dateStr]) bookedDates[dateStr] = [];
                 bookedDates[dateStr].push(d.car);
             });
         });
-        const dateInput = document.getElementById('selected-date-input');
-        if (dateInput && dateInput.value) updateCarDisplay(dateInput.value);
+        const dateVal = document.getElementById('selected-date-input').value;
+        if (dateVal) {
+            const dates = JSON.parse(dateVal);
+            updateCarDisplay(dates);
+        }
     });
 }
 
@@ -91,17 +99,24 @@ function renderIndexFleet() {
     applyTranslations();
 }
 
-function updateCarDisplay(dateStr) {
+/**
+ * FIXED: updateCarDisplay now accepts an ARRAY of dates.
+ * If a car is booked on ANY of the selected dates, it shows as booked.
+ */
+function updateCarDisplay(datesArray) {
     const container = document.querySelector(".rental-car-grid");
-    if (!container || !dateStr) return;
-    const carsBooked = bookedDates[dateStr] || [];
+    if (!container || !datesArray || datesArray.length === 0) return;
+
     container.innerHTML = allCarsData.map(car => {
-        const isBooked = carsBooked.includes(car.id);
+        // Check if car is booked on ANY of the picked dates
+        const isBooked = datesArray.some(date => (bookedDates[date] || []).includes(car.id));
+        
         return `
             <div class="car-selection-box ${isBooked ? 'booked' : ''}" data-car="${car.id}">
                 <div class="car-img-badge">${car.class || 'Premium'}</div>
                 <div class="car-img-container">
                     <img src="${car.images ? car.images[0] : 'assets/images/placeholder.jpg'}" alt="${car.id}">
+                    ${isBooked ? '<div class="booked-overlay">FULLY BOOKED</div>' : ''}
                     <div class="car-overlay">
                         <div class="overlay-stats">
                             <span>${car.specs?.seats || '7'} <span data-i18n="seats">Seats</span></span>
@@ -148,7 +163,6 @@ function applyTranslations() {
             else el.textContent = translations[key];
         }
     });
-    document.documentElement.lang = currentLang;
 }
 
 function loadPartial(id, file) {
@@ -181,21 +195,50 @@ function initNavigationLogic() {
     });
 }
 
+// --- 4. RENTAL LOGIC (MULTI-DAY + VALIDATION) ---
 async function initRentalLogic() {
     const calendarEl = document.getElementById("calendar");
+    const multiDayToggle = document.getElementById("multi-day-switch");
+
     if (calendarEl) {
         const fp = flatpickr("#calendar", {
             inline: true,
-            mode: "single", // Currently single, we can change to "range" later
+            mode: "single", 
             dateFormat: "Y-m-d",
             minDate: "today",
-            onChange: (selectedDates, dateStr) => {
-                document.getElementById('selected-date-input').value = dateStr;
+            onChange: (selectedDates, dateStr, instance) => {
+                // If range mode, wait for both dates to be picked
+                if (instance.config.mode === "range" && selectedDates.length < 2) return;
+
+                let datesArray = [];
+                if (selectedDates.length === 2) {
+                    let curr = new Date(selectedDates[0]);
+                    // Create deep copy to avoid reference issues while looping
+                    let stopDate = new Date(selectedDates[1]);
+                    while(curr <= stopDate) {
+                        datesArray.push(curr.toISOString().split('T')[0]);
+                        curr.setDate(curr.getDate() + 1);
+                    }
+                } else {
+                    datesArray = [dateStr];
+                }
+
+                document.getElementById('selected-date-input').value = JSON.stringify(datesArray);
                 document.getElementById('car-selection').style.display = 'block';
-                updateCarDisplay(dateStr);
+                // Trigger availability check for the full array
+                updateCarDisplay(datesArray);
             }
         });
-        calendarEl._flatpickr = fp;
+
+        if (multiDayToggle) {
+            multiDayToggle.addEventListener('change', (e) => {
+                fp.set("mode", e.target.checked ? "range" : "single");
+                fp.clear();
+                document.getElementById('selected-date-input').value = "";
+                document.getElementById('car-selection').style.display = 'none';
+                document.getElementById('reservation-form-container').style.display = 'none';
+            });
+        }
     }
 
     const rentalForm = document.getElementById("rental-form");
@@ -203,46 +246,44 @@ async function initRentalLogic() {
         rentalForm.onsubmit = (e) => {
             e.preventDefault();
 
-            // 1. INPUT VALIDATION
-            const nameInput = document.getElementById("name").value;
-            const phoneInput = document.getElementById("phone").value;
-            const licenseInput = document.getElementById("license-input").value; // Matches the ID we added to HTML
-            
-            // Alphabets and spaces only for name
-            if (!/^[A-Za-z\s]+$/.test(nameInput)) {
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const license = document.getElementById("license-input").value;
+            const car = document.getElementById('selected-car-input').value;
+            const datesJson = document.getElementById('selected-date-input').value;
+            const dates = JSON.parse(datesJson || "[]");
+
+            // --- STRICT VALIDATIONS ---
+            if (!/^[A-Za-z\s]+$/.test(name)) {
                 alert("Please enter a valid name (Alphabets only).");
                 return;
             }
-
-            // Numbers only for phone
-            if (!/^\d+$/.test(phoneInput)) {
+            if (!/^\d+$/.test(phone)) {
                 alert("Please enter a valid phone number (Digits only).");
                 return;
             }
-
-            const car = document.getElementById('selected-car-input').value;
-            const date = document.getElementById('selected-date-input').value;
-            
-            // For now, we assume 1 day because multi-day is Phase 2
-            const days = 1; 
-
-            const rentalData = {
-                name: nameInput,
-                phone: phoneInput,
-                licenseNumber: licenseInput, // Storing license
-                facebook: document.getElementById("facebook").value,
-                location: document.getElementById("location").value,
-                car, 
-                date,
-                days: days, // NEW: Storing number of days
-                totalPrice: (carPrices[car] || 0) * days
-            };
-
-            const licenseRegex = /^\d{12}$/; 
-            if (!licenseRegex.test(licenseInput)) {
+            if (!/^\d{12}$/.test(license)) {
                 alert(translations["err_license"] || "Please enter a valid 12-digit license number.");
                 return;
             }
+            if (dates.length === 0) {
+                alert("Please select a rental date.");
+                return;
+            }
+
+            // --- PREPARE DATA ---
+            const rentalData = {
+                name: name,
+                phone: phone,
+                licenseNumber: license,
+                facebook: document.getElementById("facebook").value,
+                location: document.getElementById("location").value,
+                car: car,
+                dates: dates, // The Array
+                date: dates[0], // Primary date for legacy sorting
+                days: dates.length,
+                totalPrice: (carPrices[car] || 0) * dates.length
+            };
 
             sessionStorage.setItem("rentalData", JSON.stringify(rentalData));
             window.location.href = "confirmation.html";
