@@ -15,18 +15,21 @@ function watchFleet() {
         allCarsData = [];
         snapshot.forEach(doc => {
             const data = doc.data();
+            // Important: Make sure your Firestore field is exactly "status": "active"
             if (data.status === "active") {
                 carPrices[doc.id] = data.price;
                 allCarsData.push({ id: doc.id, ...data });
             }
         });
-        if (document.querySelector('.index-car-grid')) renderIndexFleet();
-        if (document.getElementById('dynamic-car-list')) renderFleetPage();
-        
-        const dateVal = document.getElementById('selected-date-input')?.value;
-        if (dateVal) {
-            const dates = JSON.parse(dateVal);
-            updateCarDisplay(dates);
+
+        console.log("Cars Loaded:", allCarsData); // Check your console (F12) for this!
+
+        // Force rendering depending on which page we are on
+        if (document.getElementById('dynamic-car-list')) {
+            renderFleetPage();
+        }
+        if (document.querySelector('.index-car-grid')) {
+            renderIndexFleet();
         }
     });
 }
@@ -54,19 +57,27 @@ function watchReservations() {
 function renderFleetPage() {
     const container = document.getElementById('dynamic-car-list');
     if (!container) return;
+    
+    if (allCarsData.length === 0) {
+        container.innerHTML = "<p>Loading vehicles...</p>";
+        return;
+    }
+
     container.innerHTML = allCarsData.map(car => {
         const carIdSafe = car.id.replace(/\s+/g, '');
         const specs = car.specs || {};
+        const mainImg = (car.images && car.images.length > 0) ? car.images[0] : 'assets/images/placeholder.jpg';
+        
         return `
         <div class="car-card-long" id="${car.id.toLowerCase().replace(/\s+/g, '-')}">
           <div class="car-images-container">
-            <div class="main-image-viewport"><img src="${car.images[0]}" alt="${car.id}" id="main-${carIdSafe}"></div>
+            <div class="main-image-viewport"><img src="${mainImg}" alt="${car.id}" id="main-${carIdSafe}"></div>
             <div class="thumbnail-grid">
-                ${car.images.map(imgUrl => `<img src="${imgUrl}" alt="Thumbnail" onclick="changeMainImage('${carIdSafe}', '${imgUrl}')">`).join('')}
+                ${(car.images || []).map(imgUrl => `<img src="${imgUrl}" alt="Thumbnail" onclick="changeMainImage('${carIdSafe}', '${imgUrl}')">`).join('')}
             </div>
           </div>
           <div class="car-info-content">
-            <div class="car-header"><h3>${car.id}</h3><span class="price-tag">¥${car.price.toLocaleString()}<span>/day</span></span></div>
+            <div class="car-header"><h3>${car.id}</h3><span class="price-tag">¥${(car.price || 0).toLocaleString()}<span>/day</span></span></div>
             <p class="car-description">${car.description || ''}</p>
             <div class="specs-grid">
               <div class="spec-item"><strong>Seats:</strong> ${specs.seats || '7'}</div>
@@ -318,12 +329,18 @@ async function initRentalLogic() {
 }
 
 // --- BOOTSTRAP ---
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Start the DB listeners immediately
     watchFleet();
     watchReservations();
-    loadTranslations(currentLang).then(() => {
-        loadPartial("site-header", "partials/header.html");
-        loadPartial("site-footer", "partials/footer.html");
+    
+    // 2. Load Language & Partials
+    await loadTranslations(currentLang);
+    loadPartial("site-header", "partials/header.html");
+    loadPartial("site-footer", "partials/footer.html");
+
+    // 3. Initialize Rental Logic if on rental page
+    if (window.location.pathname.includes('rental.html')) {
         initRentalLogic();
-    });
+    }
 });
