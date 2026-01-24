@@ -8,6 +8,21 @@ let bookedDates = {};
 let currentLang = localStorage.getItem('preferredLang') || 'en';
 let translations = {};
 
+const getDatesInRange = (start, end) => {
+    const dates = [];
+    let curr = new Date(start);
+    const stop = new Date(end);
+    // Setting time to noon avoids any "daylight savings" or timezone skipping
+    curr.setHours(12, 0, 0, 0);
+    stop.setHours(12, 0, 0, 0);
+
+    while (curr <= stop) { // The "<=" is what includes the end date!
+        dates.push(curr.toISOString().split('T')[0]);
+        curr.setDate(curr.getDate() + 1);
+    }
+    return dates;
+};
+
 // --- 1. DATABASE WATCHERS ---
 function watchFleet() {
     onSnapshot(collection(db, "cars"), (snapshot) => {
@@ -36,20 +51,23 @@ function watchFleet() {
 
 function watchReservations() {
     onSnapshot(query(collection(db, "reservations")), (snapshot) => {
-        bookedDates = {}; 
+        // We will store reservations in a flat array for easier range checking
+        const activeReservations = []; 
         snapshot.forEach(doc => {
-            const d = doc.data();
-            const dates = d.dates || [d.date];
-            dates.forEach(dateStr => {
-                if (!bookedDates[dateStr]) bookedDates[dateStr] = [];
-                bookedDates[dateStr].push(d.car);
-            });
+            activeReservations.push(doc.data());
         });
+
+        // Trigger UI update if dates are already picked
         const dateInput = document.getElementById('selected-date-input');
         if (dateInput && dateInput.value) {
-            const dates = JSON.parse(dateInput.value);
-            updateCarDisplay(dates);
+            try {
+                const selectedDates = JSON.parse(dateInput.value);
+                updateCarDisplay(selectedDates, activeReservations); // Pass data directly
+            } catch(e) { console.error("Date parse error", e); }
         }
+        
+        // Save globally for other functions
+        window.currentReservations = activeReservations; 
     });
 }
 
@@ -110,19 +128,28 @@ function renderIndexFleet() {
 
 function updateCarDisplay(datesArray) {
     const container = document.querySelector(".rental-car-grid");
+    // Use the global window.currentReservations we set in watchReservations
+    const reservations = window.currentReservations || [];
+    
     if (!container || !datesArray || datesArray.length === 0) return;
 
     container.innerHTML = allCarsData.map(car => {
-        const isBooked = datesArray.some(date => (bookedDates[date] || []).includes(car.id));
+        // COLLISION CHECK: Does ANY requested date exist in ANY existing reservation for this car?
+        const isBooked = reservations.some(res => {
+            if (res.car !== car.id) return false;
+            const resDates = res.dates || [res.date];
+            return datesArray.some(d => resDates.includes(d));
+        });
+
         return `
             <div class="car-selection-box ${isBooked ? 'booked' : ''}" data-car="${car.id}">
                 <div class="car-img-badge">${car.class || 'Premium'}</div>
                 <div class="car-img-container">
                     <img src="${car.images ? car.images[0] : 'assets/images/placeholder.jpg'}" alt="${car.id}">
-                    ${isBooked ? '<div class="booked-overlay">FULLY BOOKED</div>' : ''}
+                    ${isBooked ? '<div class="booked-overlay">ALREADY RESERVED</div>' : ''}
                     <div class="car-overlay">
                         <div class="overlay-stats">
-                            <span>${car.specs?.seats || '7'} <span data-i18n="seats">Seats</span></span>
+                            <span>${car.specs?.seats || '7'} Seats</span>
                             <span>¥${car.price.toLocaleString()}/day</span>
                         </div>
                     </div>
@@ -130,6 +157,7 @@ function updateCarDisplay(datesArray) {
                 <div class="car-selection-info"><h4>${car.id}</h4></div>
             </div>`;
     }).join('');
+    
     attachBoxListeners();
     applyTranslations();
 }
@@ -220,20 +248,19 @@ async function initRentalLogic() {
 
                 let datesArray = [];
                 if (selectedDates.length === 2) {
-                    let curr = new Date(selectedDates[0]);
-                    let stopDate = new Date(selectedDates[1]);
-                    // Only add dates while curr is LESS THAN stopDate (Excludes return day)
-                    while(curr < stopDate) {
-                        datesArray.push(curr.toISOString().split('T')[0]);
-                        curr.setDate(curr.getDate() + 1);
-                    }
+                    // Use our new inclusive helper
+                    datesArray = getDatesInRange(selectedDates[0], selectedDates[1]);
                 } else {
                     datesArray = [dateStr];
                 }
 
+                console.log("Checking availability for these dates:", datesArray); // Debug check
+
                 document.getElementById('selected-date-input').value = JSON.stringify(datesArray);
                 document.getElementById('car-selection').style.display = 'block';
-                updateCarDisplay(datesArray);
+                
+                // Pass the newly generated dates to the display updater
+                updateCarDisplay(datesArray); 
             }
         });
 
@@ -327,6 +354,7 @@ async function initRentalLogic() {
         };
     }
 }
+
 
 // --- BOOTSTRAP ---
 document.addEventListener("DOMContentLoaded", async () => {

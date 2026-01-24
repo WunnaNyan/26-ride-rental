@@ -3,6 +3,19 @@ import {
     collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, setDoc, getDoc 
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+let allReservations = [];
+
+let allCarsData = []; // Global at the top
+
+// Add this alongside your other onSnapshot listeners
+onSnapshot(collection(db, "cars"), (snapshot) => {
+    allCarsData = [];
+    snapshot.forEach(doc => {
+        allCarsData.push({ id: doc.id, ...doc.data() });
+    });
+    console.log("Admin Fleet Loaded:", allCarsData);
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // --- ELEMENT SELECTORS ---
     const calendarEl = document.getElementById('calendar');
@@ -115,35 +128,98 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // --- MANUAL BOOKING (MULTI-DATE SUPPORT) ---
+    const getDatesInRange = (start, end) => {
+        const dates = [];
+        let curr = new Date(start);
+        const stop = new Date(end);
+        while (curr <= stop) {
+            dates.push(curr.toISOString().split('T')[0]);
+            curr.setDate(curr.getDate() + 1);
+        }
+        return dates;
+    };
+
+    // --- 2. NEW HELPER: REFRESH AVAILABLE CARS ---
+    const updateManualCarDropdown = () => {
+        const startVal = document.getElementById("addDate").value;
+        const endVal = document.getElementById("addEndDate").value || startVal;
+        const carSelect = document.getElementById("addCar");
+
+        if (!startVal) return;
+        if (allCarsData.length === 0) {
+            console.error("No cars loaded yet!");
+            return;
+        }
+
+        const requestedDates = getDatesInRange(startVal, endVal);
+        carSelect.innerHTML = '<option value="">-- Select Available Vehicle --</option>';
+
+        allCarsData.forEach(car => {
+            // Check if car is in Maintenance
+            if (car.status !== "active") return;
+
+            // Check for ANY date overlap
+            const isOccupied = allReservations.some(res => {
+                if (res.car !== car.id) return false;
+                const resDates = res.dates || [res.date];
+                // Returns true if any requested date is found in the reservation's dates
+                return requestedDates.some(d => resDates.includes(d));
+            });
+
+            if (!isOccupied) {
+                const option = document.createElement("option");
+                option.value = car.id;
+                option.textContent = car.id;
+                carSelect.appendChild(option);
+            }
+        });
+    };
+    // --- 3. ATTACH LISTENERS TO DATE INPUTS ---
+    document.getElementById("addDate").addEventListener("change", updateManualCarDropdown);
+    document.getElementById("addEndDate").addEventListener("change", updateManualCarDropdown);
     const manualForm = document.getElementById("manualBookingForm");
     manualForm.onsubmit = async (e) => {
         e.preventDefault();
-        const startDateVal = document.getElementById("addDate").value;
-        const endDateVal = document.getElementById("addEndDate")?.value || startDateVal;
+        
+        const car = document.getElementById("addCar").value;
+        const startVal = document.getElementById("addDate").value;
+        const endVal = document.getElementById("addEndDate").value || startVal;
         const licenseInput = document.getElementById("addLicense").value;
-        const licenseRegex = /^\d{12}$/;
-        const datesArray = [];
-        let curr = new Date(startDateVal);
-        const end = new Date(endDateVal);
-        while(curr < end) {
-            datesArray.push(curr.toISOString().split('T')[0]);
-            curr.setDate(curr.getDate() + 1);
+
+        if (!car) {
+            alert("Please select an available vehicle.");
+            return;
         }
+
+        const datesArray = getDatesInRange(startVal, endVal);
+        const licenseRegex = /^\d{12}$/;
 
         if (!licenseRegex.test(licenseInput)) {
             alert("Invalid License Number! Please enter exactly 12 digits.");
-            document.getElementById("addLicense").focus();
-            return; // Stop the function here
+            return;
+        }
+
+        // Final safety check for collision before pushing to DB
+        const stillAvailable = !allReservations.some(res => {
+            if (res.car !== car) return false;
+            const resDates = res.dates || [res.date];
+            return datesArray.some(d => resDates.includes(d));
+        });
+
+        if (!stillAvailable) {
+            alert("Wait! This car was just booked by someone else for these dates.");
+            updateManualCarDropdown();
+            return;
         }
 
         const manualData = {
-            car: document.getElementById("addCar").value,
+            car: car,
             name: document.getElementById("addName").value,
             dates: datesArray,
             date: datesArray[0],
             days: datesArray.length,
             phone: document.getElementById("addPhone").value,
-            licenseNumber: document.getElementById("addLicense").value,
+            licenseNumber: licenseInput,
             location: document.getElementById("addLocation").value,
             status: "Approved",
             bookingID: "MAN-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
@@ -152,13 +228,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             await addDoc(collection(db, "reservations"), manualData);
-            addModal.style.display = "none";
-            if(successModal) {
+            document.getElementById("addBookingModal").style.display = "none";
+            
+            if(document.getElementById("successPopup")) {
                 document.getElementById("successID").innerText = manualData.bookingID;
                 document.getElementById("successCust").innerText = manualData.name;
                 document.getElementById("successDates").innerText = datesArray.length > 1 
                     ? `${datesArray[0]} to ${datesArray[datesArray.length-1]}` : datesArray[0];
-                successModal.style.display = "block";
+                document.getElementById("successPopup").style.display = "block";
             }
             manualForm.reset();
         } catch (err) { alert("Error: " + err.message); }
@@ -171,45 +248,135 @@ document.addEventListener('DOMContentLoaded', function() {
     closeCarBtn.onclick = () => carModal.style.display = "none";
     if(closeSuccessBtn) closeSuccessBtn.onclick = () => successModal.style.display = "none";
 
+    function filterCalendar(category) {
+        calendar.removeAllEvents();
+        
+        allReservations.forEach(data => {
+            let show = false;
+            if (category === 'all') show = true;
+            if (category === 'manual' && data.bookingID?.startsWith("MAN-")) show = true;
+            if (category === 'online' && !data.bookingID?.startsWith("MAN-")) show = true;
+            if (category === 'pending' && data.status !== "Approved") show = true;
+            if (category === 'approved' && data.status === "Approved") show = true;
+
+            if (show) addEventToCalendar(data);
+        });
+    }
+
+    function addEventToCalendar(data) {
+        const dates = data.dates || [data.date];
+        let calEnd = dates[dates.length - 1];
+        const endObj = new Date(calEnd);
+        endObj.setDate(endObj.getDate() + 1); 
+        
+        calendar.addEvent({
+            id: data.id,
+            title: `${data.car} | ${data.name || 'N/A'}`,
+            start: dates[0],
+            end: endObj.toISOString().split('T')[0],
+            allDay: true,
+            backgroundColor: getCarColor(data.car),
+            borderColor: getCarColor(data.car),
+            extendedProps: { ...data }
+        });
+    }
+
+    document.querySelectorAll('.stat-box').forEach(box => {
+        box.style.cursor = "pointer";
+        box.onclick = () => {
+            // Remove active class from others
+            document.querySelectorAll('.stat-box').forEach(b => b.style.border = "1px solid #e5e7eb");
+            box.style.border = "2px solid #2563eb";
+            
+            const label = box.querySelector('label').innerText.toLowerCase();
+            filterCalendar(label);
+        };
+    });
+
     // --- REAL-TIME SYNC: RESERVATIONS ---
     onSnapshot(collection(db, "reservations"), (snapshot) => {
         calendar.removeAllEvents();
+        allReservations = []; // Clear local storage
         let stats = { manual: 0, online: 0, pending: 0, approved: 0 };
 
         snapshot.forEach((bookingDoc) => {
             const data = bookingDoc.data();
+            data.id = bookingDoc.id; // Store Firestore ID
+            allReservations.push(data);
             
             // Stats logic
             if (data.bookingID?.startsWith("MAN-")) stats.manual++; else stats.online++;
             if (data.status === "Approved") stats.approved++; else stats.pending++;
 
-            // Calendar Event Logic (Fixed for multi-day display)
-            const dates = data.dates || [data.date];
-            let calEnd = dates[dates.length - 1];
-            const endObj = new Date(calEnd);
-            endObj.setDate(endObj.getDate() + 1); 
-            calEnd = endObj.toISOString().split('T')[0];
-
-            calendar.addEvent({
-                id: bookingDoc.id,
-                title: `${data.car} | ${data.name || 'N/A'}`,
-                start: dates[0],
-                end: calEnd,
-                allDay: true,
-                backgroundColor: getCarColor(data.car),
-                borderColor: getCarColor(data.car),
-                extendedProps: { ...data }
-            });
+            // Add to calendar
+            addEventToCalendar(data);
         });
 
-        // Update Dashboard UI
-        if(document.getElementById("stat-manual")) document.getElementById("stat-manual").innerText = stats.manual;
-        if(document.getElementById("stat-online")) document.getElementById("stat-online").innerText = stats.online;
-        if(document.getElementById("stat-pending")) document.getElementById("stat-pending").innerText = stats.pending;
-        if(document.getElementById("stat-approved")) document.getElementById("stat-approved").innerText = stats.approved;
-
+        const pendingCount = stats.pending;
         const pendingBox = document.getElementById("stat-pending-box");
-        if (pendingBox) pendingBox.classList.toggle("has-pending", stats.pending > 0);
+        const pendingLabel = document.getElementById("stat-pending");
+
+        if (pendingLabel) pendingLabel.innerText = pendingCount;
+
+        if (pendingBox) {
+            if (pendingCount > 0) {
+                pendingBox.classList.add("has-pending");
+                console.log("Pending found! Adding red tint."); // Debugging line
+            } else {
+                pendingBox.classList.remove("has-pending");
+            }
+        }
+
+        // Update UI Stats
+        document.getElementById("stat-manual").innerText = stats.manual;
+        document.getElementById("stat-online").innerText = stats.online;
+        document.getElementById("stat-pending").innerText = stats.pending;
+        document.getElementById("stat-approved").innerText = stats.approved;
     });
 
+});
+
+function filterCalendar(category) {
+    calendar.removeAllEvents();
+    
+    allReservations.forEach(data => {
+        let show = false;
+        if (category === 'all') show = true;
+        if (category === 'manual' && data.bookingID?.startsWith("MAN-")) show = true;
+        if (category === 'online' && !data.bookingID?.startsWith("MAN-")) show = true;
+        if (category === 'pending' && data.status !== "Approved") show = true;
+        if (category === 'approved' && data.status === "Approved") show = true;
+
+        if (show) addEventToCalendar(data);
+    });
+}
+
+function addEventToCalendar(data) {
+    const dates = data.dates || [data.date];
+    let calEnd = dates[dates.length - 1];
+    const endObj = new Date(calEnd);
+    endObj.setDate(endObj.getDate() + 1); 
+    
+    calendar.addEvent({
+        id: data.id,
+        title: `${data.car} | ${data.name || 'N/A'}`,
+        start: dates[0],
+        end: endObj.toISOString().split('T')[0],
+        allDay: true,
+        backgroundColor: getCarColor(data.car),
+        borderColor: getCarColor(data.car),
+        extendedProps: { ...data }
+    });
+}
+
+document.querySelectorAll('.stat-box').forEach(box => {
+    box.style.cursor = "pointer";
+    box.onclick = () => {
+        // Remove active class from others
+        document.querySelectorAll('.stat-box').forEach(b => b.style.border = "1px solid #e5e7eb");
+        box.style.border = "2px solid #2563eb";
+        
+        const label = box.querySelector('label').innerText.toLowerCase();
+        filterCalendar(label);
+    };
 });
