@@ -290,39 +290,54 @@ async function initRentalLogic() {
         }
     }
 
-    // --- HOMEPAGE SEARCH LOGIC (WITH TRANSITION) ---
+    // --- HOMEPAGE SEARCH LOGIC (REPLACEMENT) ---
     if (checkBtn && pickupDateInput && dropdown) {
-        checkBtn.onclick = () => {
+        // Explicitly set cursor so you know it's clickable
+        checkBtn.style.cursor = "pointer";
+
+        checkBtn.onclick = (e) => {
+            e.preventDefault();
+            console.log("Button clicked!"); // If you don't see this in F12, the listener didn't attach.
+
             const selectedDate = pickupDateInput.value;
             if (!selectedDate) { alert("Please select a date."); return; }
 
-            dropdown.innerHTML = '';
-            const carsBooked = bookedDates[selectedDate] || [];
-            const availableCars = allCarsData.filter(car => !carsBooked.includes(car.id));
+            // Use the global reservations from watchReservations
+            const reservations = window.currentReservations || [];
+
+            // Filter based on real data
+            const availableCars = allCarsData.filter(car => {
+                const isBooked = reservations.some(res => {
+                    if (res.car !== car.id) return false;
+                    const resDates = res.dates || [res.date];
+                    return resDates.includes(selectedDate);
+                });
+                return !isBooked;
+            });
+
+            console.log("Available cars found:", availableCars.length);
 
             if (availableCars.length === 0) {
-                dropdown.innerHTML = `
-                    <div class="no-availability">
-                        <i class="fas fa-calendar-times"></i>
-                        <p>No Vehicles Available</p>
-                        <span>Try another date</span>
-                    </div>`;
+                dropdown.innerHTML = `<div class="no-availability"><p>No cars available for this date.</p></div>`;
             } else {
-                let html = `<h4 data-i18n="available_vehicles">Available Vehicles</h4>`;
+                let html = `<h4 style="padding:10px;">Available Vehicles</h4>`;
                 availableCars.forEach(car => {
                     html += `
-                        <div class="result-item">
-                            <span>${car.id} <small>¥${car.price.toLocaleString()}</small></span>
-                            <a href="rental.html?car=${encodeURIComponent(car.id)}&date=${selectedDate}" class="btn-tiny">Book Now</a>
+                        <div class="result-item" style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                            <span>${car.id} <small>¥${(car.price || 0).toLocaleString()}</small></span>
+                            <a href="rental.html?car=${encodeURIComponent(car.id)}&date=${selectedDate}" data-i18n="book_now" class="btn-tiny">Book Now</a>
                         </div>`;
                 });
                 dropdown.innerHTML = html;
             }
+
+            // FORCE CSS via JS to bypass any "overflow" issues
+            dropdown.style.maxHeight = "none";
+            dropdown.style.opacity = "1";
+            dropdown.style.display = "block";
             dropdown.classList.add('show');
-            applyTranslations();
         };
     }
-
     const rentalForm = document.getElementById("rental-form");
     if (rentalForm) {
         rentalForm.onsubmit = (e) => {
@@ -368,7 +383,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadPartial("site-footer", "partials/footer.html");
 
     // 3. Initialize Rental Logic if on rental page
-    if (window.location.pathname.includes('rental.html')) {
-        initRentalLogic();
-    }
+    // This ensures the search bar works on index.html AND the calendar works on rental.html
+    initRentalLogic();
 });
