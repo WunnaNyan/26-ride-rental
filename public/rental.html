@@ -19,12 +19,26 @@
         <p data-i18n="book_subtitle">Select your date and vehicle to start your journey.</p>
       </div>
     </section>
-
+    
     <div class="container">
       <section class="booking-section">
         <div class="section-title-area">
           <span class="section-label" data-i18n="step1_title">Step 1</span>
           <h2 data-i18n="select_date_h2">Select Pick-up Date</h2>
+          <div class="step-instructions" style="background: #f0f7ff; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 5px solid #007bff;">
+              <h3 style="margin-top: 0; color: #007bff;" data-i18n="rent_days_h">How many days are you renting?</h3>
+              <p style="font-size: 1.1rem; margin-bottom: 15px;" data-i18n="rent_days_p">
+                  For <strong>two or more days</strong>, please toggle the button below to select a <strong>date range</strong>.
+              </p>
+              <p style="margin-bottom: 5px;" data-i18n="select_guide">Selection Guide:</p>
+              <ul style="list-style: none; padding-left: 10px; line-height: 1.8;">
+                  <li data-i18n="guide_single"><strong>Single Day:</strong> Keep toggle OFF and select one date.</li>
+                  <li data-i18n="guide_multi"><strong>Multi-Day:</strong> Turn toggle ON to select start and end dates.</li>
+              </ul>
+              <p style="margin-top: 15px; font-style: italic; color: #555;" data-i18n="auto_update">
+                  Available vehicles will update automatically based on your choice.
+              </p>
+          </div>
           
           <div class="toggle-container">
             <span data-i18n="multi_day_prompt">Rent for multiple days?</span>
@@ -52,7 +66,6 @@
 
       <section class="booking-section" id="reservation-form-container" style="display:none;">
         <div class="section-title-area">
-          <span class="section-label" data-i18n="step3_title">Final Step</span>
           <h2 data-i18n="details_h2">Your Details</h2>
         </div>
         <div class="form-card card-shadow">

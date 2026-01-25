@@ -95,6 +95,37 @@
   "multi_day_prompt": "複数日レンタルしますか？",
   "step1_title": "ステップ 1",
   "select_date_h2": "レンタル期間の選択",
-  "days_count": "日間"
+  "days_count": "日間",
+
+  "footer_desc": "日本国内のプレミアムなバンと乗用車のレンタカーサービス。2025年より、お客様の旅に快適さと信頼を提供しています。",
+  "footer_quick_links": "クイックリンク",
+  "footer_home": "ホーム",
+  "footer_fleet": "車種一覧",
+  "footer_book": "予約",
+  "footer_about": "会社概要",
+  "footer_terms": "利用規約",
+  "footer_contact_title": "お問い合わせ",
+  "footer_hours": "午前 9:00 - 午後 8:00",
+  "footer_rights": "不許複製・禁無断転載",
+
+  "rent_days_h": "ご利用日数はどのくらいですか？",
+  "rent_days_p": "2日以上のご利用の場合は、下のボタンを切り替えて期間を選択してください。",
+  "select_guide": "選択ガイド：",
+  "guide_single": "1日利用：トグルをOFFのままにし、日付を1つ選択してください。",
+  "guide_multi": "複数日利用：トグルをONにし、開始日と終了日を選択してください。",
+  "auto_update": "選択内容に基づいて、予約可能な車両が自動的に更新されます。",
+  "action_req": "【重要】予約番号を保存してください",
+  "screenshot_p": "このページをスクリーンショットするか、予約番号をメモしてください。",
+  "mandatory_h": "この予約番号は以下の際に必要となります：",
+  "list_inquiry": "お問い合わせ：予約状況の確認。",
+  "list_change": "日程変更：予約日や車種の変更。",
+  "list_cancel": "キャンセル：返金やキャンセル手続きの処理。",
+  "contact_assist": "お問い合わせの際は、スムーズな対応のためこの予約番号をご提示ください。",
+  "pay_method_label": "お支払い方法を選択",
+  "method_online": "オンライン送金 / QRコード決済",
+  "method_cash": "現地での現金払い",
+  "step2_label": "ステップ 2 / 3:",
+  "err_valid_date": "有効な日付を選択してください（本日より3ヶ月以内のみ）。",
+  "step_pay_inst": "お支払い方法を選択し、必要書類をアップロードしてください。"
 
 }

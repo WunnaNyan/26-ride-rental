@@ -14,6 +14,20 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
     const rentalData = JSON.parse(sessionStorage.getItem("rentalData"));
+    const paymentMethodSelect = document.getElementById("payment-method");
+    const onlineSection = document.getElementById("online-only-section");
+    const proofInput = document.getElementById("proof");
+
+    // Toggle logic for Cash vs Online
+    paymentMethodSelect.addEventListener("change", (e) => {
+        if (e.target.value === "cash") {
+            onlineSection.style.display = "none";
+            proofInput.required = false;
+        } else {
+            onlineSection.style.display = "block";
+            proofInput.required = true;
+        }
+    });
 
     if (!rentalData) {
         alert("No booking data found. Returning to selection.");
@@ -71,11 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const proofFile = document.getElementById("proof").files[0];
+        const method = paymentMethodSelect.value;
+        const proofFile = proofInput.files[0];
         const licenseFile = document.getElementById("license").files[0];
 
-        if (!proofFile || !licenseFile) {
-            alert("Please upload both the payment proof and your driving license.");
+        // VALIDATION: License is always mandatory, Proof is only mandatory if online
+        if (!licenseFile) {
+            alert("Please upload your driving license.");
+            return;
+        }
+        if (method === "online" && !proofFile) {
+            alert("Please upload payment proof for online booking.");
             return;
         }
 
@@ -111,6 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 2. Generate Booking ID
             const bookingNumber = Math.random().toString(36).toUpperCase().substring(2, 8);
+            
+            // --- FIX START: Initialize variables outside the IF blocks ---
+            let proofURL = null; 
+            let licenseURL = null;
+            // --- FIX END ---
+
             submitBtn.textContent = "Uploading Documents...";
 
             // Helper function for Storage upload
@@ -121,11 +147,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 return await getDownloadURL(snapshot.ref);
             };
 
-            // 3. UPLOAD BOTH
-            const [proofURL, licenseURL] = await Promise.all([
-                uploadFile(proofFile, "payment_proofs"),
-                uploadFile(licenseFile, "license_images")
-            ]);
+            // 3. UPLOAD FILES
+            // Upload License (Always mandatory)
+            licenseURL = await uploadFile(licenseFile, "license_images");
+
+            // Upload Proof (Only if Online and file exists)
+            if (method === "online" && proofFile) {
+                proofURL = await uploadFile(proofFile, "payment_proofs");
+            }
 
             submitBtn.textContent = "Finalizing Booking...";
 
@@ -133,7 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const finalBooking = {
                 ...rentalData,
                 bookingID: bookingNumber,
-                paymentScreenshot: proofURL,
+                paymentMethod: method,        // "cash" or "online"
+                paymentScreenshot: proofURL,   // This will now correctly be null for cash
                 drivingLicenseURL: licenseURL,
                 status: "Pending Verification",
                 createdAt: new Date()

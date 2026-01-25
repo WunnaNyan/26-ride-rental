@@ -23,27 +23,45 @@
           <p class="total-price"><strong data-i18n="pay_total">Total Cost:</strong> <span id="pay-cost">¥0</span></p>
         </div>
       </section>
-      <section class="qr-section">
-        <h3 data-i18n="qr_h3">Payment via Bank Transfer / QR</h3>
-        <div class="qr-info">
-          <img src="assets/images/qr-code.jpg" alt="Scan to Pay" class="qr-image">
-          <p class="qr-hint" data-i18n="qr_hint">Scan the QR code...</p>
-        </div>
-      </section>
+      <div class="step-instructions" style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #007bff;">
+          <p><span data-i18n="step_pay_inst">Choose your payment method and upload required documents.</span></p>
+      </div>
+
       <form id="payment-form">
-        <div class="form-group">
-          <label for="proof" data-i18n="upload_label">Upload Payment Proof</label>
-          <input type="file" id="proof" accept="image/*" required class="file-input">
-          <img id="proof-preview" class="image-preview" src="" alt="Proof Preview" style="display:none; width: 100%; max-width: 200px; margin-top: 10px; border-radius: 5px;">
-        </div>
+          <div class="form-group">
+              <label for="payment-method" data-i18n="pay_method_label">Select Payment Method</label>
+              <select id="payment-method" class="file-input" required>
+                  <option value="online" data-i18n="method_online">Online Transfer / QR Code</option>
+                  <option value="cash" data-i18n="method_cash">Cash on Delivery</option>
+              </select>
+          </div>
 
-        <div class="form-group">
-          <label for="license" data-i18n="license_label">Upload Front of Driving License</label>
-          <input type="file" id="license" accept="image/*" required class="file-input">
-          <img id="license-preview" class="image-preview" src="" alt="License Preview" style="display:none; width: 100%; max-width: 200px; margin-top: 10px; border-radius: 5px;">
-        </div>
+          <div id="online-only-section">
+              <section class="qr-section">
+                  <h3 data-i18n="qr_h3">Payment via Bank Transfer / QR</h3>
+                  <div class="qr-info">
+                      <img src="assets/images/qr-code.jpg" alt="Scan to Pay" class="qr-image">
+                      <p class="qr-hint" data-i18n="qr_hint">Scan the QR code to pay now.</p>
+                  </div>
+              </section>
 
-        <button type="submit" id="submit-btn" class="btn-primary full-width" data-i18n="btn_submit">Submit & Confirm Booking</button>
+              <div class="form-group">
+                  <label for="proof">
+                      <span data-i18n="upload_label">Upload Payment Proof</span> 
+                      <span id="proof-required-star" style="color: red;">*</span>
+                  </label>
+                  <input type="file" id="proof" accept="image/*" required class="file-input">
+                  <img id="proof-preview" class="image-preview" src="" style="display:none; width: 100%; max-width: 200px; margin-top: 10px; border-radius: 5px;">
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label for="license" data-i18n="license_label">Upload Front of Driving License *</label>
+              <input type="file" id="license" accept="image/*" required class="file-input">
+              <img id="license-preview" class="image-preview" src="" style="display:none; width: 100%; max-width: 200px; margin-top: 10px; border-radius: 5px;">
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn-primary full-width" data-i18n="btn_submit">Submit & Confirm Booking</button>
       </form>
     </div>
   </main>

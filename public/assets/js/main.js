@@ -235,32 +235,38 @@ async function initRentalLogic() {
     const dropdown = document.getElementById('availability-dropdown');
     const pickupDateInput = document.getElementById('pickup-date');
 
+    // --- DATE CONSTRAINTS ---
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setMonth(today.getMonth() + 3);
+
+    const minStr = today.toISOString().split('T')[0];
+    const maxStr = maxDate.toISOString().split('T')[0];
+
+    // Set constraints for standard HTML input (Homepage)
+    if (pickupDateInput) {
+        pickupDateInput.setAttribute('min', minStr);
+        pickupDateInput.setAttribute('max', maxStr);
+    }
+
     let fp; // Reference for later use
 
     if (calendarEl) {
         fp = flatpickr("#calendar", {
             inline: true,
-            mode: "single", 
+            mode: "single",
             dateFormat: "Y-m-d",
-            minDate: "today",
+            minDate: "today", // Prevents past dates
+            maxDate: maxStr,  // Prevents > 3 months
             onChange: (selectedDates, dateStr, instance) => {
                 if (instance.config.mode === "range" && selectedDates.length < 2) return;
-
-                let datesArray = [];
-                if (selectedDates.length === 2) {
-                    // Use our new inclusive helper
-                    datesArray = getDatesInRange(selectedDates[0], selectedDates[1]);
-                } else {
-                    datesArray = [dateStr];
-                }
-
-                console.log("Checking availability for these dates:", datesArray); // Debug check
+                let datesArray = (selectedDates.length === 2) 
+                    ? getDatesInRange(selectedDates[0], selectedDates[1]) 
+                    : [dateStr];
 
                 document.getElementById('selected-date-input').value = JSON.stringify(datesArray);
                 document.getElementById('car-selection').style.display = 'block';
-                
-                // Pass the newly generated dates to the display updater
-                updateCarDisplay(datesArray); 
+                updateCarDisplay(datesArray);
             }
         });
 
@@ -292,20 +298,19 @@ async function initRentalLogic() {
 
     // --- HOMEPAGE SEARCH LOGIC (REPLACEMENT) ---
     if (checkBtn && pickupDateInput && dropdown) {
-        // Explicitly set cursor so you know it's clickable
-        checkBtn.style.cursor = "pointer";
-
         checkBtn.onclick = (e) => {
             e.preventDefault();
-            console.log("Button clicked!"); // If you don't see this in F12, the listener didn't attach.
-
             const selectedDate = pickupDateInput.value;
-            if (!selectedDate) { alert("Please select a date."); return; }
 
-            // Use the global reservations from watchReservations
+            // VALIDATION LOGIC
+            const picked = new Date(selectedDate);
+            if (!selectedDate || picked < today.setHours(0,0,0,0) || picked > maxDate) {
+                dropdown.innerHTML = `<div class="no-availability"><p style="color:red;" data-i18n="err_valid_date">Input valid date (Today - 3 Months)</p></div>`;
+                dropdown.style.display = "block";
+                return;
+            }
+
             const reservations = window.currentReservations || [];
-
-            // Filter based on real data
             const availableCars = allCarsData.filter(car => {
                 const isBooked = reservations.some(res => {
                     if (res.car !== car.id) return false;
@@ -349,7 +354,6 @@ async function initRentalLogic() {
             const datesJson = document.getElementById('selected-date-input').value;
             const dates = JSON.parse(datesJson || "[]");
 
-            if (!/^[A-Za-z\s]+$/.test(name)) return alert("Invalid Name");
             if (!/^\d+$/.test(phone)) return alert("Invalid Phone");
             if (!/^\d{12}$/.test(license)) return alert(translations["err_license"] || "Invalid License");
             if (dates.length === 0) return alert("Select a date");
