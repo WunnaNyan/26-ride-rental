@@ -294,89 +294,111 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // --- REAL-TIME SYNC: RESERVATIONS ---
+    // --- REAL-TIME SYNC: RESERVATIONS ---
     onSnapshot(collection(db, "reservations"), (snapshot) => {
         calendar.removeAllEvents();
-        allReservations = []; // Clear local storage
-        let stats = { manual: 0, online: 0, pending: 0, approved: 0 };
+        allReservations = []; 
+        
+        let stats = { 
+            total: 0,
+            upcoming: 0, 
+            completed: 0, 
+            pending: 0, 
+            approved: 0,
+            manual: 0,
+            online: 0
+        };
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
         snapshot.forEach((bookingDoc) => {
             const data = bookingDoc.data();
-            data.id = bookingDoc.id; // Store Firestore ID
+            data.id = bookingDoc.id;
             allReservations.push(data);
             
-            // Stats logic
-            if (data.bookingID?.startsWith("MAN-")) stats.manual++; else stats.online++;
+            // 1. Time-based Stats
+            const dates = data.dates || [data.date];
+            const lastDate = new Date(dates[dates.length - 1]);
+            if (lastDate >= today) stats.upcoming++; else stats.completed++;
+
+            // 2. Status-based Stats
             if (data.status === "Approved") stats.approved++; else stats.pending++;
 
-            // Add to calendar
+            // 3. Source-based Stats
+            if (data.bookingID?.startsWith("MAN-")) stats.manual++; else stats.online++;
+            
+            stats.total++;
             addEventToCalendar(data);
         });
 
-        const pendingCount = stats.pending;
+        // Update UI Numbers
+        if(document.getElementById("stat-total")) document.getElementById("stat-total").innerText = stats.total;
+        if(document.getElementById("stat-upcoming")) document.getElementById("stat-upcoming").innerText = stats.upcoming;
+        if(document.getElementById("stat-completed")) document.getElementById("stat-completed").innerText = stats.completed;
+        if(document.getElementById("stat-pending")) document.getElementById("stat-pending").innerText = stats.pending;
+        if(document.getElementById("stat-approved")) document.getElementById("stat-approved").innerText = stats.approved;
+        if(document.getElementById("stat-manual")) document.getElementById("stat-manual").innerText = stats.manual;
+        if(document.getElementById("stat-online")) document.getElementById("stat-online").innerText = stats.online;
+
+        // Visual cue for pending
         const pendingBox = document.getElementById("stat-pending-box");
-        const pendingLabel = document.getElementById("stat-pending");
-
-        if (pendingLabel) pendingLabel.innerText = pendingCount;
-
         if (pendingBox) {
-            if (pendingCount > 0) {
-                pendingBox.classList.add("has-pending");
-                console.log("Pending found! Adding red tint."); // Debugging line
-            } else {
-                pendingBox.classList.remove("has-pending");
-            }
+            stats.pending > 0 ? pendingBox.classList.add("has-pending") : pendingBox.classList.remove("has-pending");
         }
-
-        // Update UI Stats
-        document.getElementById("stat-manual").innerText = stats.manual;
-        document.getElementById("stat-online").innerText = stats.online;
-        document.getElementById("stat-pending").innerText = stats.pending;
-        document.getElementById("stat-approved").innerText = stats.approved;
     });
 
-});
+    // --- UPDATED FILTER FUNCTION (Ensures it has access to 'today' and 'calendar') ---
+    window.filterCalendar = function(category) {
+        calendar.removeAllEvents();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-function filterCalendar(category) {
-    calendar.removeAllEvents();
-    
-    allReservations.forEach(data => {
-        let show = false;
-        if (category === 'all') show = true;
-        if (category === 'manual' && data.bookingID?.startsWith("MAN-")) show = true;
-        if (category === 'online' && !data.bookingID?.startsWith("MAN-")) show = true;
-        if (category === 'pending' && data.status !== "Approved") show = true;
-        if (category === 'approved' && data.status === "Approved") show = true;
+        allReservations.forEach(data => {
+            let show = false;
+            const dates = data.dates || [data.date];
+            const lastDate = new Date(dates[dates.length - 1]);
 
-        if (show) addEventToCalendar(data);
-    });
-}
+            // Matches the labels in your HTML
+            if (category === 'show all' || category === 'total') show = true;
+            if (category === 'upcoming' && lastDate >= today) show = true;
+            if (category === 'completed' && lastDate < today) show = true;
+            if (category === 'pending' && data.status !== "Approved") show = true;
+            if (category === 'approved' && data.status === "Approved") show = true;
+            if (category === 'manual' && data.bookingID?.startsWith("MAN-")) show = true;
+            if (category === 'online' && !data.bookingID?.startsWith("MAN-")) show = true;
 
-function addEventToCalendar(data) {
-    const dates = data.dates || [data.date];
-    let calEnd = dates[dates.length - 1];
-    const endObj = new Date(calEnd);
-    endObj.setDate(endObj.getDate() + 1); 
-    
-    calendar.addEvent({
-        id: data.id,
-        title: `${data.car} | ${data.name || 'N/A'}`,
-        start: dates[0],
-        end: endObj.toISOString().split('T')[0],
-        allDay: true,
-        backgroundColor: getCarColor(data.car),
-        borderColor: getCarColor(data.car),
-        extendedProps: { ...data }
-    });
-}
-
-document.querySelectorAll('.stat-box').forEach(box => {
-    box.style.cursor = "pointer";
-    box.onclick = () => {
-        // Remove active class from others
-        document.querySelectorAll('.stat-box').forEach(b => b.style.border = "1px solid #e5e7eb");
-        box.style.border = "2px solid #2563eb";
-        
-        const label = box.querySelector('label').innerText.toLowerCase();
-        filterCalendar(label);
+            if (show) addEventToCalendar(data);
+        });
     };
-});
+
+    // --- REUSABLE EVENT ADDER ---
+    function addEventToCalendar(data) {
+        const dates = data.dates || [data.date];
+        let calEnd = dates[dates.length - 1];
+        const endObj = new Date(calEnd);
+        endObj.setDate(endObj.getDate() + 1); 
+        
+        calendar.addEvent({
+            id: data.id,
+            title: `${data.car} | ${data.name || 'N/A'}`,
+            start: dates[0],
+            end: endObj.toISOString().split('T')[0],
+            allDay: true,
+            backgroundColor: getCarColor(data.car),
+            borderColor: getCarColor(data.car),
+            extendedProps: { ...data }
+        });
+    }
+
+    // Attach click listeners to all stat boxes
+    document.querySelectorAll('.stat-box').forEach(box => {
+        box.addEventListener('click', () => {
+            document.querySelectorAll('.stat-box').forEach(b => b.style.border = "1px solid #e5e7eb");
+            box.style.border = "2px solid #2563eb";
+            
+            const label = box.querySelector('label').innerText.toLowerCase();
+            window.filterCalendar(label);
+        });
+    });
+}); // End of DOMContentLoaded

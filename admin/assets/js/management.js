@@ -3,6 +3,11 @@ import {
     collection, onSnapshot, doc, deleteDoc, setDoc 
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+const getRandomColor = () => {
+    const colors = ['#2563eb', '#0f172a', '#059669', '#7c3aed', '#db2777', '#ca8a04', '#0891b2'];
+    return colors[Math.floor(Math.random() * colors.length)];
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const carModal = document.getElementById("carModal");
     const closeCarBtn = document.querySelector(".close-car-btn");
@@ -46,8 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
     carForm.onsubmit = async (e) => {
         e.preventDefault();
         const id = document.getElementById("carIdInput").value;
+        const newStatus = document.getElementById("carStatusInput").value;
+        
+        // Check if this is a NEW car or an EDIT
+        // If it's a new car, we'll assign a random color
+        const isNewCar = !document.getElementById("carIdInput").disabled;
+
         const carData = {
-            status: document.getElementById("carStatusInput").value,
+            status: newStatus,
             price: Number(document.getElementById("carPriceInput").value),
             description: document.getElementById("carDescInput").value,
             class: document.getElementById("carClassInput").value,
@@ -59,8 +70,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 trans: document.getElementById("specTrans").value
             }
         };
-        await setDoc(doc(db, "cars", id), carData, { merge: true });
-        carModal.style.display = "none";
+
+        // If it's a new car, add the random color field
+        if (isNewCar) {
+            carData.colorCode = getRandomColor();
+        }
+
+        try {
+            // Save the car
+            await setDoc(doc(db, "cars", id), carData, { merge: true });
+
+            // --- MAINTENANCE LOGIC ---
+            // If status is changed to maintenance, set all bookings for THIS car to 'Pending'
+            if (newStatus === 'maintenance') {
+                const { query, where, getDocs, writeBatch } = await import("https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js");
+                
+                const q = query(collection(db, "reservations"), where("car", "==", id));
+                const querySnapshot = await getDocs(q);
+                
+                const batch = writeBatch(db);
+                let count = 0;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                querySnapshot.forEach((bookingDoc) => {
+                    const bookingData = bookingDoc.data();
+                    
+                    // 1. Get the last date of the booking (if it's a range) or the single date
+                    const dates = bookingData.dates || [bookingData.date];
+                    const lastDateStr = dates[dates.length - 1]; 
+                    const lastDate = new Date(lastDateStr);
+
+                    // 2. Logic: Only update if status is Approved AND the booking ends today or in the future
+                    if (bookingData.status === "Approved" && lastDate >= today) {
+                        const bookingRef = doc(db, "reservations", bookingDoc.id);
+                        batch.update(bookingRef, { status: "Pending" });
+                        count++;
+                    }
+                });
+
+                if (count > 0) {
+                    await batch.commit();
+                    alert(`Car set to Maintenance. ${count} approved bookings have been moved back to Pending.`);
+                }
+            }
+
+            carModal.style.display = "none";
+        } catch (error) {
+            console.error("Error updating car/bookings: ", error);
+            alert("Failed to save. check console.");
+        }
     };
 
     document.getElementById("btnDeleteCar").onclick = async () => {
@@ -81,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         snapshot.forEach((carDoc) => {
             const c = carDoc.data();
             const isMaint = c.status === 'maintenance';
-            const color = getCarColor(carDoc.id);
+            const color = c.colorCode || getCarColor(carDoc.id);
 
             grid.innerHTML += `
                 <div class="admin-car-card" style="opacity: ${isMaint ? '0.6' : '1'}; border-top: 4px solid ${isMaint ? '#ef4444' : color}">
