@@ -116,18 +116,23 @@ body.admin-body {
     display: none; 
     position: fixed; 
     z-index: 9999; 
-    inset: 0; /* Shorthand for top/left/bottom/right: 0 */
+    inset: 0; 
     background: rgba(15, 23, 42, 0.7); 
     backdrop-filter: blur(6px); 
+    /* NEW: This allows the modal background to be the scrollable area */
+    overflow-y: auto; 
+    padding: 20px 0;
 }
 
 .modal-content { 
     background: var(--bg-card); 
-    margin: 5vh auto; 
+    margin: 20px auto; /* Reduced margin */
     border-radius: var(--radius-lg); 
     width: 90%; 
     max-width: 800px; 
-    overflow: hidden; 
+    /* UPDATED: Change hidden to visible or clip to allow internal content flow */
+    overflow: visible; 
+    position: relative;
     animation: slideUp 0.3s ease; 
 }
 
@@ -216,4 +221,9 @@ body.admin-body {
 .close-btn:hover {
     color: #ef4444; /* Turns red when hovering */
     transform: scale(1.2); /* Grows slightly */
+}
+
+#carForm {
+    max-height: none; 
+    overflow: visible;
 }

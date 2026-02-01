@@ -45,14 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     btnNavFleet.onclick = () => switchTab('fleet');
 
     // --- HELPER: CAR COLORS ---
-    const getCarColor = (carName) => {
-        const car = (carName || "").toLowerCase();
-        if (car.includes("alphard")) return "#2563eb"; 
-        if (car.includes("vellfire")) return "#0f172a"; 
-        if (car.includes("serena")) return "#059669";  
-        return "#64748b"; 
-    };
-
     if (!calendarEl) return;
 
     // --- CALENDAR INITIALIZATION ---
@@ -275,8 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
             start: dates[0],
             end: endObj.toISOString().split('T')[0],
             allDay: true,
-            backgroundColor: getCarColor(data.car),
-            borderColor: getCarColor(data.car),
+            backgroundColor: displayColor,
+            borderColor: displayColor,
             extendedProps: { ...data }
         });
     }
@@ -378,15 +370,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let calEnd = dates[dates.length - 1];
         const endObj = new Date(calEnd);
         endObj.setDate(endObj.getDate() + 1); 
-        
+        const carInfo = allCarsData.find(c => c.id === data.car);
+        const displayColor = carInfo?.colorCode || '#64748b'; // Fallback to gray
         calendar.addEvent({
             id: data.id,
             title: `${data.car} | ${data.name || 'N/A'}`,
             start: dates[0],
             end: endObj.toISOString().split('T')[0],
             allDay: true,
-            backgroundColor: getCarColor(data.car),
-            borderColor: getCarColor(data.car),
+            backgroundColor: displayColor,
+            borderColor: displayColor,
             extendedProps: { ...data }
         });
     }

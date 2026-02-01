@@ -131,6 +131,15 @@
                     </div>
                 </div>
                 <div class="info-row"><label>Description</label><textarea id="carDescInput" class="admin-input"></textarea></div>
+                <div class="info-row">
+                    <label>Car Images (eg. filename.jpg)</label>
+                    <div id="imageInputsContainer">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <input type="text" class="car-image-path admin-input" placeholder="filename.jpg">
+                            <button type="button" id="btnAddImageField" class="btn-primary" style="width: 40px;">+</button>
+                        </div>
+                    </div>
+                </div>
                 <button type="submit" class="btn-primary">Save Vehicle</button>
                 <button type="button" id="btnDeleteCar" class="btn-danger-link">Delete Vehicle</button>
             </form>
@@ -141,8 +150,6 @@
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header"><h2>Manual Booking</h2><span class="close-add-btn">&times;</span></div>
             <form id="manualBookingForm" class="modal-info-pane" style="border:none;">
-                <div class="info-row"><label>Vehicle</label><select id="addCar" class="admin-input" required></select></div>
-                <div class="info-row"><label>Customer Name</label><input type="text" id="addName" class="admin-input" required></div>
                 <div class="info-row">
                     <label>Rental Period</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -150,6 +157,8 @@
                         <input type="date" id="addEndDate" class="admin-input" placeholder="End Date">
                     </div>
                 </div>
+                <div class="info-row"><label>Vehicle</label><select id="addCar" class="admin-input" required></select></div>
+                <div class="info-row"><label>Customer Name</label><input type="text" id="addName" class="admin-input" required></div>
                 <div class="info-row"><label>Phone Number</label><input type="tel" id="addPhone" class="admin-input" required></div>
                 <div class="info-row"><label>License Number</label><input type="text" id="addLicense" class="admin-input" required></div>
                 <div class="info-row"><label>Pick-up Location</label>
