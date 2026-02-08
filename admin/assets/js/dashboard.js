@@ -1,11 +1,57 @@
-import { db } from "../../../public/assets/js/firebase.js";
+import { db , auth } from "../../../public/assets/js/firebase.js";
 import { 
-    collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, setDoc, getDoc 
+    collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, setDoc, getDoc, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 let allReservations = [];
-
 let allCarsData = []; // Global at the top
+
+// Make it global so management.js can see it
+window.logAdminAction = async (actionMessage, type) => {
+    try {
+        const user = auth.currentUser;
+        const adminName = user ? user.email.split('@')[0] : "Admin";
+        
+        await addDoc(collection(db, "admin_logs"), {
+            adminName: adminName,
+            action: actionMessage,
+            type: type, // 'create' (green), 'update' (yellow), 'delete' (red)
+            timestamp: serverTimestamp()
+        });
+    } catch (error) {
+        console.error("Logging failed", error);
+    }
+};
+
+// Real-time Logs UI Updater
+const logsContainer = document.getElementById("logs-container");
+if (logsContainer) {
+    onSnapshot(query(collection(db, "admin_logs"), orderBy("timestamp", "desc")), (snapshot) => {
+        logsContainer.innerHTML = "";
+        snapshot.forEach(doc => {
+            const log = doc.data();
+            const time = log.timestamp?.toDate().toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }) || "Processing...";
+            
+            const div = document.createElement("div");
+            div.className = `log-item log-entry-${log.type}`;
+            
+            // Clean Output: [2/9/2026, 04:22:30] Admin "nyanwunna43" deleted booking: "JMPWF8"
+            div.innerHTML = `
+                <span class="log-time">[${time}]</span> 
+                <span style="font-weight: 800;">[${log.adminName}]..</span> ${log.action}
+            `;
+            logsContainer.appendChild(div);
+        });
+    });
+}
 
 // Add this alongside your other onSnapshot listeners
 onSnapshot(collection(db, "cars"), (snapshot) => {
@@ -31,19 +77,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnOpenAdd = document.getElementById("btnOpenAddModal");
     const btnNavCalendar = document.getElementById("nav-calendar");
     const btnNavFleet = document.getElementById("nav-fleet");
+    const btnNavLogs = document.getElementById("nav-logs");
 
     let currentDocId = null; 
 
     // --- TAB SWITCHING ---
     const switchTab = (tab) => {
-        document.getElementById("calendar-section").style.display = tab === 'calendar' ? 'block' : 'none';
-        document.getElementById("fleet-section").style.display = tab === 'fleet' ? 'block' : 'none';
-        btnNavCalendar.classList.toggle('active', tab === 'calendar');
-        btnNavFleet.classList.toggle('active', tab === 'fleet');
-    };
-    btnNavCalendar.onclick = () => switchTab('calendar');
-    btnNavFleet.onclick = () => switchTab('fleet');
+        // Define all sections
+        const sections = {
+            calendar: document.getElementById("calendar-section"),
+            fleet: document.getElementById("fleet-section"),
+            logs: document.getElementById("logs-section")
+        };
 
+        // Define all buttons
+        const buttons = {
+            calendar: btnNavCalendar,
+            fleet: btnNavFleet,
+            logs: btnNavLogs
+        };
+
+        // Loop through and show only the active one
+        Object.keys(sections).forEach(key => {
+            if (sections[key]) {
+                sections[key].style.display = (key === tab) ? 'block' : 'none';
+            }
+            if (buttons[key]) {
+                buttons[key].classList.toggle('active', key === tab);
+            }
+        });
+    };
+
+    // Attach listeners
+    if (btnNavCalendar) btnNavCalendar.onclick = () => switchTab('calendar');
+    if (btnNavFleet) btnNavFleet.onclick = () => switchTab('fleet');
+    if (btnNavLogs) btnNavLogs.onclick = () => switchTab('logs');
     // --- HELPER: CAR COLORS ---
     if (!calendarEl) return;
 
@@ -107,18 +175,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     calendar.render();
 
-    // --- RESERVATION ACTIONS ---
+        // --- RESERVATION ACTIONS ---
     document.getElementById("btnDelete").onclick = async () => {
-        if (!currentDocId || !confirm("PERMANENTLY delete this booking?")) return;
+        // Get the actual Booking ID from the modal text we set during eventClick
+        const bookingID = document.getElementById("modalID").innerText;
+        
+        if (!currentDocId || !confirm(`PERMANENTLY delete booking ${bookingID}?`)) return;
+        
         await deleteDoc(doc(db, "reservations", currentDocId));
+        // Log using the readable Booking ID (e.g., JMPWF8)
+        await window.logAdminAction(` deleted booking: "${bookingID}"`, "delete");
         viewModal.style.display = "none";
     };
 
     document.getElementById("btnApprove").onclick = async () => {
+        const bookingID = document.getElementById("modalID").innerText;
+        
         await updateDoc(doc(db, "reservations", currentDocId), { status: "Approved" });
+        // Log using the readable Booking ID
+        await window.logAdminAction(`approved booking: "${bookingID}"`, "create");
         viewModal.style.display = "none";
     };
-
     // --- MANUAL BOOKING (MULTI-DATE SUPPORT) ---
     const getDatesInRange = (start, end) => {
         const dates = [];
@@ -190,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Invalid License Number! Please enter exactly 12 digits.");
             return;
         }
+        
 
         // Final safety check for collision before pushing to DB
         const stillAvailable = !allReservations.some(res => {
@@ -217,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
             bookingID: "MAN-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
             createdAt: new Date()
         };
+        
 
         try {
             await addDoc(collection(db, "reservations"), manualData);
@@ -231,6 +310,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             manualForm.reset();
         } catch (err) { alert("Error: " + err.message); }
+        // Inside manualForm.onsubmit
+        await logAdminAction(` created a Manual booking: ${manualData.bookingID}`, "create");
     };
 
     // --- SHARED UI CONTROLS ---

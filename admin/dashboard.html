@@ -7,17 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <link rel="stylesheet" href="assets/css/admin.css">
+    <script type="module" src="assets/js/auth.js" defer></script>
     <script type="module" src="assets/js/dashboard.js" defer></script>
     <script type="module" src="assets/js/management.js" defer></script>
 </head>
 <body class="admin-body">
     <aside class="admin-sidebar">
-        <div class="sidebar-header"><h2 class="logo">ACTIVE <span>26</span></h2></div>
+        <div class="sidebar-header">
+            <h2 class="logo">ACTIVE <span>26</span></h2>
+            <p id="admin-display-name" style="font-size: 0.8rem; color: #64748b; margin-top: 5px;"></p>
+        </div>
         <nav class="sidebar-nav">
             <button class="nav-item active" id="nav-calendar">Calendar View</button>
             <button class="nav-item" id="nav-fleet">Manage Fleet</button>
+            <button class="nav-item" id="nav-logs">System Logs</button>
             <button id="btnOpenAddModal" class="nav-item" style="color: #10b981;">+ Manual Booking</button>
-            <button class="nav-item" onclick="window.location.href='../index.html'">View Site</button>
+            <button id="logout-btn" class="nav-item" style="color: #ef4444; margin-top: auto;">Logout</button>
         </nav>
     </aside>
 
@@ -65,6 +70,13 @@
                 <button class="btn-primary" id="btnAddNewCar" style="width: auto; padding: 10px 20px;">+ Add New Car</button>
             </div>
             <div id="admin-car-grid" class="admin-fleet-grid"></div>
+        </section>
+        <section id="logs-section" style="display:none;">
+            <div class="section-header">
+                <h2>System Activity Logs</h2>
+            </div>
+            <div id="logs-container" style="display: flex; flex-direction: column; gap: 10px;">
+                </div>
         </section>
     </main>
 

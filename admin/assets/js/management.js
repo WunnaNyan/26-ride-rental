@@ -1,4 +1,4 @@
-import { db } from "../../../public/assets/js/firebase.js";
+import { db , auth } from "../../../public/assets/js/firebase.js";
 import { 
     collection, onSnapshot, doc, deleteDoc, setDoc 
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
@@ -113,6 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = document.getElementById("carIdInput").value;
         const status = document.getElementById("carStatusInput").value;
         const existing = allCarsData.find(c => c.id === id);
+        const actionType = existing ? "update" : "create";
+        const message = existing 
+            ? ` updated vehicle details: "${id}"` 
+            : ` added a new vehicle to fleet: "${id}"`;
         
         const images = Array.from(document.querySelectorAll(".car-image-path"))
             .map(i => i.value.trim()).filter(v => v)
@@ -135,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         await setDoc(doc(db, "cars", id), carData, { merge: true });
+        await window.logAdminAction(message, actionType); // Call the logger
         carModal.style.display = "none";
     };
 
@@ -144,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             await deleteDoc(doc(db, "cars", id));
             carModal.style.display = "none";
         }
+        await deleteDoc(doc(db, "cars", id));
+        await logAdminAction(` deleted the car "${id}"`, "delete");
     };
 
     document.querySelector(".close-car-btn").onclick = () => carModal.style.display = "none";

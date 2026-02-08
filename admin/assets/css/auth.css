@@ -1,0 +1,176 @@
+/* --- 1. VARIABLES --- */
+:root {
+    --bg-dark: #0f172a;           /* Deep Slate */
+    --primary: #3b82f6;           /* Active 26 Blue */
+    --primary-hover: #2563eb;
+    --white: #ffffff;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 20px;
+    --font-main: 'Inter', sans-serif;
+}
+
+/* --- 2. LAYOUT --- */
+* { box-sizing: border-box; }
+
+body.auth-page {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    font-family: var(--font-main);
+    color: var(--bg-dark);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+/* --- 3. THE CARD --- */
+.auth-card {
+    background: var(--white);
+    padding: 48px 40px;
+    border-radius: var(--radius);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 4. TYPOGRAPHY & HEADER --- */
+.auth-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.auth-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.auth-header h1 span {
+    color: var(--primary);
+}
+
+.auth-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* --- 5. FORM ELEMENTS --- */
+.input-group {
+    margin-bottom: 24px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* --- 6. BUTTON --- */
+.btn-login {
+    width: 100%;
+    height: 54px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.btn-login:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* --- 7. FOOTER --- */
+.auth-footer {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.auth-footer p {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin: 4px 0;
+}
+
+.lang-hint {
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+/* --- Add to your FORM ELEMENTS section --- */
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 60px; /* Make room for the button */
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.toggle-btn:hover {
+    background: rgba(59, 130, 246, 0.1);
+}

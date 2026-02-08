@@ -227,3 +227,32 @@ body.admin-body {
     max-height: none; 
     overflow: visible;
 }
+/* Log Page Styling */
+#logs-section {
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.log-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    border-left: 6px solid #cbd5e1;
+}
+
+/* Specific Tints you requested */
+.log-entry-create { background-color: #f0fdf4; border-left-color: #22c55e; color: #166534; } /* Green */
+.log-entry-update { background-color: #fefce8; border-left-color: #eab308; color: #854d0e; } /* Yellow */
+.log-entry-delete { background-color: #fef2f2; border-left-color: #ef4444; color: #991b1b; } /* Red */
+
+.log-time {
+    color: #64748b;
+    font-weight: 600;
+    margin-right: 15px;
+    font-family: monospace;
+}
